@@ -6,5 +6,9 @@ namespace TsuroTheSecond
         public Player()
         {
         }
+
+        private Boolean CheckDead() {
+            return true;
+        }
     }
 }

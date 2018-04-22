@@ -1,8 +1,8 @@
 ﻿using System;
 namespace TsuroTheSecond
 {
-    public interface IPlayer
+    public interface ITile
     {
-        Boolean move();
+        void Rotate();
     }
 }

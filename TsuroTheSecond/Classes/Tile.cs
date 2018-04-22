@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 namespace TsuroTheSecond
 {
-    public class Tile
+    public class Tile : ITile
     {
         private int id;
         public List<List<int>> paths;
@@ -15,7 +15,7 @@ namespace TsuroTheSecond
             }
         }
 
-        public void rotate() {
+        public void Rotate() {
             foreach(List<int> item in this.paths){
                 item[0] = (item[0] + 2) % 8;
                 item[1] = (item[1] + 2) % 8;
