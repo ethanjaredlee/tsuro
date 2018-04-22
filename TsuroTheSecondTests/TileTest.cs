@@ -17,7 +17,7 @@ namespace TsuroTheSecondTests
                 new List<int>(2){6, 7},
             };
             Tile testTile1 = new Tile(1, paths);
-            testTile1.rotate();
+            testTile1.Rotate();
             List<List<int>> changed_paths = new List<List<int>>(4) {
                 new List<int>(2){2, 3},
                 new List<int>(2){4, 5},

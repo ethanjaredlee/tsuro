@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 namespace TsuroTheSecond
 {
-    public class SPlayer : IPlayer
+    public class SPlayer
     {
         private class PlayerPosition {
             public int x;

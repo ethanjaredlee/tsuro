@@ -6,6 +6,7 @@ namespace TsuroTheSecond
     {
         private int id;
         public List<List<int>> paths;
+
         public Tile(int _id, List<List<int>> path)
         {
             id = _id;

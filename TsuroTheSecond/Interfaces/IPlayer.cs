@@ -3,6 +3,7 @@ namespace TsuroTheSecond
 {
     public interface IPlayer
     {
-        Boolean Move();
+        Boolean ChooseLocation();
+        void ChooseOrientation();
     }
 }
