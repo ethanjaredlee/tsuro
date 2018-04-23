@@ -6,7 +6,8 @@ namespace TsuroTheSecond
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Board board = new Board(6);
+            Console.WriteLine(board.tiles[0].Count);
         }
     }
 }

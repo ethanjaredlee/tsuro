@@ -10,7 +10,7 @@ namespace TsuroTheSecond
         {
             tiles = new List<List<Tile>>();
             for (int i = 0; i < size; i++) {
-                tiles.Add(new List<Tile>(size));
+                tiles.Add(new List<Tile>(new Tile[size]));
             }
         }
 
@@ -21,7 +21,5 @@ namespace TsuroTheSecond
         public void PlaceTile(Tile tile, int x, int y) {
             tiles[y][x] = tile;
         }
-
-
     }
 }
