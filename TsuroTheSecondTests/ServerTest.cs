@@ -7,6 +7,7 @@ namespace TsuroTheSecondTests
     [TestClass]
     public class ServerTest
     {
+
         [TestMethod]
         public void TestConstructor()
         {
