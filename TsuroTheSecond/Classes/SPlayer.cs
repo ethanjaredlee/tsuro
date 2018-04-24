@@ -17,11 +17,11 @@ namespace TsuroTheSecond
 
         private List<Tile> Hand;
         private PlayerPosition position;
-        private string Color;
+        private string color;
 
         public SPlayer(string color)
         {
-            Color = color;
+            this.color = color;
         }
 
         public void SetMarker(int x, int y, int port) {
