@@ -5,5 +5,6 @@ namespace TsuroTheSecond
     {
         Boolean ChooseLocation();
         void ChooseOrientation();
+        void updatePosition();
     }
 }

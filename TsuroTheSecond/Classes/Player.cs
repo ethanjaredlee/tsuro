@@ -57,6 +57,8 @@ namespace TsuroTheSecond
             }
         }
 
-
+        void updatePosition(Board board){
+            
+        }
     }
 }
