@@ -26,16 +26,15 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestPlaceAndFreeTileSpace() {
             Board board = new Board(6);
-            Assert.IsTrue(board.FreeTileSpace(1, 1));
             Tile tile = new Tile(1, new List<List<int>>{
                 new List<int>{0, 1},
                 new List<int>{2, 3},
                 new List<int>{4, 5},
                 new List<int>{6, 7}
             });
+            Assert.IsNull(board.tiles[1][1]);
             board.PlaceTile(tile, 1, 1);
-            Assert.IsFalse(board.FreeTileSpace(1, 1));
-            Debug.Print(string.Join("\n", string.Join(", ", board.tiles)));
+            Assert.IsNotNull(board.tiles[1][1]);
         }
     }
 }

@@ -14,10 +14,6 @@ namespace TsuroTheSecond
             }
         }
 
-        public Boolean FreeTileSpace(int x, int y) {
-            return tiles[y][x] == null;
-        }
-
         public void PlaceTile(Tile tile, int x, int y) {
             tiles[y][x] = tile;
         }
