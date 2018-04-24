@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace TsuroTheSecond
@@ -13,7 +14,7 @@ namespace TsuroTheSecond
 
         public Server() {
             // initializes the game
-            deck = ShuffleDeck(Constants.tiles);
+            deck = Constants.tiles; // shuffle on server initialization
             alive = new List<Player>();
             dead = new List<Player>();
             board = new Board(Constants.boardSize);
@@ -23,12 +24,14 @@ namespace TsuroTheSecond
             
         //}
 
-        public void AddPlayer() {
-            //alive.Add(new Player());
+        public void AddPlayer(IPlayer p, int age, string color) {
+            // todo organize alive by age and don't let players pick duplicate colors
+            alive.Add(new Player(p, age, color));
         }
 
         public List<Tile> ShuffleDeck(List<Tile> deck)
         {
+            // doesnt quite work the way i want it to yet
             List<Tile> shuffledDeck = new List<Tile>(new Tile[deck.Count]);
             Random rng = new Random();
             int n = deck.Count;
@@ -44,36 +47,27 @@ namespace TsuroTheSecond
         }
 
         Boolean LegalPlay(Player player, Board b, Tile tile) {
+            // keep this in for iterating through the loop
             if (tile == null) {
                 return false;
             }
 
-            if (!player.TileinHand(tile)) {
-                return false;
-            }
-
-            // copy board
-            Board copyBoard = CopyBoard(b);
-            copyBoard.PlaceTile(tile, player.nextTilePosition[0], player.nextTilePosition[1]);
-            player.UpdatePosition(copyBoard);
-
-            if (player.IsDead()) {
-                return false;
-            }
-
-            return true;
+            return (ValidTilePlacement(b, player, tile) && player.TileinHand(tile));
         }
 
-        Board CopyBoard(Board b) {
-            Board copy = new Board(board.tiles.Count);
+        Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
+            // checks if placing a tile on the board will kill the player 
+            Boolean playerAlive = true;
+            b.PlaceTile(tile, player.nextTilePosition[0], player.nextTilePosition[1]);
+            List<int> origPosition = new List<int>(player.position);
+            player.UpdatePosition(b);
 
-            for (int i = 0; i < board.tiles.Count; i++){
-                for (int j = 0; j < board.tiles.Count; j++) {
-                    copy.PlaceTile(board.tiles[i][j], i, j);
-                }
-            }
+            playerAlive = !player.IsDead();
 
-            return copy;
+            // undoing changes to the board
+            b.PlaceTile(null, player.nextTilePosition[0], player.nextTilePosition[1]);
+            player.position = new List<int>(origPosition);
+            return playerAlive;
         }
 
         void PlayATurn(List<Tile> deck, List<Player> alive, List<Player> dead, Board board, Tile tile) {
@@ -115,20 +109,27 @@ namespace TsuroTheSecond
         public void WinGame(List<Player> winners) {
         }
 
-        void DrawTile(Player player, List<Tile> d) {
+        public void DrawTile(Player player, List<Tile> d) {
+            // dragon tile isnt implemented
             // how is this supposed to work with an interface?
-            //if (player.Hand.Count) > 3) {
-            //    throw new Exception("Player can't have more than 3 cards in hand");
-            //}
+            Console.WriteLine(player.Hand.Count);
+            if (player.Hand.Count >= 3) {
+                throw new InvalidOperationException("Player can't have more than 3 cards in hand");
+            }
 
             Tile t = d[0];
             d.RemoveAt(0);
-            // implement this
             player.AddTiletoHand(t); 
         }
 
         static void Main(string[] args)
         {
+            Server server = new Server();
+            MPlayer p1 = new MPlayer();
+            MPlayer p2 = new MPlayer();
+
+            server.AddPlayer(p1, 12, "blue");
+            server.AddPlayer(p2, 10, "green");
         }
     }
 }

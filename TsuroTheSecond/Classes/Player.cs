@@ -12,13 +12,20 @@ namespace TsuroTheSecond
         int age;
         string color;
         public List<int> nextTilePosition;
+        private IPlayer player;
 
-        public Player(List<int> _position, List<Tile> _Hand, int _age, string _color)
-        {
-            Hand = _Hand;
+        public Player(IPlayer p, int _age, string _color) {
+            Hand = new List<Tile>();
             age = _age;
             color = _color;
+            player = p;
+        }
+
+        public void InitPlayerPosition(List<int> _position)
+        {
             // port, x, y range check
+            // i think? this should be the phantom block. like if we want our player in the very
+            // top left notch, then the initial position is [0, -1, 0]
             if ( (_position[2] < 8 && _position[2] > -1) && ( ((_position[0] == -1) || (_position[0] == 6)) ^ ( (_position[1] == -1) || (_position[1] == 6)) ) ) {
                 position = _position;
             } else {
@@ -137,18 +144,21 @@ namespace TsuroTheSecond
             this.position = cur_pos;
 
         }
+
         public void AddTiletoHand(Tile tile){
             if( this.Hand.Count > 3 ) {
                 throw new Exception("Player hand is already full!");
             }
             this.Hand.Add(tile);
         }
+
         public void RemoveTilefromHand(Tile tile) {
             if( this.Hand.Count < 0 ) {
                 throw new Exception("Player hand is already empty!");
             }
             this.Hand.Remove(tile);
         }
+
         public bool TileinHand(Tile tile) {
             if ( this.Hand.Find(each => each.id == tile.id) == null ) {
                 return false;

@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace TsuroTheSecond
 {
     public interface IPlayer
     {
-        Boolean ChooseLocation();
-        void ChooseOrientation();
-        void UpdatePosition();
+        Tile ChooseTile(List<Tile> hand);
     }
 }
