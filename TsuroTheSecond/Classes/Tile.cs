@@ -4,7 +4,7 @@ namespace TsuroTheSecond
 {
     public class Tile : ITile
     {
-        private int id;
+        public readonly int id;
         public List<List<int>> paths;
 
         public Tile(int _id, List<int> path)
