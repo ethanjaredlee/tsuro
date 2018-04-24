@@ -20,7 +20,7 @@ namespace TsuroTheSecondTests
 
         });
 
-        Tile testTile3 = new Tile(2, new List<int>(8) {
+        Tile testTile3 = new Tile(3, new List<int>(8) {
             6, 7, 0, 1, 2, 3, 4, 5,
         });
         [TestMethod]
@@ -225,8 +225,21 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestUpdatePositionBaseCase()
         {
+            // start at 5, 6 and at port 0
             Player player1 = new Player(new List<int> { 5, 6, 0 }, 0, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-
+            Board board = new Board(6);
+            Tile testTile_1 = new Tile(1, new List<int>(8) {
+                0, 4, 1, 5, 2, 6, 3, 7
+            });
+            // places a tile that gives direct path up 
+            board.PlaceTile(testTile_1, 5, 5);
+            // move and update position of the player
+            player1.UpdatePosition(board);
+            // check position
+            Assert.IsFalse(player1.CheckDead());
+            Assert.AreEqual(player1.position[0], 5);
+            Assert.AreEqual(player1.position[1], 5);
+            Assert.AreEqual(player1.position[2], 1);
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace TsuroTheSecond
@@ -58,8 +59,59 @@ namespace TsuroTheSecond
             }
         }
 
-        void UpdatePosition(Board board){
-            
+        public void UpdatePosition(Board board){
+            List<int> cur_pos = new List<int>(3){0, 0, 0};
+            List<int> nxt_pos = new List<int>(3){0, 0, 0};
+            int[] port_table = new int[]{5, 4, 7, 6, 1, 0, 3, 2};
+            Tile nxt_tile = null;
+            int enter_port, end_port = -1;
+            bool recur = true;
+            cur_pos = this.position;
+
+            while (recur) {
+                // calculate next x, y from onward
+                switch (this.onward) {
+                    case 0:
+                        nxt_pos[0] = cur_pos[0];
+                        nxt_pos[1] = cur_pos[1] - 1;
+                        break;
+                    case 1:
+                        nxt_pos[0] = cur_pos[0] + 1;
+                        nxt_pos[1] = cur_pos[1];
+                        break;
+                    case 2:
+                        nxt_pos[0] = cur_pos[0];
+                        nxt_pos[1] = cur_pos[1] + 1;
+                        break;
+                    case 3:
+                        nxt_pos[0] = cur_pos[0] - 1;
+                        nxt_pos[1] = cur_pos[1];
+                        break;
+                    default:
+                        break;
+                }
+                // see if that position if the next tile is there.
+                // if not, break
+                // if so, update cur_pos
+
+                try{
+                    nxt_tile = board.tiles[nxt_pos[0]][nxt_pos[1]];
+                } catch(IndexOutOfRangeException) {
+                    recur = false;
+                }
+                if (nxt_tile == null) {
+                    //Console.WriteLine("next tile is null!");
+                    recur = false;
+                } else {
+                    cur_pos[0] = nxt_pos[0];
+                    cur_pos[1] = nxt_pos[1];
+                    enter_port = port_table[cur_pos[2]];
+                    // find destination port in tile by enterport and update cur_pos
+                    cur_pos[2] = nxt_tile.FindEndofPath(enter_port);
+                }
+            }
+
+            this.position = cur_pos;
         }
     }
 }
