@@ -24,7 +24,7 @@ namespace TsuroTheSecond
         //}
 
         public void AddPlayer() {
-            alive.Add(new Player());
+            //alive.Add(new Player());
         }
 
         public List<Tile> ShuffleDeck(List<Tile> deck)
@@ -48,7 +48,7 @@ namespace TsuroTheSecond
                 return false;
             }
 
-            if (!player.TileInHand(tile)) {
+            if (!player.TileinHand(tile)) {
                 return false;
             }
 
@@ -86,7 +86,7 @@ namespace TsuroTheSecond
             //    }
             //}
             Player currentPlayer = alive[0];
-            currentPlayer.RemoveTileFromHand(tile);
+            currentPlayer.RemoveTilefromHand(tile);
             board.PlaceTile(tile, currentPlayer.nextTilePosition[0], currentPlayer.nextTilePosition[1]);
             List<Player> fatalities = new List<Player>();
             foreach (Player p in alive) {
@@ -124,7 +124,7 @@ namespace TsuroTheSecond
             Tile t = d[0];
             d.RemoveAt(0);
             // implement this
-            player.AddTileToHand(t); 
+            player.AddTiletoHand(t); 
         }
 
         static void Main(string[] args)

@@ -10,13 +10,16 @@ namespace TsuroTheSecond
         public Board(int size)
         {
             tiles = new List<List<Tile>>();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++)
+            {
                 tiles.Add(new List<Tile>(new Tile[size]));
             }
         }
 
-        public void PlaceTile(Tile tile, int x, int y) {
-            tiles[x]][y]] = tile;
+        public void PlaceTile(Tile tile, int x, int y)
+        {
+
+            this.tiles[x][y] = tile;
         }
     }
 }
