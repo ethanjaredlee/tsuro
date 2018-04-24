@@ -7,12 +7,16 @@ namespace TsuroTheSecond
         private int id;
         public List<List<int>> paths;
 
-        public Tile(int _id, List<List<int>> path)
+        public Tile(int _id, List<int> path)
         {
+            if (path.Count > 8) {
+                Console.WriteLine("Warning: more than 8 ports specified");
+            }
+
             id = _id;
             paths = new List<List<int>>(4);
-            foreach(List<int> item in path){
-                paths.Add(item);
+            for (int i = 0; i < path.Count/2; i+=2) {
+                List<int> p = new List<int> { path[i], path[i + 1] };
             }
         }
 
