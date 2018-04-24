@@ -5,7 +5,7 @@ namespace TsuroTheSecond
 {
     public class Player
     {
-        List<int> position;
+        public List<int> position;
         int onward;
         List<Tile> Hand;
         int age;
@@ -50,15 +50,15 @@ namespace TsuroTheSecond
             onward = _onward;
         }   
 
-        private Boolean CheckDead(List<int> _position) {
-            if ( (_position[0] < 0) || (_position[0] > 5) || (_position[1] < 0) || (_position[1] > 5) ) {
+        public Boolean CheckDead() {
+            if ( (this.position[0] < 0) || (this.position[0] > 5) || (this.position[1] < 0) || (this.position[1] > 5) ) {
                 return true;
             } else {
                 return false;
             }
         }
 
-        void updatePosition(Board board){
+        void UpdatePosition(Board board){
             
         }
     }

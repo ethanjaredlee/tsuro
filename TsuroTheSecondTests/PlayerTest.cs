@@ -213,10 +213,21 @@ namespace TsuroTheSecondTests
             Player player_wrongx = new Player(new List<int> { 5, 6, 0 }, 3, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
         }
 
+        [TestMethod]
+        public void TestCheckDead()
+        {
+            Player player_wrongx = new Player(new List<int> { 5, 6, 1 }, 0, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
+            Assert.IsTrue(player_wrongx.CheckDead());
+            player_wrongx.position[1] = 3;
+            Assert.IsTrue(!player_wrongx.CheckDead());
+        }
 
+        [TestMethod]
+        public void TestUpdatePositionBaseCase()
+        {
+            Player player1 = new Player(new List<int> { 5, 6, 0 }, 0, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
 
-
-
+        }
 
 
     }
