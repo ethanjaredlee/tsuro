@@ -266,6 +266,28 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(player1.position[2], 7);
             Assert.AreEqual(player1.onward, 3);
         }
+        [TestMethod]
+        public void TestAddTiletoHand()
+        {
+            // takes tile and adds the player to the Hand
+            Player player1 = new Player(new List<int> { 5, 6, 0 }, 0, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
+            Assert.AreEqual(player1.Hand.Count, 3);
+            player1.Hand.RemoveAt(0);
+            Assert.AreEqual(2, player1.Hand.Count);
+            player1.AddTiletoHand(testTile1);
+            Assert.AreEqual(3, player1.Hand.Count);
+            Assert.AreEqual(testTile1.id, (player1.Hand.Find(each => each.id == 1)).id);
+        }
+        [TestMethod]
+        public void TestRemoveTilefromHand()
+        {
+            // should fail
+            Player player1 = new Player(new List<int> { 5, 6, 0 }, 0, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
+            Assert.AreEqual(player1.Hand.Count, 3);
+            player1.RemoveTilefromHand(testTile1);
+            Assert.AreEqual(2, player1.Hand.Count);
+        }
+
 
 
     }

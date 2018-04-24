@@ -8,7 +8,7 @@ namespace TsuroTheSecond
     {
         public List<int> position;
         public int onward;
-        List<Tile> Hand;
+        public List<Tile> Hand;
         int age;
         string color;
 
@@ -116,6 +116,17 @@ namespace TsuroTheSecond
             this.position = cur_pos;
             this.onward = heading;
 
+        }
+        public void AddTiletoHand(Tile tile){
+            if( this.Hand.Count > 3 ) {
+                throw new Exception("Player hand is already full!");
+            }
+            int prev_count = this.Hand.Count;
+            Hand.Add(tile);
+            int res_count = this.Hand.Count;
+        }
+        public void RemoveTilefromHand(Tile tile) {
+            
         }
     }
 }
