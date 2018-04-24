@@ -26,6 +26,7 @@ namespace TsuroTheSecond
             //}
         }
 
+
         public void Rotate() {
             foreach(List<int> item in this.paths){
                 item[0] = (item[0] + 2) % 8;

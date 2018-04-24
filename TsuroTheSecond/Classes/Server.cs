@@ -6,40 +6,77 @@ namespace TsuroTheSecond
     public class Server 
     {
 
-        public List<String> colors = new List<string> { "blue", "green", "black", "yellow", "red", "orange", "white", "pink" };
-               
-        public Server(int playerCount) {
+        public List<Tile> deck;
+        public List<Player> alive;
+        public List<Player> dead;
+        public Board board;
+
+        public Server() {
             // initializes the game
-            List<Tile> deck = new List<Tile>();
-            List <SPlayer> alive = new List<SPlayer>();
-            List <SPlayer> dead = new List<SPlayer>();
-            Board board = new Board(Constants.boardSize);
-
-            for (int i = 0; i < playerCount; i++) {
-                alive.Add(new SPlayer(colors[i]));
-            }
-
+            deck = ShuffleDeck(Constants.tiles);
         }
 
-        //Boolean LegalPlay(SPlayer player, Board b, Tile tile) {
-        //    if (tile == null) {
-        //        return false;
-        //    }
-        //    return true;
-        //}
+        public List<Tile> ShuffleDeck(List<Tile> deck)
+        {
+            List<Tile> shuffledDeck = new List<Tile>(new Tile[deck.Count]);
+            Random rng = new Random();
+            int n = deck.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                Tile tile = deck[k];
+                deck[k] = deck[n];
+                deck[n] = tile;
+            }
+            return deck;
+        }
 
-        //void PlayATurn(List<Tile> deck, List<SPlayer> alive, List<SPlayer> dead, Board board, Tile tile) {
-        //    while (alive.Count > 0) {
-        //        Tile chosenTile = null;
+        Boolean LegalPlay(Player player, Board b, Tile tile) {
+            //if (tile == null) {
+            //    return false;
+            //}
 
-        //        while (!LegalPlay(chosenTile)) {
-        //            SPlayer currentPlayer = alive[0];
-        //            chosenTile = currentPlayer.player.chooseTile(board);
-        //        }
-        //    }
-        //}
+            //if (!player.TileInHand(tile)) {
+            //    return false;
+            //}
 
-        //void DrawTile(SPlayer player, List<Tile> deck) {
+            //// copy board
+            //Board copyBoard = CopyBoard(b);
+            //copyBoard.PlaceTile(tile, player);
+            //player.UpdatePosition(copyBoard);
+
+            //if (player.IsDead()) {
+            //    return false;
+            //}
+
+            return true;
+        }
+
+        Board CopyBoard(Board b) {
+            Board copy = new Board(board.tiles.Count);
+
+            for (int i = 0; i < board.tiles.Count; i++){
+                for (int j = 0; j < board.tiles.Count; j++) {
+                    copy.PlaceTile(board.tiles[i][j], i, j);
+                }
+            }
+
+            return copy;
+        }
+
+        void PlayATurn(List<Tile> deck, List<Player> alive, List<Player> dead, Board board, Tile tile) {
+            //while (alive.Count > 0) {
+            //    Tile chosenTile = null;
+
+            //    while (!LegalPlay(chosenTile)) {
+            //        Player currentPlayer = alive[0];
+            //        chosenTile = currentPlayer.player.chooseTile(board);
+            //    }
+            //}
+        }
+
+        //void DrawTile(Player player, List<Tile> deck) {
         //    // how is this supposed to work with an interface?
         //    //if (player.Hand.Count) > 3) {
         //    //    throw new Exception("Player can't have more than 3 cards in hand");

@@ -7,12 +7,13 @@ namespace TsuroTheSecond
     public class Player
     {
         public List<int> position;
-        public int onward;
+
         public List<Tile> Hand;
         int age;
         string color;
+        public List<int> nextTilePosition;
 
-        public Player(List<int> _position, int _onward, List<Tile> _Hand, int _age, string _color)
+        public Player(List<int> _position, List<Tile> _Hand, int _age, string _color)
         {
             Hand = _Hand;
             age = _age;
@@ -24,34 +25,46 @@ namespace TsuroTheSecond
                 throw new ArgumentException("Illegal position to initialize player", "_position");
             }
             // invalid _onward
-            if ( _onward != (position[2] / 2) ) {
-                throw new ArgumentException("Illegal onward value", "_onward");
-            }
-            // invalid combinations of _onward and initial position
-            switch(_onward) {
+            int onward = position[2] / 2;
+            nextTilePosition = new List<int> { position[0], position[1] };
+            switch(onward) {
                 case 0:
-                    if( _position[1] == 6 ){}
-                    else{throw new ArgumentException("Illegal onward value", "_onward");}
+                    // onward is the tile above
+                    nextTilePosition[1] += 1;
+                    if (nextTilePosition[1] > Constants.boardSize - 1) {
+                        throw new ArgumentException("I think the player is dead?");
+                    }
                     break;
                 case 1:
-                    if (_position[0] == -1) { }
-                    else { throw new ArgumentException("Illegal onward value", "_onward"); }
+                    // onward is the tile to the right
+                    nextTilePosition[0] += 1;
+                    if (nextTilePosition[0] > Constants.boardSize - 1)
+                    {
+                        throw new ArgumentException("I think the player is dead?");
+                    }
                     break;
                 case 2:
-                    if (_position[1] == -1) { }
-                    else { throw new ArgumentException("Illegal onward value", "_onward"); }
+                    // onward is the tile below
+                    nextTilePosition[1] -= 1;
+                    if (nextTilePosition[1] < 0)
+                    {
+                        throw new ArgumentException("I think the player is dead?");
+                    }
                     break;
                 case 3:
-                    if (_position[0] == 6) { }
-                    else { throw new ArgumentException("Illegal onward value", "_onward"); }
+                    // onward is the tile to the left
+                    nextTilePosition[0] -= 1;
+                    if (nextTilePosition[0] < 0)
+                    {
+                        throw new ArgumentException("I think the player is dead?");
+                    }
                     break;
                 default:
                     throw new ArgumentException("Illegal onward value", "_onward");
             }
-            onward = _onward;
         }   
 
-        public Boolean CheckDead() {
+        public Boolean IsDead() {
             if ( (this.position[0] < 0) || (this.position[0] > 5) || (this.position[1] < 0) || (this.position[1] > 5) ) {
                 return true;
             } else {
@@ -67,7 +80,7 @@ namespace TsuroTheSecond
             int enter_port, heading;
             bool recur = true;
             cur_pos = this.position;
-            heading = this.onward;
+            heading = cur_pos[2]/2;
 
             while (recur) {
                 // calculate next x, y from onward
@@ -114,7 +127,6 @@ namespace TsuroTheSecond
             }
 
             this.position = cur_pos;
-            this.onward = heading;
 
         }
         public void AddTiletoHand(Tile tile){
