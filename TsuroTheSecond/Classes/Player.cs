@@ -7,7 +7,7 @@ namespace TsuroTheSecond
     public class Player
     {
         public List<int> position;
-        int onward;
+        public int onward;
         List<Tile> Hand;
         int age;
         string color;
@@ -64,13 +64,15 @@ namespace TsuroTheSecond
             List<int> nxt_pos = new List<int>(3){0, 0, 0};
             int[] port_table = new int[]{5, 4, 7, 6, 1, 0, 3, 2};
             Tile nxt_tile = null;
-            int enter_port, end_port = -1;
+            int enter_port, heading;
             bool recur = true;
             cur_pos = this.position;
+            heading = this.onward;
 
             while (recur) {
                 // calculate next x, y from onward
-                switch (this.onward) {
+
+                switch (heading) {
                     case 0:
                         nxt_pos[0] = cur_pos[0];
                         nxt_pos[1] = cur_pos[1] - 1;
@@ -95,12 +97,11 @@ namespace TsuroTheSecond
                 // if so, update cur_pos
 
                 try{
-                    nxt_tile = board.tiles[nxt_pos[0]][nxt_pos[1]];
+                    nxt_tile = board.tiles[nxt_pos[1]][nxt_pos[0]];
                 } catch(IndexOutOfRangeException) {
                     recur = false;
                 }
                 if (nxt_tile == null) {
-                    //Console.WriteLine("next tile is null!");
                     recur = false;
                 } else {
                     cur_pos[0] = nxt_pos[0];
@@ -108,10 +109,13 @@ namespace TsuroTheSecond
                     enter_port = port_table[cur_pos[2]];
                     // find destination port in tile by enterport and update cur_pos
                     cur_pos[2] = nxt_tile.FindEndofPath(enter_port);
+                    heading = cur_pos[2] / 2;
                 }
             }
 
             this.position = cur_pos;
+            this.onward = heading;
+
         }
     }
 }

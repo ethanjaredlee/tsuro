@@ -240,6 +240,31 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(player1.position[0], 5);
             Assert.AreEqual(player1.position[1], 5);
             Assert.AreEqual(player1.position[2], 1);
+            Assert.AreEqual(player1.onward, 0);
+        }
+        [TestMethod]
+        public void TestUpdatePositionInductiveCase()
+        {
+            // start at 5, 6 and at port 0
+            Player player1 = new Player(new List<int> { 5, 6, 0 }, 0, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
+            Board board = new Board(6);
+            Tile testTile_1 = new Tile(1, new List<int>(8) {
+                0, 4, 1, 5, 2, 6, 3, 7
+            });
+            Tile testTile_2 = new Tile(2, new List<int>(8) {
+                4, 7, 0, 6, 1, 3, 5, 2
+            });
+            // places a tile that gives direct path up 
+            board.PlaceTile(testTile_1, 5, 5);
+            board.PlaceTile(testTile_2, 5, 4);
+            // move and update position of the player
+            player1.UpdatePosition(board);
+            // check position
+            Assert.IsFalse(player1.CheckDead());
+            Assert.AreEqual(player1.position[0], 5);
+            Assert.AreEqual(player1.position[1], 4);
+            Assert.AreEqual(player1.position[2], 7);
+            Assert.AreEqual(player1.onward, 3);
         }
 
 
