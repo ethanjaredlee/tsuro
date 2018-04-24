@@ -14,6 +14,17 @@ namespace TsuroTheSecond
         public Server() {
             // initializes the game
             deck = ShuffleDeck(Constants.tiles);
+            alive = new List<Player>();
+            dead = new List<Player>();
+            board = new Board(Constants.boardSize);
+        }
+
+        //public void InitializeGame(int playerCount) {
+            
+        //}
+
+        public void AddPlayer() {
+            alive.Add(new Player());
         }
 
         public List<Tile> ShuffleDeck(List<Tile> deck)
@@ -33,22 +44,22 @@ namespace TsuroTheSecond
         }
 
         Boolean LegalPlay(Player player, Board b, Tile tile) {
-            //if (tile == null) {
-            //    return false;
-            //}
+            if (tile == null) {
+                return false;
+            }
 
-            //if (!player.TileInHand(tile)) {
-            //    return false;
-            //}
+            if (!player.TileInHand(tile)) {
+                return false;
+            }
 
-            //// copy board
-            //Board copyBoard = CopyBoard(b);
-            //copyBoard.PlaceTile(tile, player);
-            //player.UpdatePosition(copyBoard);
+            // copy board
+            Board copyBoard = CopyBoard(b);
+            copyBoard.PlaceTile(tile, player.nextTilePosition[0], player.nextTilePosition[1]);
+            player.UpdatePosition(copyBoard);
 
-            //if (player.IsDead()) {
-            //    return false;
-            //}
+            if (player.IsDead()) {
+                return false;
+            }
 
             return true;
         }
@@ -74,24 +85,50 @@ namespace TsuroTheSecond
             //        chosenTile = currentPlayer.player.chooseTile(board);
             //    }
             //}
+            Player currentPlayer = alive[0];
+            currentPlayer.RemoveTileFromHand(tile);
+            board.PlaceTile(tile, currentPlayer.nextTilePosition[0], currentPlayer.nextTilePosition[1]);
+            List<Player> fatalities = new List<Player>();
+            foreach (Player p in alive) {
+                p.UpdatePosition(board);
+                if (p.IsDead()) {
+                    fatalities.Add(p);
+                }
+            }
+
+            if (alive.Count == 1) {
+                WinGame(alive);
+            }
+
+            if (alive.Count == 0) {
+                WinGame(fatalities);
+            }
+
+            foreach (Player p in fatalities) {
+                dead.Add(p);
+                alive.Remove(p);
+            }
+
+            DrawTile(currentPlayer, deck);
         }
 
-        //void DrawTile(Player player, List<Tile> deck) {
-        //    // how is this supposed to work with an interface?
-        //    //if (player.Hand.Count) > 3) {
-        //    //    throw new Exception("Player can't have more than 3 cards in hand");
-        //    //}
+        public void WinGame(List<Player> winners) {
+        }
 
-        //    Tile t = deck[0];
-        //    deck.RemoveAt(0);
-        //    // implement this
-        //    player.addTileToHand(t); 
-        //}
+        void DrawTile(Player player, List<Tile> d) {
+            // how is this supposed to work with an interface?
+            //if (player.Hand.Count) > 3) {
+            //    throw new Exception("Player can't have more than 3 cards in hand");
+            //}
+
+            Tile t = d[0];
+            d.RemoveAt(0);
+            // implement this
+            player.AddTileToHand(t); 
+        }
 
         static void Main(string[] args)
         {
-            Board board = new Board(6);
-            Console.WriteLine(board.tiles[0].Count);
         }
     }
 }

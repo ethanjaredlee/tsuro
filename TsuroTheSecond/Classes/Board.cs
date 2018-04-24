@@ -16,7 +16,7 @@ namespace TsuroTheSecond
         }
 
         public void PlaceTile(Tile tile, int x, int y) {
-            tiles[x][y] = tile;
+            tiles[x]][y]] = tile;
         }
     }
 }
