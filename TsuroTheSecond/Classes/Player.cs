@@ -19,7 +19,7 @@ namespace TsuroTheSecond
             age = _age;
             color = _color;
             // port, x, y range check
-            if ( (_position[2] < 8 || _position[2] > -1) && ( ((_position[0] == -1) || (_position[0] == 6)) ^ ( (_position[1] == -1) || (_position[1] == 6)) ) ) {
+            if ( (_position[2] < 8 && _position[2] > -1) && ( ((_position[0] == -1) || (_position[0] == 6)) ^ ( (_position[1] == -1) || (_position[1] == 6)) ) ) {
                 position = _position;
             } else {
                 throw new ArgumentException("Illegal position to initialize player", "_position");
@@ -30,12 +30,16 @@ namespace TsuroTheSecond
             switch(onward) {
                 case 0:
                     // onward is the tile above
-                    nextTilePosition[1] += 1;
-                    if (nextTilePosition[1] > Constants.boardSize - 1) {
+                    if (_position[1] == 6) { }
+                    else { throw new ArgumentException("Illegal port and xy combination"); }
+                    nextTilePosition[1] -= 1;
+                    if (nextTilePosition[1] < 0) {
                         throw new ArgumentException("I think the player is dead?");
                     }
                     break;
                 case 1:
+                    if (_position[0] == -1) { }
+                    else { throw new ArgumentException("Illegal port and xy combination"); }
                     // onward is the tile to the right
                     nextTilePosition[0] += 1;
                     if (nextTilePosition[0] > Constants.boardSize - 1)
@@ -44,14 +48,18 @@ namespace TsuroTheSecond
                     }
                     break;
                 case 2:
+                    if (_position[1] == -1) { }
+                    else { throw new ArgumentException("Illegal port and xy combination"); }
                     // onward is the tile below
-                    nextTilePosition[1] -= 1;
-                    if (nextTilePosition[1] < 0)
+                    nextTilePosition[1] += 1;
+                    if (nextTilePosition[1] > Constants.boardSize - 1)
                     {
                         throw new ArgumentException("I think the player is dead?");
                     }
                     break;
                 case 3:
+                    if (_position[0] == 6) { }
+                    else { throw new ArgumentException("Illegal port and xy combination"); }
                     // onward is the tile to the left
                     nextTilePosition[0] -= 1;
                     if (nextTilePosition[0] < 0)
@@ -133,12 +141,21 @@ namespace TsuroTheSecond
             if( this.Hand.Count > 3 ) {
                 throw new Exception("Player hand is already full!");
             }
-            int prev_count = this.Hand.Count;
-            Hand.Add(tile);
-            int res_count = this.Hand.Count;
+            this.Hand.Add(tile);
         }
         public void RemoveTilefromHand(Tile tile) {
-            
+            if( this.Hand.Count < 0 ) {
+                throw new Exception("Player hand is already empty!");
+            }
+            this.Hand.Remove(tile);
+        }
+        public bool TileinHand(Tile tile) {
+            if ( this.Hand.Find(each => each.id == tile.id) == null ) {
+                return false;
+            } else {
+                return true;
+            }
+
         }
     }
 }
