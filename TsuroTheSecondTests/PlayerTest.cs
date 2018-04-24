@@ -256,7 +256,7 @@ namespace TsuroTheSecondTests
             });
             // places a tile that gives direct path up 
             board.PlaceTile(testTile_1, 5, 5);
-            board.PlaceTile(testTile_2, 5, 4);
+            board.PlaceTile(testTile_2, 4, 5);
             // move and update position of the player
             player1.UpdatePosition(board);
             // check position
