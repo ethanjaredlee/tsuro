@@ -10,27 +10,19 @@ namespace TsuroTheSecondTests
     public class PlayerTest
     {
         // go to line 223 to skip constructor tests
-        public Tile testTile1 = new Tile(1, new List<List<int>>(4) {
-            new List<int>(2){0, 1},
-            new List<int>(2){2, 3},
-            new List<int>(2){4, 5},
-            new List<int>(2){6, 7},
+        public Tile testTile1 = new Tile(1, new List<int>(8) {
+            0, 1, 2, 3, 4, 5, 6, 7,
         });
 
 
-        Tile testTile2 = new Tile(2, new List<List<int>>(4) {
-            new List<int>(2){2, 3},
-            new List<int>(2){4, 5},
-            new List<int>(2){6, 7},
-            new List<int>(2){0, 1},
+        Tile testTile2 = new Tile(2, new List<int>(8) {
+            2, 3, 4, 5, 6, 7, 0, 1,
+
         });
 
-        Tile testTile3 = new Tile(2, new List<List<int>>(4) {
-                new List<int>(2){6, 7},
-                new List<int>(2){0, 1},
-                new List<int>(2){2, 3},
-                new List<int>(2){4, 5},
-            });
+        Tile testTile3 = new Tile(2, new List<int>(8) {
+            6, 7, 0, 1, 2, 3, 4, 5,
+        });
         [TestMethod]
         public void TestConstructor()
         {

@@ -47,6 +47,7 @@ namespace TsuroTheSecond
                 default:
                     throw new ArgumentException("Illegal onward value", "_onward");
             }
+            onward = _onward;
         }   
 
         private Boolean CheckDead(List<int> _position) {
