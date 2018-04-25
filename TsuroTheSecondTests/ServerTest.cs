@@ -208,19 +208,57 @@ namespace TsuroTheSecondTests
         public void TestInitGame()
         {
         }
+        [TestMethod]
+        public void TestLegalPlayFalse3()
+        {
+            Server server = new Server();
+            MPlayer p1 = new MPlayer();
+            server.AddPlayer(p1, 12, "blue");
+
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
+
+            Player p_1 = server.alive[0];
+            Board board = new Board(6);
+            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
+            Assert.IsTrue(server.LegalPlay(p_1, board, testTile1));
+        }
+        [TestMethod]
+        public void TestLegalPlayFalse2()
+        {
+            Server server = new Server();
+            MPlayer p1 = new MPlayer();
+            server.AddPlayer(p1, 12, "blue");
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
+
+            Player p_1 = server.alive[0];
+            Board board = new Board(6);
+            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.Hand = new List<Tile> { testTile1, testTile3 };
+            Assert.IsTrue(server.LegalPlay(p_1, board, testTile1));
+        }
 
         [TestMethod]
         public void TestLegalPlayTrue3()
         {
             Server server = new Server();
             MPlayer p1 = new MPlayer();
-            MPlayer p2 = new MPlayer();
-            MPlayer p3 = new MPlayer();
-            MPlayer p4 = new MPlayer();
+
             server.AddPlayer(p1, 12, "blue");
-            server.AddPlayer(p2, 10, "green");
-            server.AddPlayer(p3, 20, "pink");
-            server.AddPlayer(p4, 30, "red");
+
             Tile testTile1 = new Tile(1, new List<int>(8) {
                 0, 1, 2, 3, 4, 5, 6, 7,
             });
@@ -237,22 +275,15 @@ namespace TsuroTheSecondTests
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             Assert.IsTrue(server.LegalPlay(p_1, board, testTile3));
         }
+
+
         [TestMethod]
-        public void TestLegalPlayFalse3()
+        public void TestLegalPlayTrue2()
         {
             Server server = new Server();
             MPlayer p1 = new MPlayer();
-            MPlayer p2 = new MPlayer();
-            MPlayer p3 = new MPlayer();
-            MPlayer p4 = new MPlayer();
             server.AddPlayer(p1, 12, "blue");
-            server.AddPlayer(p2, 10, "green");
-            server.AddPlayer(p3, 20, "pink");
-            server.AddPlayer(p4, 30, "red");
             Tile testTile1 = new Tile(1, new List<int>(8) {
-                0, 1, 2, 3, 4, 5, 6, 7,
-            });
-            Tile testTile2 = new Tile(2, new List<int>(8) {
                 0, 1, 2, 3, 4, 5, 6, 7,
             });
             Tile testTile3 = new Tile(3, new List<int>(8) {
@@ -262,22 +293,48 @@ namespace TsuroTheSecondTests
             Player p_1 = server.alive[0];
             Board board = new Board(6);
             p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
-            p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
+            p_1.Hand = new List<Tile> { testTile1, testTile3 };
+            Assert.IsTrue(server.LegalPlay(p_1, board, testTile3));
+        }
+        [TestMethod]
+        public void TestLegalPlayTrue1_t()
+        {
+            Server server = new Server();
+            MPlayer p1 = new MPlayer();
+
+            server.AddPlayer(p1, 12, "blue");
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
+            Player p_1 = server.alive[0];
+            Board board = new Board(6);
+            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.Hand = new List<Tile> { testTile3 };
+            Assert.IsTrue(server.LegalPlay(p_1, board, testTile3));
+        }
+        [TestMethod]
+        public void TestLegalPlayTrue1_f()
+        {
+            Server server = new Server();
+            MPlayer p1 = new MPlayer();
+
+            server.AddPlayer(p1, 12, "blue");
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+
+            Player p_1 = server.alive[0];
+            Board board = new Board(6);
+            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.Hand = new List<Tile> { testTile1 };
             Assert.IsTrue(server.LegalPlay(p_1, board, testTile1));
         }
-
         [TestMethod]
         public void TestLegalPlayLastResort()
         {
             Server server = new Server();
             MPlayer p1 = new MPlayer();
-            MPlayer p2 = new MPlayer();
-            MPlayer p3 = new MPlayer();
-            MPlayer p4 = new MPlayer();
             server.AddPlayer(p1, 12, "blue");
-            server.AddPlayer(p2, 10, "green");
-            server.AddPlayer(p3, 20, "pink");
-            server.AddPlayer(p4, 30, "red");
             Tile testTile1 = new Tile(1, new List<int>(8) {
                 0, 1, 2, 3, 4, 5, 6, 7,
             });
@@ -293,34 +350,6 @@ namespace TsuroTheSecondTests
             p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             Assert.IsTrue(server.LegalPlay(p_1, board, testTile1));
-        }
-        [TestMethod]
-        public void TestLegalPlayTrue2()
-        {
-            //Server server = new Server();
-            //MPlayer p1 = new MPlayer();
-            //MPlayer p2 = new MPlayer();
-            //MPlayer p3 = new MPlayer();
-            //MPlayer p4 = new MPlayer();
-            //server.AddPlayer(p1, 12, "blue");
-            //server.AddPlayer(p2, 10, "green");
-            //server.AddPlayer(p3, 20, "pink");
-            //server.AddPlayer(p4, 30, "red");
-            //Tile testTile1 = new Tile(1, new List<int>(8) {
-            //    0, 1, 2, 3, 4, 5, 6, 7,
-            //});
-            //Tile testTile2 = new Tile(2, new List<int>(8) {
-            //    0, 1, 2, 3, 4, 5, 6, 7,
-            //});
-            //Tile testTile3 = new Tile(3, new List<int>(8) {
-            //    0, 1, 2, 3, 4, 5, 6, 7,
-            //});
-
-            //Player p_1 = server.alive[0];
-            //Board board = new Board(6);
-            //p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
-            //p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
-            //Assert.IsTrue(server.LegalPlay(p_1, board, testTile1));
         }
 
         [TestMethod]
