@@ -49,13 +49,45 @@ namespace TsuroTheSecond
             return deck;
         }
 
-        Boolean LegalPlay(Player player, Board b, Tile tile) {
+        public Boolean LegalPlay(Player player, Board b, Tile tile) {
             // keep this in for iterating through the loop
             if (tile == null) {
                 return false;
             }
 
-            return (ValidTilePlacement(b, player, tile) && player.TileinHand(tile));
+            if (ValidTilePlacement(b, player, tile) && player.TileinHand(tile)) {
+                return true;    
+            } else {
+                // check hand lengh
+                // if 1, return true;
+                // if 2, try the other one and if legal for that tile, return false else return true;
+                // if 3, try the other two and if both of them are invalid return true;
+                switch (player.Hand.Count) {
+                    case 1:
+                        return true;
+                    case 2:
+                        foreach(Tile other_tile in player.Hand) {
+                            if ( other_tile.id != tile.id ) {
+                                return !(ValidTilePlacement(b, player, tile) && player.TileinHand(tile));
+                            }
+                        }
+                        break;
+                    case 3:
+                        List<bool> other_tiles = new List<bool>();
+                        foreach (Tile other_tile in player.Hand)
+                        {
+                            if (other_tile.id != tile.id)
+                            {
+                                other_tiles.Add(!(ValidTilePlacement(b, player, tile) && player.TileinHand(tile)));
+                            }
+                        }
+
+                        return (other_tiles[0] && other_tiles[1]);
+                    default:
+                        break;
+                }
+            }
+            return false;
         }
 
         Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
