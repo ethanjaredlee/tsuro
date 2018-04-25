@@ -349,7 +349,29 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(1, player2.position[2]);
         }
 
-
+        [TestMethod]
+        public void TestUpdatePositionRotatedTile()
+        {
+            // start at 5, 6 and at port 0
+            MPlayer p_1 = new MPlayer();
+            Player p1 = new Player(p_1, 4, "purple");
+            p1.InitPlayerPosition(new List<int> { 6, 4, 7 });
+            //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
+            Board board = new Board(6);
+            Tile testTile_2 = new Tile(2, new List<int>(8) {
+                4, 7, 0, 6, 1, 3, 5, 2
+            });
+            testTile_2.Rotate();
+            // places a tile that gives direct path up 
+            board.PlaceTile(testTile_2, 5, 4);
+            // move and update position of the player
+            p1.UpdatePosition(board);
+            // check position
+            Assert.IsFalse(p1.IsDead());
+            Assert.AreEqual(p1.position[0], 5);
+            Assert.AreEqual(p1.position[1], 4);
+            Assert.AreEqual(p1.position[2], 0);   
+        }
 
 
 
