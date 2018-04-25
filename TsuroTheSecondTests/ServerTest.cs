@@ -393,18 +393,20 @@ namespace TsuroTheSecondTests
             server.alive[0].Hand.Remove(playTile);
 
             Tile secondTile = new Tile(2, new List<int> { 0, 7, 2, 6, 1, 3, 5, 4 });
-            server.board.PlaceTile(secondTile, 1, 0);
+            server.board.PlaceTile(secondTile, 0, 1);
 
             (List<Tile>, List<Player>, List<Player>, Board, Boolean) playResult = server.PlayATurn(server.deck,
                                                                                                    server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
                                                                                                    playTile);
-            Assert.AreEqual(1, server.alive.Count);
-            Assert.AreEqual(1, server.dead.Count);
+            Assert.AreEqual(2, server.alive.Count);
             // 0th player should move to the end
 
-            //CollectionAssert.AreEqual(new List<int>() { 1, 0, 2 }, server.alive[0].position);
+            Console.WriteLine(server.alive[0].position[0]);
+            Console.WriteLine(server.alive[0].position[1]);
+            Console.WriteLine(server.alive[0].position[2]);
+            CollectionAssert.AreEqual(new List<int>{ 0, 0, 2 }, server.alive[1].position);
         }
 
         [TestMethod]
