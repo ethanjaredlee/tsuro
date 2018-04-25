@@ -101,7 +101,6 @@ namespace TsuroTheSecond
 
             while (recur) {
                 // calculate next x, y from onward
-
                 switch (heading) {
                     case 0:
                         nxt_pos[0] = cur_pos[0];
@@ -127,24 +126,32 @@ namespace TsuroTheSecond
                 // if so, update cur_pos
 
                 try{
-                    nxt_tile = board.tiles[nxt_pos[1]][nxt_pos[0]];
-                } catch(IndexOutOfRangeException) {
+                    Console.WriteLine(nxt_pos[0]);
+                    Console.WriteLine(nxt_pos[1]);
+                    Console.WriteLine(nxt_pos[2]);
+                    nxt_tile = board.tiles[nxt_pos[0]][nxt_pos[1]];
+                } catch(Exception) {
                     recur = false;
                 }
                 if (nxt_tile == null) {
+                    Console.WriteLine(cur_pos[0]);
+                    Console.WriteLine(cur_pos[1]);
+                    Console.WriteLine(cur_pos[2]);
                     recur = false;
                 } else {
                     cur_pos[0] = nxt_pos[0];
                     cur_pos[1] = nxt_pos[1];
                     enter_port = port_table[cur_pos[2]];
                     // find destination port in tile by enterport and update cur_pos
-                    cur_pos[2] = nxt_tile.FindEndofPath(enter_port);
+                    if( recur ){
+                        cur_pos[2] = nxt_tile.FindEndofPath(enter_port);
+                    } else {
+                        cur_pos[2] = enter_port;
+                    }
                     heading = cur_pos[2] / 2;
                 }
             }
-
             this.position = cur_pos;
-
         }
 
         public void AddTiletoHand(Tile tile){
