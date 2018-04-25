@@ -141,8 +141,12 @@ namespace TsuroTheSecond
             return playerAlive;
         }
 
-        void PlayATurn(List<Tile> _deck, List<Player> _alive, List<Player> _dead, Board _board, Tile tile) {
-            
+        public (List<Tile>, List<Player>, List<Player>, Board, Boolean) PlayATurn(List<Tile> _deck, 
+                                                                                  List<Player> _alive, 
+                                                                                  List<Player> _dead, 
+                                                                                  Board _board, 
+                                                                                  Tile tile) 
+        {
             Player currentPlayer = _alive[0];
             currentPlayer.RemoveTilefromHand(tile);
             _board.PlaceTile(tile, currentPlayer.nextTilePosition[0], currentPlayer.nextTilePosition[1]);
@@ -167,6 +171,8 @@ namespace TsuroTheSecond
             }
 
             DrawTile(currentPlayer, _deck);
+
+            return (_deck, _alive, _dead, _board, false);
         }
 
         public void KillPlayer(Player player) {
@@ -211,6 +217,23 @@ namespace TsuroTheSecond
 
         static void Main(string[] args)
         {
+            Server server = new Server();
+            MPlayer p1 = new MPlayer();
+            MPlayer p2 = new MPlayer();
+            server.AddPlayer(p1, 12, "blue");
+            server.AddPlayer(p2, 10, "green");
+
+            Tile playTile = new Tile(1, new List<int> { 0, 7, 1, 2, 3, 4, 5, 6 });
+            server.alive[0].Hand.Remove(playTile);
+
+            server.alive[0].InitPlayerPosition(new List<int> { 0, -1, 5 });
+
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean) playResult = server.PlayATurn(server.deck,
+                                                                                                   server.alive,
+                                                                                                   server.dead,
+                                                                                                   server.board,
+                                                                                                   playTile);
+            Console.WriteLine(server.alive.Count);
         }
     }
 }

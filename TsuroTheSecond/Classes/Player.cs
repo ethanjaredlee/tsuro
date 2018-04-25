@@ -126,9 +126,6 @@ namespace TsuroTheSecond
                 // if so, update cur_pos
 
                 try{
-                    Console.WriteLine(nxt_pos[0]);
-                    Console.WriteLine(nxt_pos[1]);
-                    Console.WriteLine(nxt_pos[2]);
                     nxt_tile = board.tiles[nxt_pos[0]][nxt_pos[1]];
                 } catch(Exception) {
                     recur = false;
