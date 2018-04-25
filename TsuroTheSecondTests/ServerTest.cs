@@ -111,27 +111,28 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestKillPlayer()
         {
-            Server server_2 = new Server();
+            Server server = new Server();
             MPlayer p1 = new MPlayer();
             MPlayer p2 = new MPlayer();
             MPlayer p3 = new MPlayer();
             MPlayer p4 = new MPlayer();
 
-            server_2.AddPlayer(p1, 12, "blue");
-            server_2.AddPlayer(p2, 10, "green");
-            server_2.AddPlayer(p3, 20, "pink");
-            server_2.AddPlayer(p4, 30, "red");
+            server.AddPlayer(p1, 12, "blue");
+            server.AddPlayer(p2, 10, "green");
+            server.AddPlayer(p3, 20, "pink");
+            server.AddPlayer(p4, 30, "red");
 
-            Assert.AreEqual(35, server_2.deck.Count);
-            //server.DrawTile(server.alive[0], server.deck);
-            //Assert.AreEqual(0, server.dead.Count);
-            //Assert.AreEqual(4, server.alive.Count);
-            //Assert.AreEqual(34, server.deck.Count);
+            Assert.AreEqual(0, server.alive[0].Hand.Count);
+            Assert.AreEqual(35, server.deck.Count);
+            server.DrawTile(server.alive[0], server.deck);
+            Assert.AreEqual(0, server.dead.Count);
+            Assert.AreEqual(4, server.alive.Count);
+            Assert.AreEqual(34, server.deck.Count);
 
-            //server.KillPlayer(server.alive[0]);
-            //Assert.AreEqual(1, server.dead.Count);
-            //Assert.AreEqual(3, server.alive.Count);
-            //Assert.AreEqual(35, server.deck.Count);
+            server.KillPlayer(server.alive[0]);
+            Assert.AreEqual(1, server.dead.Count);
+            Assert.AreEqual(3, server.alive.Count);
+            Assert.AreEqual(35, server.deck.Count);
         }
 
         [TestMethod]
@@ -169,6 +170,33 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(1, server.dead.Count);
             Assert.AreEqual(0, server.dragonQueue.Count);
             Assert.AreEqual(2, server.alive[1].Hand.Count);
+        }
+
+        [TestMethod]
+        public void TestKillYourselfWithDragonTile()
+        {
+            Server server = new Server();
+            MPlayer p1 = new MPlayer();
+            MPlayer p2 = new MPlayer();
+            MPlayer p3 = new MPlayer();
+            MPlayer p4 = new MPlayer();
+
+            server.AddPlayer(p1, 12, "blue");
+            server.AddPlayer(p2, 10, "green");
+            server.AddPlayer(p3, 20, "pink");
+            server.AddPlayer(p4, 30, "red");
+
+            server.deck = server.deck.GetRange(0, 5);
+            server.DrawTile(server.alive[0], server.deck);
+            server.DrawTile(server.alive[1], server.deck);
+            server.DrawTile(server.alive[2], server.deck);
+            server.DrawTile(server.alive[3], server.deck);
+            server.DrawTile(server.alive[0], server.deck);
+            // player 1 has the dragon tile
+            server.DrawTile(server.alive[1], server.deck);
+            server.KillPlayer(server.alive[1]);
+            Assert.AreEqual(1, server.deck.Count);
+            Assert.AreEqual(0, server.dragonQueue.Count);
         }
 
         [TestMethod]
