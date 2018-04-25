@@ -353,8 +353,14 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void TestPlayTurn()
+        public void TestPlayTurnAllWin()
         {
+            
+        }
+        [TestMethod]
+        public void TestPlayTurnOneWin()
+        {
+
         }
     }
 }

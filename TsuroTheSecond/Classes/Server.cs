@@ -141,31 +141,24 @@ namespace TsuroTheSecond
             return playerAlive;
         }
 
-        void PlayATurn(List<Tile> deck, List<Player> alive, List<Player> dead, Board board, Tile tile) {
-            //while (alive.Count > 0) {
-            //    Tile chosenTile = null;
-
-            //    while (!LegalPlay(chosenTile)) {
-            //        Player currentPlayer = alive[0];
-            //        chosenTile = currentPlayer.player.chooseTile(board);
-            //    }
-            //}
-            Player currentPlayer = alive[0];
+        void PlayATurn(List<Tile> _deck, List<Player> _alive, List<Player> _dead, Board _board, Tile tile) {
+            
+            Player currentPlayer = _alive[0];
             currentPlayer.RemoveTilefromHand(tile);
-            board.PlaceTile(tile, currentPlayer.nextTilePosition[0], currentPlayer.nextTilePosition[1]);
+            _board.PlaceTile(tile, currentPlayer.nextTilePosition[0], currentPlayer.nextTilePosition[1]);
             List<Player> fatalities = new List<Player>();
-            foreach (Player p in alive) {
+            foreach (Player p in _alive) {
                 p.UpdatePosition(board);
                 if (p.IsDead()) {
                     fatalities.Add(p);
                 }
             }
 
-            if (alive.Count == 1) {
-                WinGame(alive);
+            if (_alive.Count == 1) {
+                WinGame(_alive);
             }
 
-            if (alive.Count == 0) {
+            if (_alive.Count == 0) {
                 WinGame(fatalities);
             }
 
@@ -173,7 +166,7 @@ namespace TsuroTheSecond
                 KillPlayer(p);
             }
 
-            DrawTile(currentPlayer, deck);
+            DrawTile(currentPlayer, _deck);
         }
 
         public void KillPlayer(Player player) {
