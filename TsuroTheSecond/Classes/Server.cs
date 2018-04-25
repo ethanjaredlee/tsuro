@@ -15,6 +15,7 @@ namespace TsuroTheSecond
 
         public Server() {
             // initializes the game
+            dragonQueue = new List<Player>();
             deck = Constants.tiles; // shuffle on server initialization
             alive = new List<Player>();
             dead = new List<Player>();
@@ -107,7 +108,7 @@ namespace TsuroTheSecond
             DrawTile(currentPlayer, deck);
         }
 
-        void KillPlayer(Player player) {
+        public void KillPlayer(Player player) {
             dead.Add(player);
             alive.Remove(player);
 
@@ -132,7 +133,7 @@ namespace TsuroTheSecond
         public void DrawTile(Player player, List<Tile> d) {
             // dragon tile isnt implemented
             // how is this supposed to work with an interface?
-            Console.WriteLine(player.Hand.Count);
+            Console.WriteLine(d.Count);
             if (player.Hand.Count >= 3) {
                 throw new InvalidOperationException("Player can't have more than 3 cards in hand");
             }
@@ -149,15 +150,6 @@ namespace TsuroTheSecond
 
         static void Main(string[] args)
         {
-            Server server = new Server();
-            server.deck = server.deck.GetRange(0, 5);
-            server.DrawTile(server.alive[0], server.deck);
-            server.DrawTile(server.alive[1], server.deck);
-            server.DrawTile(server.alive[2], server.deck);
-            server.DrawTile(server.alive[3], server.deck);
-            server.DrawTile(server.alive[0], server.deck);
-
-            server.DrawTile(server.alive[1], server.deck);
         }
     }
 }
