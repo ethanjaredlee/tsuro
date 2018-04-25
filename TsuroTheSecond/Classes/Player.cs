@@ -13,8 +13,10 @@ namespace TsuroTheSecond
         string color;
         public List<int> nextTilePosition;
         private IPlayer player;
+        public Boolean dragonTile;
 
         public Player(IPlayer p, int _age, string _color) {
+            dragonTile = false;
             Hand = new List<Tile>();
             age = _age;
             color = _color;

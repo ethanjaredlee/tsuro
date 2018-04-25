@@ -11,6 +11,7 @@ namespace TsuroTheSecond
         public List<Player> alive;
         public List<Player> dead;
         public Board board;
+        public List<Player> dragonQueue; // whoever is the first person of the queue has the tile
 
         public Server() {
             // initializes the game
@@ -20,11 +21,12 @@ namespace TsuroTheSecond
             board = new Board(Constants.boardSize);
         }
 
-        //public void InitializeGame(int playerCount) {
-            
-        //}
-
         public void AddPlayer(IPlayer p, int age, string color) {
+            // somehow check that at least 2 players are in teh game?
+
+            if (alive.Count >= 8) {
+                throw new InvalidOperationException("Only 8 players allowed in game");
+            }
             // todo organize alive by age and don't let players pick duplicate colors
             alive.Add(new Player(p, age, color));
         }
@@ -99,11 +101,29 @@ namespace TsuroTheSecond
             }
 
             foreach (Player p in fatalities) {
-                dead.Add(p);
-                alive.Remove(p);
+                KillPlayer(p);
             }
 
             DrawTile(currentPlayer, deck);
+        }
+
+        void KillPlayer(Player player) {
+            dead.Add(player);
+            alive.Remove(player);
+
+            if (dragonQueue.Contains(player)) {
+                dragonQueue.Remove(player);
+            }
+
+            // distribute player hand to whoevers waiting in queue or just add to deck
+            if (player.Hand.Count > 0) {
+                deck.AddRange(player.Hand);
+                int dragonCount = dragonQueue.Count;
+                for (int i = 0; i < dragonCount; i++) {
+                    DrawTile(dragonQueue[i], deck);
+                    dragonQueue.Remove(dragonQueue[i]);
+                }
+            }
         }
 
         public void WinGame(List<Player> winners) {
@@ -117,19 +137,27 @@ namespace TsuroTheSecond
                 throw new InvalidOperationException("Player can't have more than 3 cards in hand");
             }
 
-            Tile t = d[0];
-            d.RemoveAt(0);
-            player.AddTiletoHand(t); 
+            if (deck.Count <= 0) {
+                dragonQueue.Add(player);   
+            } else {
+                Tile t = d[0];
+                d.RemoveAt(0);
+                player.AddTiletoHand(t); 
+            }
+
         }
 
         static void Main(string[] args)
         {
             Server server = new Server();
-            MPlayer p1 = new MPlayer();
-            MPlayer p2 = new MPlayer();
+            server.deck = server.deck.GetRange(0, 5);
+            server.DrawTile(server.alive[0], server.deck);
+            server.DrawTile(server.alive[1], server.deck);
+            server.DrawTile(server.alive[2], server.deck);
+            server.DrawTile(server.alive[3], server.deck);
+            server.DrawTile(server.alive[0], server.deck);
 
-            server.AddPlayer(p1, 12, "blue");
-            server.AddPlayer(p2, 10, "green");
+            server.DrawTile(server.alive[1], server.deck);
         }
     }
 }
