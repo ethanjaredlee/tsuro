@@ -104,7 +104,7 @@ namespace TsuroTheSecond
                     case 2:
                         foreach(Tile other_tile in player.Hand) {
                             if ( other_tile.id != tile.id ) {
-                                return !(ValidTilePlacement(b, player, tile) && player.TileinHand(tile));
+                                return !(ValidTilePlacement(b, player, other_tile) && player.TileinHand(other_tile));
                             }
                         }
                         break;
@@ -114,7 +114,7 @@ namespace TsuroTheSecond
                         {
                             if (other_tile.id != tile.id)
                             {
-                                other_tiles.Add(!(ValidTilePlacement(b, player, tile) && player.TileinHand(tile)));
+                                other_tiles.Add(!(ValidTilePlacement(b, player, other_tile) && player.TileinHand(other_tile)));
                             }
                         }
 
@@ -126,7 +126,7 @@ namespace TsuroTheSecond
             return false;
         }
 
-        Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
+        public Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
             // checks if placing a tile on the board will kill the player 
             Boolean playerAlive = true;
             b.PlaceTile(tile, player.nextTilePosition[0], player.nextTilePosition[1]);
