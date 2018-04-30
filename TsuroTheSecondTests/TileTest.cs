@@ -21,6 +21,27 @@ namespace TsuroTheSecondTests
                 Assert.AreEqual(testTile1.FindEndofPath(tile1_ent_2), testTile2.FindEndofPath(tile1_ent_2));
             }
         }
+        [TestMethod]
+        public void CheckJudgeSymmetric1()
+        {
+            Tile testTile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile testTile2 = new Tile(2, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+
+            testTile1.JudgeSymmetric();
+            Assert.AreEqual(1, testTile1.symmetricity);
+            Assert.AreEqual(testTile1.PathMap(), testTile2.PathMap());
+        }
+        [TestMethod]
+        public void CheckJudgeSymmetric4()
+        {
+            Tile testTile1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Tile testTile2 = new Tile(2, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+
+            testTile1.JudgeSymmetric();
+            Assert.AreEqual(4, testTile1.symmetricity);
+            Assert.AreEqual(testTile1.PathMap(), testTile2.PathMap());
+
+        }
 
     }
 }
