@@ -6,6 +6,7 @@ namespace TsuroTheSecond
     {
         public MPlayer()
         {
+            
         }
 
         public Tile ChooseTile(List<Tile> hand)
