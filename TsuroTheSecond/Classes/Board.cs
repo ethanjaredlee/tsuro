@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace TsuroTheSecond
@@ -17,6 +18,8 @@ namespace TsuroTheSecond
             {
                 tiles.Add(new List<Tile>(new Tile[size]));
             }
+
+            tokenPositions = new Dictionary<string, List<int>>();
         }
 
         public void PlaceTile(Tile tile, int x, int y)
@@ -27,6 +30,26 @@ namespace TsuroTheSecond
 
         public Boolean FreeTokenSpot(List<int> position) {
             return !tokenPositions.ContainsValue(position);
+        }
+
+        public void AddPlayerToken(string color, List<int> position) {
+            // add safety check to make sure tiles arent initialized?
+            // make sure color is in list of acceptable colors?
+
+            if (tokenPositions.ContainsKey(color)) {
+                throw new Exception("Initializing a second player of color " + color);
+            }
+
+            foreach (List<int> pos in tokenPositions.Values) {
+                if (pos.SequenceEqual(position)) {
+                    throw new Exception("Initializing a second player at position " +
+                                        position[0].ToString() + ", " +
+                                        position[1].ToString() + ", " +
+                                        position[2].ToString());
+                }
+            }
+
+            tokenPositions.Add(color, position);
         }
     }
 }

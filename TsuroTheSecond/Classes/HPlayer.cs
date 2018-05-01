@@ -9,10 +9,6 @@ namespace TsuroTheSecond
         {
         }
 
-        public Tile ChooseTile(List<Tile> hand) {
-            return null;
-        }
-
         public String GetName() {
             return null;
         }

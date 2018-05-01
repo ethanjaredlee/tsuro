@@ -6,6 +6,17 @@ namespace TsuroTheSecond
     public class Constants
     {
         public const int boardSize = 6;
+        public static readonly List<string> colors = new List<string>
+        {
+            "blue",
+            "red", 
+            "green",
+            "orange",
+            "sienna",
+            "hotpink",
+            "darkgreen",
+            "purple"
+        };
         // probably want to test this
         public static readonly List<Tile> tiles = new List<Tile>{
             new Tile(1, new List<int>{0, 1, 2, 3, 4, 5, 6, 7}),

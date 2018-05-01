@@ -14,11 +14,6 @@ namespace TsuroTheSecond
             name = _name;
         }
 
-        public Tile ChooseTile(List<Tile> hand)
-        {
-            return null;
-        }
-
         public String GetName()
         {
             return name;
@@ -48,11 +43,18 @@ namespace TsuroTheSecond
 
         public Tile PlayTurn(Board board, List<Tile> hand, int unused)
         {
-            return null;
+            Random random = new Random();
+            int r = random.Next(0, hand.Count);
+            return hand[r];
         }
 
         public void EndGame(Board board, List<string> colors)
         {
+            if (colors.Contains(color)) {
+                Console.WriteLine("You win!");
+            } else {
+                Console.WriteLine("You lose!");
+            }
         }
     }
 }

@@ -58,14 +58,14 @@ namespace TsuroTheSecond
             board = new Board(Constants.boardSize);
         }
 
-        public void AddPlayer(IPlayer p, int age, string color) {
+        public void AddPlayer(IPlayer p, int age) {
             // somehow check that at least 2 players are in teh game?
 
             if (alive.Count >= 8) {
                 throw new InvalidOperationException("Only 8 players allowed in game");
             }
             // todo organize alive by age and don't let players pick duplicate colors
-            alive.Add(new Player(p, age, color));
+            alive.Add(new Player(p, age));
         }
 
         public List<Tile> ShuffleDeck(List<Tile> deck)
@@ -217,23 +217,26 @@ namespace TsuroTheSecond
 
         static void Main(string[] args)
         {
+            // make server
             Server server = new Server();
-            MPlayer p1 = new MPlayer();
-            MPlayer p2 = new MPlayer();
-            server.AddPlayer(p1, 12, "blue");
-            server.AddPlayer(p2, 10, "green");
 
-            Tile playTile = new Tile(1, new List<int> { 0, 7, 1, 2, 3, 4, 5, 6 });
-            server.alive[0].Hand.Remove(playTile);
+            // add players
+            MPlayer1 player1 = new MPlayer1("joe");
+            MPlayer1 player2 = new MPlayer1("bob");
+            server.AddPlayer(player1, 20);
+            server.AddPlayer(player2, 12);
 
-            server.alive[0].InitPlayerPosition(new List<int> { 0, -1, 5 });
+            // init positions of players
 
-            (List<Tile>, List<Player>, List<Player>, Board, Boolean) playResult = server.PlayATurn(server.deck,
-                                                                                                   server.alive,
-                                                                                                   server.dead,
-                                                                                                   server.board,
-                                                                                                   playTile);
-            Console.WriteLine(server.alive.Count);
+            // game loop
+                // pop from alive
+                // player plays turn
+                // checks if its legal
+                // hopefully doesnt loop back and play differnt tile
+                // place tile
+                // move players
+                // check alive/dead and update
+                // add player to end of alive if alivew
         }
     }
 }
