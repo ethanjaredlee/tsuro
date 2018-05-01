@@ -12,10 +12,8 @@ namespace TsuroTheSecond
         public readonly int age;
         public List<int> nextTilePosition;
         private IPlayer player;
-        public Boolean dragonTile;
 
         public Player(IPlayer p, int _age) {
-            dragonTile = false;
             Hand = new List<Tile>();
             age = _age;
             player = p;

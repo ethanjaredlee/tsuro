@@ -11,8 +11,14 @@ namespace TsuroTheSecond
 
         public Tile(int _id, List<int> path)
         {
-            if (path.Count > 8) {
-                Console.WriteLine("Warning: more than 8 ports specified");
+            HashSet<int> pathHashSet = new HashSet<int>(path);
+            if (pathHashSet.Count != 8 || path.Count != 8) {
+                throw new ArgumentException("There must be 8 unique ports specified");
+            }
+
+            List<int> outOfRangePorts = path.Where(x => x > 7 || x < 0).ToList();
+            if (outOfRangePorts.Count > 0) {
+                throw new ArgumentException("Ports must be in range 0 to 7");
             }
 
             id = _id;
@@ -21,11 +27,6 @@ namespace TsuroTheSecond
                 List<int> p = new List<int> { path[i], path[i + 1] };
                 this.paths.Add(p);
             }
-            //for (int i = 0; i < 4; i++) {
-            //    for (int j = 0; j < 2; j++) {
-            //        Console.WriteLine(this.paths[i][j]);
-            //    }
-            //}
         }
 
 
@@ -37,6 +38,10 @@ namespace TsuroTheSecond
         }
 
         public int FindEndofPath(int start) {
+            if (start > 7 || start < 0) {
+                throw new ArgumentException("Start is out of range");
+            }
+
             // find destination port in tile by entering port
             for (int i = 0; i < 4; i++)
             {
@@ -49,7 +54,7 @@ namespace TsuroTheSecond
                     return route[0];
                 }
             }
-            return -1;
+            throw new ArgumentException("Port doesn't exist in tile");
         }
 
         public void PrintMe()
@@ -74,6 +79,7 @@ namespace TsuroTheSecond
             }
             return string.Join("", path_map);
         }
+
         public void JudgeSymmetric() {
             int sym;
             List<Tile> rotatos = new List<Tile>();
