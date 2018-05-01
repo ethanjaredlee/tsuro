@@ -81,8 +81,12 @@ namespace TsuroTheSecond
             {
                 n--;
                 int k = rng.Next(n + 1);
+                int rot = rng.Next(0, 3);
                 Tile tile = deck[k];
                 deck[k] = deck[n];
+                for (int i = 0; i < rot; i++) {
+                    tile.Rotate();
+                }
                 deck[n] = tile;
             }
             return deck;
