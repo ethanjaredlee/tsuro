@@ -9,7 +9,7 @@ namespace TsuroTheSecond
         public List<int> position;
 
         public List<Tile> Hand;
-        int age;
+        public readonly int age;
         public List<int> nextTilePosition;
         private IPlayer player;
         public Boolean dragonTile;

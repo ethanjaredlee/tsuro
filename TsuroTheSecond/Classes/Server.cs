@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 
@@ -66,6 +67,8 @@ namespace TsuroTheSecond
             }
             // todo organize alive by age and don't let players pick duplicate colors
             alive.Add(new Player(p, age));
+            alive = alive.OrderBy(x => x.age).ToList();
+            alive.Reverse();
         }
 
         public List<Tile> ShuffleDeck(List<Tile> deck)
