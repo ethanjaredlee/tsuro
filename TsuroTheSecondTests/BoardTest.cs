@@ -31,5 +31,32 @@ namespace TsuroTheSecondTests
             board.PlaceTile(tile, 1, 1);
             Assert.IsNotNull(board.tiles[1][1]);
         }
+
+        [TestMethod]
+        public void TestAddPlayerToken() {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new List<int> { 0, -1, 5 });
+            board.AddPlayerToken("green", new List<int> { 0, -1, 4 });
+            CollectionAssert.Equals(new List<int> { 0, -1, 5 }, board.tokenPositions["blue"]);
+            CollectionAssert.Equals(new List<int> { 0, -1, 4 }, board.tokenPositions["green"]);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void TestAddDuplicateColorPlayerToken()
+        {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new List<int> { 0, -1, 5 });
+            board.AddPlayerToken("blue", new List<int> { 0, -1, 4 });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void TestAddDuplicatePositionPlayerToken()
+        {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new List<int> { 0, -1, 5 });
+            board.AddPlayerToken("green", new List<int> { 0, -1, 5 });
+        }
     }
 }

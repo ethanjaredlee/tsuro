@@ -28,16 +28,16 @@ namespace TsuroTheSecondTests
         public void TestConstructor()
         {
             MPlayer p_0 = new MPlayer();
-            Player player = new Player(p_0, 4, "red");
+            Player player = new Player(p_0, 4);
             player.InitPlayerPosition(new List<int> { -1, 2, 3 });
             MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 2, "blue");
+            Player player1 = new Player(p_1, 2);
             player1.InitPlayerPosition(new List<int> { 6, 3, 6 });
             MPlayer p_2 = new MPlayer();
-            Player player2 = new Player(p_2, 2, "blues");
+            Player player2 = new Player(p_2, 2);
             player1.InitPlayerPosition(new List<int> { 3, -1, 4 });
             MPlayer p_3 = new MPlayer();
-            Player player3 = new Player(p_3, 2, "blude");
+            Player player3 = new Player(p_3, 2);
             player1.InitPlayerPosition(new List<int> { 5, 6, 0 });
         }
 
@@ -226,7 +226,7 @@ namespace TsuroTheSecondTests
         {
             // takes tile and adds the player to the Hand
             MPlayer machine = new MPlayer();
-            Player p1 = new Player(machine, 1, "blue");
+            Player p1 = new Player(machine, 1);
             Assert.AreEqual(0, p1.Hand.Count);
             p1.AddTiletoHand(testTile1);
             Assert.AreEqual(1, p1.Hand.Count);
@@ -239,7 +239,7 @@ namespace TsuroTheSecondTests
         {
             // start at 5, 6 and at port 0
             MPlayer p_1 = new MPlayer();
-            Player p1 = new Player(p_1, 4, "purple");
+            Player p1 = new Player(p_1, 4);
             p1.InitPlayerPosition(new List<int> { 5, 6, 0 });
             //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
             Board board = new Board(6);
@@ -260,7 +260,7 @@ namespace TsuroTheSecondTests
         public void TestUpdatePositionInductiveCase()
         {
             MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 4, "red");
+            Player player1 = new Player(p_1, 4);
             player1.InitPlayerPosition(new List<int> { 5, 6, 0 });
             // start at 5, 6 and at port 0
             //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
@@ -287,10 +287,10 @@ namespace TsuroTheSecondTests
         public void TestUpdatePositionMultiMove()
         {
             MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 4, "red");
+            Player player1 = new Player(p_1, 4);
             player1.InitPlayerPosition(new List<int> { 5, 6, 0 });
             MPlayer p_2 = new MPlayer();
-            Player player2 = new Player(p_2, 4, "red");
+            Player player2 = new Player(p_2, 4);
             player2.InitPlayerPosition(new List<int> { 6, 4, 6 });
             // start at 5, 6 and at port 0
             //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
@@ -324,10 +324,10 @@ namespace TsuroTheSecondTests
         public void TestUpdatePositionMultiKill()
         {
             MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 4, "red");
+            Player player1 = new Player(p_1, 4);
             player1.InitPlayerPosition(new List<int> { 5, 6, 1 });
             MPlayer p_2 = new MPlayer();
-            Player player2 = new Player(p_2, 4, "red");
+            Player player2 = new Player(p_2, 4);
             player2.InitPlayerPosition(new List<int> { 6, 4, 7 });
             // start at 5, 6 and at port 0
             //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
@@ -361,7 +361,7 @@ namespace TsuroTheSecondTests
         {
             // start at 5, 6 and at port 0
             MPlayer p_1 = new MPlayer();
-            Player p1 = new Player(p_1, 4, "purple");
+            Player p1 = new Player(p_1, 4);
             p1.InitPlayerPosition(new List<int> { 6, 4, 7 });
             //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
             Board board = new Board(6);
@@ -386,7 +386,7 @@ namespace TsuroTheSecondTests
         public void TestInitPlayerPosition()
         {
             MPlayer machine = new MPlayer();
-            Player p1 = new Player(machine, 1, "blue");
+            Player p1 = new Player(machine, 1);
             p1.InitPlayerPosition(new List<int> { 0, -1, 4 });
             CollectionAssert.AreEqual(p1.position, new List<int> { 0, -1, 4 });
         }
