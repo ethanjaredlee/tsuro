@@ -5,7 +5,10 @@ namespace TsuroTheSecond
 {
     public class Board : IBoard
     {
+        // "board describes where tiles are, what orientation they're in, 
+        // where each pawn is, and what color it is" - hw5
         public readonly List<List<Tile>> tiles;
+        public readonly Dictionary<string, List<int>> tokenPositions;
 
         public Board(int size)
         {
@@ -20,6 +23,10 @@ namespace TsuroTheSecond
         {
 
             this.tiles[x][y] = tile;
+        }
+
+        public Boolean FreeTokenSpot(List<int> position) {
+            return !tokenPositions.ContainsValue(position);
         }
     }
 }

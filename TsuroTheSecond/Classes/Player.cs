@@ -27,7 +27,7 @@ namespace TsuroTheSecond
         {
             // port, x, y range check
             // i think? this should be the phantom block. like if we want our player in the very
-            // top left notch, then the initial position is [0, -1, 0]
+            // top left notch, then the initial position is [0, -1, 5]
             if ( (_position[2] < 8 && _position[2] > -1) && ( ((_position[0] == -1) || (_position[0] == 6)) ^ ( (_position[1] == -1) || (_position[1] == 6)) ) ) {
                 position = _position;
             } else {
