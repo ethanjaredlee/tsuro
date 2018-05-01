@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 namespace TsuroTheSecond
 {
@@ -6,6 +7,7 @@ namespace TsuroTheSecond
     {
         public readonly int id;
         public List<List<int>> paths;
+        public int symmetricity;
 
         public Tile(int _id, List<int> path)
         {
@@ -57,6 +59,36 @@ namespace TsuroTheSecond
                 Console.WriteLine(" leads to ");
                 Console.WriteLine(each[1]);
                 Console.WriteLine("\n");
+            }
+        }
+        public string PathMap(){
+            // init all to -1.
+            int[] path_map = Enumerable.Repeat(-1, 8).ToArray();
+            for (int i = 0; i < 8; i++){
+                // check if it's initial
+                if( path_map[i] == -1 ) {
+                    int end_of_i = this.FindEndofPath(i);
+                    path_map[i] = end_of_i;
+                    path_map[end_of_i] = i;
+                }
+            }
+            return string.Join("", path_map);
+        }
+        public void JudgeSymmetric() {
+            int sym;
+            List<Tile> rotatos = new List<Tile>();
+            HashSet<string> rotatos_paths = new HashSet<string>();
+            for (int i = 0; i < 4; i++) {
+                rotatos.Add(this);
+                rotatos_paths.Add(rotatos[i].PathMap());
+                this.Rotate();
+            }
+            sym = rotatos_paths.Count;
+            Console.WriteLine(sym);
+            if (sym == 1 || sym == 2 || sym == 4) {
+                this.symmetricity = sym;
+            } else {
+                throw new System.Exception("symmetricity of a tile can only be 1, 2, or 4");
             }
         }
 

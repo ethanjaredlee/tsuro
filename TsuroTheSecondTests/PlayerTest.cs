@@ -24,15 +24,22 @@ namespace TsuroTheSecondTests
             6, 7, 0, 1, 2, 3, 4, 5,
         });
 
-        //[TestMethod]
-        //public void TestConstructor()
-        //{
-        //    // valid constructor
-        //    Player player = new Player(new List<int> { -1, 2, 3 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Player player1 = new Player(new List<int> { 6, 3, 6 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Player player2 = new Player(new List<int> { 3, -1, 4 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Player player3 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //}
+        [TestMethod]
+        public void TestConstructor()
+        {
+            MPlayer p_0 = new MPlayer();
+            Player player = new Player(p_0, 4, "red");
+            player.InitPlayerPosition(new List<int> { -1, 2, 3 });
+            MPlayer p_1 = new MPlayer();
+            Player player1 = new Player(p_1, 2, "blue");
+            player1.InitPlayerPosition(new List<int> { 6, 3, 6 });
+            MPlayer p_2 = new MPlayer();
+            Player player2 = new Player(p_2, 2, "blues");
+            player1.InitPlayerPosition(new List<int> { 3, -1, 4 });
+            MPlayer p_3 = new MPlayer();
+            Player player3 = new Player(p_3, 2, "blude");
+            player1.InitPlayerPosition(new List<int> { 5, 6, 0 });
+        }
 
         //[TestMethod]
         //[ExpectedException(typeof(ArgumentException),
