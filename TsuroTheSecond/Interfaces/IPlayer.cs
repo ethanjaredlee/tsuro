@@ -4,7 +4,6 @@ namespace TsuroTheSecond
 {
     public interface IPlayer
     {
-        Tile ChooseTile(List<Tile> hand);
         String GetName();
         void Initialize(string color, List<string> other_colors);
         List<int> PlacePawn(Board board);

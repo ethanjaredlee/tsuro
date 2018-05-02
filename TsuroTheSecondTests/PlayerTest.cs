@@ -28,17 +28,17 @@ namespace TsuroTheSecondTests
         public void TestConstructor()
         {
             MPlayer p_0 = new MPlayer();
-            Player player = new Player(p_0, 4, "red");
-            player.InitPlayerPosition(new List<int> { -1, 2, 3 });
+            Player player = new Player(p_0, 4);
+            player.InitPlayerPosition(-1, 2, 3 );
             MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 2, "blue");
-            player1.InitPlayerPosition(new List<int> { 6, 3, 6 });
+            Player player1 = new Player(p_1, 2);
+            player1.InitPlayerPosition( 6, 3, 6 );
             MPlayer p_2 = new MPlayer();
-            Player player2 = new Player(p_2, 2, "blues");
-            player1.InitPlayerPosition(new List<int> { 3, -1, 4 });
+            Player player2 = new Player(p_2, 2);
+            player1.InitPlayerPosition( 3, -1, 4);
             MPlayer p_3 = new MPlayer();
-            Player player3 = new Player(p_3, 2, "blude");
-            player1.InitPlayerPosition(new List<int> { 5, 6, 0 });
+            Player player3 = new Player(p_3, 2);
+            player1.InitPlayerPosition( 5, 6, 0 );
         }
 
         //[TestMethod]
@@ -226,7 +226,7 @@ namespace TsuroTheSecondTests
         {
             // takes tile and adds the player to the Hand
             MPlayer machine = new MPlayer();
-            Player p1 = new Player(machine, 1, "blue");
+            Player p1 = new Player(machine, 1);
             Assert.AreEqual(0, p1.Hand.Count);
             p1.AddTiletoHand(testTile1);
             Assert.AreEqual(1, p1.Hand.Count);
@@ -239,8 +239,8 @@ namespace TsuroTheSecondTests
         {
             // start at 5, 6 and at port 0
             MPlayer p_1 = new MPlayer();
-            Player p1 = new Player(p_1, 4, "purple");
-            p1.InitPlayerPosition(new List<int> { 5, 6, 0 });
+            Player p1 = new Player(p_1, 4);
+            p1.InitPlayerPosition(5, 6, 0);
             //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
             Board board = new Board(6);
             Tile testTile_1 = new Tile(1, new List<int>(8) {
@@ -252,16 +252,16 @@ namespace TsuroTheSecondTests
             p1.UpdatePosition(board);
             // check position
             Assert.IsFalse(p1.IsDead());
-            Assert.AreEqual(p1.position[0], 5);
-            Assert.AreEqual(p1.position[1], 5);
-            Assert.AreEqual(p1.position[2], 1);
+            Assert.AreEqual(p1.position.x, 5);
+            Assert.AreEqual(p1.position.y, 5);
+            Assert.AreEqual(p1.position.port, 1);
         }
         [TestMethod]
         public void TestUpdatePositionInductiveCase()
         {
             MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 4, "red");
-            player1.InitPlayerPosition(new List<int> { 5, 6, 0 });
+            Player player1 = new Player(p_1, 4);
+            player1.InitPlayerPosition(5, 6, 0);
             // start at 5, 6 and at port 0
             //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
             Board board = new Board(6);
@@ -278,20 +278,20 @@ namespace TsuroTheSecondTests
             player1.UpdatePosition(board);
             // check position
             Assert.IsFalse(player1.IsDead());
-            Assert.AreEqual(5, player1.position[0]);
-            Assert.AreEqual(7, player1.position[2]);
-            Assert.AreEqual(4, player1.position[1]);
+            Assert.AreEqual(5, player1.position.x);
+            Assert.AreEqual(7, player1.position.port);
+            Assert.AreEqual(4, player1.position.y);
         }
 
         [TestMethod]
         public void TestUpdatePositionMultiMove()
         {
             MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 4, "red");
-            player1.InitPlayerPosition(new List<int> { 5, 6, 0 });
+            Player player1 = new Player(p_1, 4);
+            player1.InitPlayerPosition(5, 6, 0 );
             MPlayer p_2 = new MPlayer();
-            Player player2 = new Player(p_2, 4, "red");
-            player2.InitPlayerPosition(new List<int> { 6, 4, 6 });
+            Player player2 = new Player(p_2, 4);
+            player2.InitPlayerPosition(6, 4, 6 );
             // start at 5, 6 and at port 0
             //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
             Board board = new Board(6);
@@ -309,26 +309,26 @@ namespace TsuroTheSecondTests
             player2.UpdatePosition(board);
             // check position
             Assert.IsFalse(player1.IsDead());
-            Assert.AreEqual(5, player1.position[0]);
-            Assert.AreEqual(4, player1.position[1]);
-            Assert.AreEqual(7, player1.position[2]);
+            Assert.AreEqual(5, player1.position.x);
+            Assert.AreEqual(4, player1.position.y);
+            Assert.AreEqual(7, player1.position.port);
 
 
             Assert.IsFalse(player2.IsDead());
-            Assert.AreEqual(5, player2.position[0]);
-            Assert.AreEqual(4, player2.position[1]);
-            Assert.AreEqual(1, player2.position[2]);
+            Assert.AreEqual(5, player2.position.x);
+            Assert.AreEqual(4, player2.position.y);
+            Assert.AreEqual(1, player2.position.port);
         }
 
         [TestMethod]
         public void TestUpdatePositionMultiKill()
         {
             MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 4, "red");
-            player1.InitPlayerPosition(new List<int> { 5, 6, 1 });
+            Player player1 = new Player(p_1, 4);
+            player1.InitPlayerPosition(5, 6, 1);
             MPlayer p_2 = new MPlayer();
-            Player player2 = new Player(p_2, 4, "red");
-            player2.InitPlayerPosition(new List<int> { 6, 4, 7 });
+            Player player2 = new Player(p_2, 4);
+            player2.InitPlayerPosition(6, 4, 7);
             // start at 5, 6 and at port 0
             //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
             Board board = new Board(6);
@@ -346,14 +346,14 @@ namespace TsuroTheSecondTests
             player2.UpdatePosition(board);
             // check position
             Assert.IsTrue(player1.IsDead());
-            Assert.AreEqual(6, player1.position[0]);
-            Assert.AreEqual(4, player1.position[1]);
-            Assert.AreEqual(7, player1.position[2]);
+            Assert.AreEqual(6, player1.position.x);
+            Assert.AreEqual(4, player1.position.y);
+            Assert.AreEqual(7, player1.position.port);
 
             Assert.IsTrue(player2.IsDead());
-            Assert.AreEqual(5, player2.position[0]);
-            Assert.AreEqual(6, player2.position[1]);
-            Assert.AreEqual(1, player2.position[2]);
+            Assert.AreEqual(5, player2.position.x);
+            Assert.AreEqual(6, player2.position.y);
+            Assert.AreEqual(1, player2.position.port);
         }
 
         [TestMethod]
@@ -361,8 +361,8 @@ namespace TsuroTheSecondTests
         {
             // start at 5, 6 and at port 0
             MPlayer p_1 = new MPlayer();
-            Player p1 = new Player(p_1, 4, "purple");
-            p1.InitPlayerPosition(new List<int> { 6, 4, 7 });
+            Player p1 = new Player(p_1, 4);
+            p1.InitPlayerPosition(6, 4, 7 );
             //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
             Board board = new Board(6);
             Tile testTile_2 = new Tile(2, new List<int>(8) {
@@ -375,9 +375,9 @@ namespace TsuroTheSecondTests
             p1.UpdatePosition(board);
             // check position
             Assert.IsFalse(p1.IsDead());
-            Assert.AreEqual(p1.position[0], 5);
-            Assert.AreEqual(p1.position[1], 4);
-            Assert.AreEqual(p1.position[2], 0);   
+            Assert.AreEqual(p1.position.x, 5);
+            Assert.AreEqual(p1.position.y, 4);
+            Assert.AreEqual(p1.position.port, 0);   
         }
 
 
@@ -386,9 +386,11 @@ namespace TsuroTheSecondTests
         public void TestInitPlayerPosition()
         {
             MPlayer machine = new MPlayer();
-            Player p1 = new Player(machine, 1, "blue");
-            p1.InitPlayerPosition(new List<int> { 0, -1, 4 });
-            CollectionAssert.AreEqual(p1.position, new List<int> { 0, -1, 4 });
+            Player p1 = new Player(machine, 1);
+            p1.InitPlayerPosition(0, -1, 4);
+            Assert.AreEqual(0, p1.position.x);
+            Assert.AreEqual(-1, p1.position.y);
+            Assert.AreEqual(4, p1.position.port);
         }
 
         //[TestMethod]

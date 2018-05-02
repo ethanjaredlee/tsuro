@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 
@@ -16,61 +17,27 @@ namespace TsuroTheSecond
         public Server() {
             // initializes the game
             dragonQueue = new List<Player>();
-            deck = new List<Tile>{
-                new Tile(1, new List<int>{0, 1, 2, 3, 4, 5, 6, 7}),
-                new Tile(2, new List<int>{0, 1, 2, 4, 3, 6, 5, 7}),
-                new Tile(3, new List<int>{0, 6, 1, 5, 2, 4, 3, 7}),
-                new Tile(4, new List<int>{0, 5, 1, 4, 2, 7, 3, 6}),
-                new Tile(5, new List<int>{0, 2, 1, 4, 3, 7, 5, 6}),
-                new Tile(6, new List<int>{0, 4, 1, 7, 2, 3, 5, 6}),
-                new Tile(7, new List<int>{0, 1, 2, 6, 3, 7, 4, 5}),
-                new Tile(8, new List<int>{0, 2, 1, 6, 3, 7, 4, 5}),
-                new Tile(9, new List<int>{0, 4, 1, 5, 2, 6, 3, 7}),
-                new Tile(10, new List<int>{0, 1, 2, 7, 3, 4, 5, 6}),
-                new Tile(11, new List<int>{0, 2, 1, 7, 3, 4, 5, 6}),
-                new Tile(12, new List<int>{0, 3, 1, 5, 2, 7, 4, 6}),
-                new Tile(13, new List<int>{0, 4, 1, 3, 2, 7, 5, 6}),
-                new Tile(14, new List<int>{0, 3, 1, 7, 2, 6, 4, 5}),
-                new Tile(15, new List<int>{0, 1, 2, 5, 3, 6, 4, 7}),
-                new Tile(16, new List<int>{0, 3, 1, 6, 2, 5, 4, 7}),
-                new Tile(17, new List<int>{0, 1, 2, 7, 3, 5, 4, 6}),
-                new Tile(18, new List<int>{0, 7, 1, 6, 2, 3, 4, 5}),
-                new Tile(19, new List<int>{0, 7, 1, 2, 3, 4, 5, 6}),
-                new Tile(20, new List<int>{0, 2, 1, 4, 3, 6, 5, 7}),
-                new Tile(21, new List<int>{0, 7, 1, 3, 2, 5, 4, 6}),
-                new Tile(22, new List<int>{0, 7, 1, 5, 2, 6, 3, 4}),
-                new Tile(23, new List<int>{0, 4, 1, 5, 2, 7, 3, 6}),
-                new Tile(24, new List<int>{0, 1, 2, 4, 3, 5, 6, 7}),
-                new Tile(25, new List<int>{0, 2, 1, 7, 3, 5, 4, 6}),
-                new Tile(26, new List<int>{0, 7, 1, 5, 2, 3, 4, 6}),
-                new Tile(27, new List<int>{0, 4, 1, 3, 2, 6, 5, 7}),
-                new Tile(28, new List<int>{0, 6, 1, 3, 2, 5, 4, 7}),
-                new Tile(29, new List<int>{0, 1, 2, 7, 3, 6, 4, 5}),
-                new Tile(30, new List<int>{0, 3, 1, 2, 4, 6, 5, 7}),
-                new Tile(31, new List<int>{0, 3, 1, 5, 2, 6, 4, 7}),
-                new Tile(32, new List<int>{0, 7, 1, 6, 2, 5, 3, 4}),
-                new Tile(33, new List<int>{0, 2, 1, 3, 4, 6, 5, 7}),
-                new Tile(34, new List<int>{0, 5, 1, 6, 2, 7, 3, 4}),
-                new Tile(35, new List<int>{0, 5, 1, 3, 2, 6, 4, 7})
-            };
+            deck = new List<Tile>(Constants.tiles);
             alive = new List<Player>();
             dead = new List<Player>();
             board = new Board(Constants.boardSize);
         }
 
-        public void AddPlayer(IPlayer p, int age, string color) {
+        public void AddPlayer(IPlayer p, int age) {
             // somehow check that at least 2 players are in teh game?
 
             if (alive.Count >= 8) {
                 throw new InvalidOperationException("Only 8 players allowed in game");
             }
             // todo organize alive by age and don't let players pick duplicate colors
-            alive.Add(new Player(p, age, color));
+            alive.Add(new Player(p, age));
+            alive = alive.OrderBy(x => x.age).ToList();
+            alive.Reverse();
         }
 
         public List<Tile> ShuffleDeck(List<Tile> deck)
         {
-            // doesnt quite work the way i want it to yet
+            // doesnt quite work the way we want it to yet
             List<Tile> shuffledDeck = new List<Tile>(new Tile[deck.Count]);
             Random rng = new Random();
             int n = deck.Count;
@@ -78,8 +45,12 @@ namespace TsuroTheSecond
             {
                 n--;
                 int k = rng.Next(n + 1);
+                int rot = rng.Next(0, 3);
                 Tile tile = deck[k];
                 deck[k] = deck[n];
+                for (int i = 0; i < rot; i++) {
+                    tile.Rotate();
+                }
                 deck[n] = tile;
             }
             return deck;
@@ -90,7 +61,6 @@ namespace TsuroTheSecond
             if (tile == null) {
                 return false;
             }
-
             if (ValidTilePlacement(b, player, tile) && player.TileinHand(tile)) {
                 return true;    
             } else {
@@ -102,9 +72,11 @@ namespace TsuroTheSecond
                     case 1:
                         return true;
                     case 2:
-                        foreach(Tile other_tile in player.Hand) {
-                            if ( other_tile.id != tile.id ) {
-                                return !(ValidTilePlacement(b, player, tile) && player.TileinHand(tile));
+                        foreach(Tile other_tile in player.Hand) 
+                        {
+                            if ( other_tile.id != tile.id ) 
+                            {
+                                return !(ValidTilePlacement(b, player, other_tile) && player.TileinHand(other_tile));
                             }
                         }
                         break;
@@ -114,7 +86,7 @@ namespace TsuroTheSecond
                         {
                             if (other_tile.id != tile.id)
                             {
-                                other_tiles.Add(!(ValidTilePlacement(b, player, tile) && player.TileinHand(tile)));
+                                other_tiles.Add(!(ValidTilePlacement(b, player, other_tile) && player.TileinHand(other_tile)));
                             }
                         }
 
@@ -126,18 +98,19 @@ namespace TsuroTheSecond
             return false;
         }
 
-        Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
+        public Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
             // checks if placing a tile on the board will kill the player 
             Boolean playerAlive = true;
-            b.PlaceTile(tile, player.nextTilePosition[0], player.nextTilePosition[1]);
-            List<int> origPosition = new List<int>(player.position);
+            var origNext = player.position.WhatNext();
+            b.PlaceTile(tile, origNext.Item1, origNext.Item2);
+            Position origPosition = player.position;
             player.UpdatePosition(b);
 
             playerAlive = !player.IsDead();
 
             // undoing changes to the board
-            b.PlaceTile(null, player.nextTilePosition[0], player.nextTilePosition[1]);
-            player.position = new List<int>(origPosition);
+            b.PlaceTile(null, origNext.Item1, origNext.Item2);
+            player.position = origPosition;
             return playerAlive;
         }
 
@@ -149,7 +122,8 @@ namespace TsuroTheSecond
         {
             Player currentPlayer = _alive[0];
             currentPlayer.RemoveTilefromHand(tile);
-            _board.PlaceTile(tile, currentPlayer.nextTilePosition[0], currentPlayer.nextTilePosition[1]);
+            var next = currentPlayer.position.WhatNext();
+            _board.PlaceTile(tile, next.Item1, next.Item2);
             List<Player> fatalities = new List<Player>();
             foreach (Player p in _alive) {
                 p.UpdatePosition(board);
@@ -172,6 +146,7 @@ namespace TsuroTheSecond
 
             DrawTile(currentPlayer, _deck);
 
+            // fix this shouldnt return false
             return (_deck, _alive, _dead, _board, false);
         }
 
@@ -198,7 +173,6 @@ namespace TsuroTheSecond
         }
 
         public void DrawTile(Player player, List<Tile> d) {
-            // dragon tile isnt implemented
             // how is this supposed to work with an interface?
             Console.WriteLine(d.Count);
             if (player.Hand.Count >= 3) {
@@ -217,23 +191,26 @@ namespace TsuroTheSecond
 
         static void Main(string[] args)
         {
+            // make server
             Server server = new Server();
-            MPlayer p1 = new MPlayer();
-            MPlayer p2 = new MPlayer();
-            server.AddPlayer(p1, 12, "blue");
-            server.AddPlayer(p2, 10, "green");
 
-            Tile playTile = new Tile(1, new List<int> { 0, 7, 1, 2, 3, 4, 5, 6 });
-            server.alive[0].Hand.Remove(playTile);
+            // add players
+            MPlayer1 player1 = new MPlayer1("joe");
+            MPlayer1 player2 = new MPlayer1("bob");
+            server.AddPlayer(player1, 20);
+            server.AddPlayer(player2, 12);
 
-            server.alive[0].InitPlayerPosition(new List<int> { 0, -1, 5 });
+            // init positions of players
 
-            (List<Tile>, List<Player>, List<Player>, Board, Boolean) playResult = server.PlayATurn(server.deck,
-                                                                                                   server.alive,
-                                                                                                   server.dead,
-                                                                                                   server.board,
-                                                                                                   playTile);
-            Console.WriteLine(server.alive.Count);
+            // game loop
+                // pop from alive
+                // player plays turn
+                // checks if its legal
+                // hopefully doesnt loop back and play differnt tile
+                // place tile
+                // move players
+                // check alive/dead and update
+                // add player to end of alive if alivew
         }
     }
 }

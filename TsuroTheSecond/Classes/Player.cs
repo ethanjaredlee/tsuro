@@ -6,83 +6,24 @@ namespace TsuroTheSecond
 {
     public class Player
     {
-        public List<int> position;
-
+        public Position position;
         public List<Tile> Hand;
-        int age;
-        string color;
-        public List<int> nextTilePosition;
+        public readonly int age;
         private IPlayer player;
-        public Boolean dragonTile;
 
-        public Player(IPlayer p, int _age, string _color) {
-            dragonTile = false;
+        public Player(IPlayer p, int _age) {
             Hand = new List<Tile>();
             age = _age;
-            color = _color;
             player = p;
         }
+        public void InitPlayerPosition(int x, int y, int port){
+            position = new Position(x, y, port);
 
-        public void InitPlayerPosition(List<int> _position)
-        {
-            // port, x, y range check
-            // i think? this should be the phantom block. like if we want our player in the very
-            // top left notch, then the initial position is [0, -1, 0]
-            if ( (_position[2] < 8 && _position[2] > -1) && ( ((_position[0] == -1) || (_position[0] == 6)) ^ ( (_position[1] == -1) || (_position[1] == 6)) ) ) {
-                position = _position;
-            } else {
-                throw new ArgumentException("Illegal position to initialize player", "_position");
-            }
-            // invalid _onward
-            int onward = position[2] / 2;
-            nextTilePosition = new List<int> { position[0], position[1] };
-            switch(onward) {
-                case 0:
-                    // onward is the tile above
-                    if (_position[1] == 6) { }
-                    else { throw new ArgumentException("Illegal port and xy combination"); }
-                    nextTilePosition[1] -= 1;
-                    if (nextTilePosition[1] < 0) {
-                        throw new ArgumentException("I think the player is dead?");
-                    }
-                    break;
-                case 1:
-                    if (_position[0] == -1) { }
-                    else { throw new ArgumentException("Illegal port and xy combination"); }
-                    // onward is the tile to the right
-                    nextTilePosition[0] += 1;
-                    if (nextTilePosition[0] > Constants.boardSize - 1)
-                    {
-                        throw new ArgumentException("I think the player is dead?");
-                    }
-                    break;
-                case 2:
-                    if (_position[1] == -1) { }
-                    else { throw new ArgumentException("Illegal port and xy combination"); }
-                    // onward is the tile below
-                    nextTilePosition[1] += 1;
-                    if (nextTilePosition[1] > Constants.boardSize - 1)
-                    {
-                        throw new ArgumentException("I think the player is dead?");
-                    }
-                    break;
-                case 3:
-                    if (_position[0] == 6) { }
-                    else { throw new ArgumentException("Illegal port and xy combination"); }
-                    // onward is the tile to the left
-                    nextTilePosition[0] -= 1;
-                    if (nextTilePosition[0] < 0)
-                    {
-                        throw new ArgumentException("I think the player is dead?");
-                    }
-                    break;
-                default:
-                    throw new ArgumentException("Illegal onward value", "_onward");
-            }
-        }   
+        }
+
 
         public Boolean IsDead() {
-            if ( (this.position[0] < 0) || (this.position[0] > 5) || (this.position[1] < 0) || (this.position[1] > 5) ) {
+            if ( (this.position.x < 0) || (this.position.x > 5) || (this.position.y < 0) || (this.position.y > 5) ) {
                 return true;
             } else {
                 return false;
@@ -90,33 +31,32 @@ namespace TsuroTheSecond
         }
 
         public void UpdatePosition(Board board){
-            List<int> cur_pos = new List<int>(3){0, 0, 0};
+            Position cur_pos = this.position;
             List<int> nxt_pos = new List<int>(3){0, 0, 0};
             int[] port_table = new int[]{5, 4, 7, 6, 1, 0, 3, 2};
             Tile nxt_tile = null;
             int enter_port, heading;
             bool recur = true;
-            cur_pos = this.position;
-            heading = cur_pos[2]/2;
+            heading = cur_pos.port/2;
 
             while (recur) {
                 // calculate next x, y from onward
                 switch (heading) {
                     case 0:
-                        nxt_pos[0] = cur_pos[0];
-                        nxt_pos[1] = cur_pos[1] - 1;
+                        nxt_pos[0] = cur_pos.x;
+                        nxt_pos[1] = cur_pos.y - 1;
                         break;
                     case 1:
-                        nxt_pos[0] = cur_pos[0] + 1;
-                        nxt_pos[1] = cur_pos[1];
+                        nxt_pos[0] = cur_pos.x + 1;
+                        nxt_pos[1] = cur_pos.y;
                         break;
                     case 2:
-                        nxt_pos[0] = cur_pos[0];
-                        nxt_pos[1] = cur_pos[1] + 1;
+                        nxt_pos[0] = cur_pos.x;
+                        nxt_pos[1] = cur_pos.y + 1;
                         break;
                     case 3:
-                        nxt_pos[0] = cur_pos[0] - 1;
-                        nxt_pos[1] = cur_pos[1];
+                        nxt_pos[0] = cur_pos.x - 1;
+                        nxt_pos[1] = cur_pos.y;
                         break;
                     default:
                         break;
@@ -131,21 +71,18 @@ namespace TsuroTheSecond
                     recur = false;
                 }
                 if (nxt_tile == null) {
-                    Console.WriteLine(cur_pos[0]);
-                    Console.WriteLine(cur_pos[1]);
-                    Console.WriteLine(cur_pos[2]);
                     recur = false;
                 } else {
-                    cur_pos[0] = nxt_pos[0];
-                    cur_pos[1] = nxt_pos[1];
-                    enter_port = port_table[cur_pos[2]];
+                    cur_pos.x = nxt_pos[0];
+                    cur_pos.y = nxt_pos[1];
+                    enter_port = port_table[cur_pos.port];
                     // find destination port in tile by enterport and update cur_pos
                     if( recur ){
-                        cur_pos[2] = nxt_tile.FindEndofPath(enter_port);
+                        cur_pos.port = nxt_tile.FindEndofPath(enter_port);
                     } else {
-                        cur_pos[2] = enter_port;
+                        cur_pos.port = enter_port;
                     }
-                    heading = cur_pos[2] / 2;
+                    heading = cur_pos.port / 2;
                 }
             }
             this.position = cur_pos;
