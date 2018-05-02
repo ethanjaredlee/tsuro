@@ -61,7 +61,6 @@ namespace TsuroTheSecond
             if (tile == null) {
                 return false;
             }
-
             if (ValidTilePlacement(b, player, tile) && player.TileinHand(tile)) {
                 return true;    
             } else {
@@ -73,8 +72,10 @@ namespace TsuroTheSecond
                     case 1:
                         return true;
                     case 2:
-                        foreach(Tile other_tile in player.Hand) {
-                            if ( other_tile.id != tile.id ) {
+                        foreach(Tile other_tile in player.Hand) 
+                        {
+                            if ( other_tile.id != tile.id ) 
+                            {
                                 return !(ValidTilePlacement(b, player, other_tile) && player.TileinHand(other_tile));
                             }
                         }
@@ -100,15 +101,17 @@ namespace TsuroTheSecond
         public Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
             // checks if placing a tile on the board will kill the player 
             Boolean playerAlive = true;
+            int todo_x = player.nextTilePosition[0];
+            int todo_y = player.nextTilePosition[1];
             b.PlaceTile(tile, player.nextTilePosition[0], player.nextTilePosition[1]);
-            List<int> origPosition = new List<int>(player.position);
+            Position origPosition = player.position;
             player.UpdatePosition(b);
 
             playerAlive = !player.IsDead();
 
             // undoing changes to the board
-            b.PlaceTile(null, player.nextTilePosition[0], player.nextTilePosition[1]);
-            player.position = new List<int>(origPosition);
+            b.PlaceTile(null, todo_x, todo_y);
+            player.position = origPosition;
             return playerAlive;
         }
 

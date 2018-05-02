@@ -150,7 +150,7 @@ namespace TsuroTheSecondTests
         public void TestValidTilePlacement() {
             AddFourPlayers();
 
-            server.alive[0].InitPlayerPosition(new List<int> { 4, 6, 0 });
+            server.alive[0].InitPlayerPosition(4, 6, 0);
             Tile testTile = new Tile(1, new List<int> { 1, 2, 3, 4, 5, 6, 7, 0 });
             Assert.IsTrue(server.ValidTilePlacement(server.board, server.alive[0], testTile));
         }
@@ -160,7 +160,7 @@ namespace TsuroTheSecondTests
         {
             AddFourPlayers();
 
-            server.alive[0].InitPlayerPosition(new List<int> { 4, 6, 0 });
+            server.alive[0].InitPlayerPosition(4, 6, 0 );
             Tile testTile = new Tile(1, new List<int> {0, 1, 2, 3, 4, 5, 6, 7});
             Assert.IsFalse(server.ValidTilePlacement(server.board, server.alive[0], testTile));
         }
@@ -257,7 +257,7 @@ namespace TsuroTheSecondTests
             });
 
             Player p_1 = server.alive[0];
-            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.InitPlayerPosition(4, 6, 0 );
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             Boolean legalPlay = server.LegalPlay(p_1, server.board, testTile1);
             Tile checkTile1 = new Tile(1, new List<int>(8) {
@@ -287,7 +287,7 @@ namespace TsuroTheSecondTests
             });
 
             Player p_1 = server.alive[0];
-            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.InitPlayerPosition(4, 6, 0);
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             Boolean legalPlay = server.LegalPlay(p_1, server.board, testTile1);
 
@@ -311,7 +311,7 @@ namespace TsuroTheSecondTests
 
             Player p_1 = server.alive[0];
             Board board = new Board(6);
-            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.InitPlayerPosition(4, 6, 0 );
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             Assert.IsFalse(server.LegalPlay(p_1, board, testTile1));
         }
@@ -329,7 +329,7 @@ namespace TsuroTheSecondTests
 
             Player p_1 = server.alive[0];
             Board board = new Board(6);
-            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.InitPlayerPosition(4, 6, 0 );
             p_1.Hand = new List<Tile> { testTile1, testTile3 };
             Assert.IsFalse(server.LegalPlay(p_1, board, testTile1));
         }
@@ -351,7 +351,7 @@ namespace TsuroTheSecondTests
 
             Player p_1 = server.alive[0];
             Board board = new Board(6);
-            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.InitPlayerPosition(4, 6, 0 );
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             Assert.IsTrue(server.LegalPlay(p_1, board, testTile3));
         }
@@ -371,7 +371,7 @@ namespace TsuroTheSecondTests
 
             Player p_1 = server.alive[0];
             Board board = new Board(6);
-            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.InitPlayerPosition(4, 6, 0 );
             p_1.Hand = new List<Tile> { testTile1, testTile3 };
             Assert.IsTrue(server.LegalPlay(p_1, board, testTile3));
         }
@@ -385,7 +385,7 @@ namespace TsuroTheSecondTests
             });
             Player p_1 = server.alive[0];
             Board board = new Board(6);
-            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.InitPlayerPosition(4, 6, 0);
             p_1.Hand = new List<Tile> { testTile3 };
             Assert.IsTrue(server.LegalPlay(p_1, board, testTile3));
         }
@@ -400,7 +400,7 @@ namespace TsuroTheSecondTests
 
             Player p_1 = server.alive[0];
             Board board = new Board(6);
-            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.InitPlayerPosition(4, 6, 0);
             p_1.Hand = new List<Tile> { testTile1 };
             Assert.IsTrue(server.LegalPlay(p_1, board, testTile1));
         }
@@ -421,7 +421,7 @@ namespace TsuroTheSecondTests
 
             Player p_1 = server.alive[0];
             Board board = new Board(6);
-            p_1.InitPlayerPosition(new List<int> { 4, 6, 0 });
+            p_1.InitPlayerPosition(4, 6, 0);
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             Assert.IsTrue(server.LegalPlay(p_1, board, testTile1));
         }
@@ -434,8 +434,8 @@ namespace TsuroTheSecondTests
             Tile playTile = new Tile(1, new List<int>{0, 7, 1, 2, 3, 4, 5, 6});
             server.alive[0].Hand.Remove(playTile);
 
-            server.alive[0].InitPlayerPosition(new List<int>{0, -1, 5});
-            server.alive[1].InitPlayerPosition(new List<int>{ 0, -1, 4 });
+            server.alive[0].InitPlayerPosition(0, -1, 5);
+            server.alive[1].InitPlayerPosition(0, -1, 4);
              
             (List<Tile>, List<Player>, List<Player>, Board, Boolean) playResult = server.PlayATurn(server.deck, 
                                                                                                    server.alive, 
@@ -444,7 +444,10 @@ namespace TsuroTheSecondTests
                                                                                                    playTile);
             Assert.AreEqual(1, server.alive.Count);
             Assert.AreEqual(1, server.dead.Count);
-            CollectionAssert.AreEqual(new List<int> { 0, 0, 2 }, server.alive[0].position);
+            Assert.AreEqual(0, server.alive[0].position.x);
+            Assert.AreEqual(0, server.alive[0].position.y);
+            Assert.AreEqual(2, server.alive[0].position.port);
+           
         }
 
         [TestMethod]
@@ -452,8 +455,8 @@ namespace TsuroTheSecondTests
         {
             AddTwoPlayers();
 
-            server.alive[0].InitPlayerPosition(new List<int> { 0, -1, 5 });
-            server.alive[1].InitPlayerPosition(new List<int> { 0, -1, 4 });
+            server.alive[0].InitPlayerPosition(0, -1, 5 );
+            server.alive[1].InitPlayerPosition(0, -1, 4 );
 
             Tile playTile = new Tile(1, new List<int> { 0, 4, 1, 2, 3, 5, 6, 7 });
             server.alive[0].Hand.Remove(playTile);
@@ -468,7 +471,9 @@ namespace TsuroTheSecondTests
                                                                                                    playTile);
             Assert.AreEqual(2, server.alive.Count);
             // 0th player should move to the end
-            CollectionAssert.AreEqual(new List<int>{ 0, 0, 2 }, server.alive[1].position);
+            Assert.AreEqual(0, server.alive[1].position.x);
+            Assert.AreEqual(0, server.alive[1].position.y);
+            Assert.AreEqual(2, server.alive[1].position.port);
         }
 
         [TestMethod]
