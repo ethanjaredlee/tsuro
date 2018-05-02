@@ -23,16 +23,23 @@ namespace TsuroTheSecond
             board = new Board(Constants.boardSize);
         }
 
-        public void AddPlayer(IPlayer p, int age) {
+        public void AddPlayer(IPlayer p, string color) {
+            if (!Constants.colors.Contains(color)) {
+                throw new ArgumentException("Invalid color");
+            }
+
+            List<string> colors = alive.Select(x => x.Color).ToList();
+            if (colors.Contains(color)) {
+                throw new ArgumentException("Duplicate color");
+            }
+
             // somehow check that at least 2 players are in teh game?
 
             if (alive.Count >= 8) {
                 throw new InvalidOperationException("Only 8 players allowed in game");
             }
             // todo organize alive by age and don't let players pick duplicate colors
-            alive.Add(new Player(p, age));
-            alive = alive.OrderBy(x => x.age).ToList();
-            alive.Reverse();
+            alive.Add(new Player(p, color));
         }
 
         public List<Tile> ShuffleDeck(List<Tile> deck)
@@ -101,16 +108,17 @@ namespace TsuroTheSecond
         public Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
             // checks if placing a tile on the board will kill the player 
             Boolean playerAlive = true;
-            var origNext = player.position.WhatNext();
+            var origNext = b.ReturnNextSpot(player);
             b.PlaceTile(tile, origNext.Item1, origNext.Item2);
-            Position origPosition = player.position;
-            player.UpdatePosition(b);
+            Position origPosition = b.ReturnPlayerSpot(player);
+            b.MovePlayer(player);
 
-            playerAlive = !player.IsDead();
+            //playerAlive = !player.IsDead();
+            playerAlive = !b.IsDead(player);
 
             // undoing changes to the board
             b.PlaceTile(null, origNext.Item1, origNext.Item2);
-            player.position = origPosition;
+            b.tokenPositions[player.Color] = origPosition;
             return playerAlive;
         }
 
@@ -122,12 +130,13 @@ namespace TsuroTheSecond
         {
             Player currentPlayer = _alive[0];
             currentPlayer.RemoveTilefromHand(tile);
-            var next = currentPlayer.position.WhatNext();
+            var next = _board.ReturnNextSpot(currentPlayer);
             _board.PlaceTile(tile, next.Item1, next.Item2);
+
             List<Player> fatalities = new List<Player>();
             foreach (Player p in _alive) {
-                p.UpdatePosition(board);
-                if (p.IsDead()) {
+                _board.MovePlayer(p);
+                if (_board.IsDead(p)) {
                     fatalities.Add(p);
                 }
             }
@@ -195,10 +204,6 @@ namespace TsuroTheSecond
             Server server = new Server();
 
             // add players
-            MPlayer1 player1 = new MPlayer1("joe");
-            MPlayer1 player2 = new MPlayer1("bob");
-            server.AddPlayer(player1, 20);
-            server.AddPlayer(player2, 12);
 
             // init positions of players
 

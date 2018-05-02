@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TsuroTheSecond
 {
-    public class HPlayer : IPlayer
+    public class HPlayer
     {
         public HPlayer()
         {
