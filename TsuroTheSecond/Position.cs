@@ -42,5 +42,49 @@ namespace TsuroTheSecond
             }
         }
 
+        public (int, int) WhatNext(){
+            // invalid _onward
+            int next_x = x;
+            int next_y = y;
+            switch (port / 2)
+            {
+                case 0:
+                    // onward is the tile above
+                    next_y -= 1;
+                    if (next_y < 0)
+                    {
+                        throw new ArgumentException("I think the player is dead?");
+                    }
+                    break;
+                case 1:
+                    // onward is the tile to the right
+                    next_x += 1;
+                    if (next_x > Constants.boardSize - 1)
+                    {
+                        throw new ArgumentException("I think the player is dead?");
+                    }
+                    break;
+                case 2:
+                    // onward is the tile below
+                    next_y += 1;
+                    if (next_y > Constants.boardSize - 1)
+                    {
+                        throw new ArgumentException("I think the player is dead?");
+                    }
+                    break;
+                case 3:
+                    // onward is the tile to the left
+                    next_x -= 1;
+                    if (next_x < 0)
+                    {
+                        throw new ArgumentException("I think the player is dead?");
+                    }
+                    break;
+                default:
+                    throw new ArgumentException("Illegal onward value", "_onward");
+            }
+            return (next_x, next_y);
+        }
+
     }
 }

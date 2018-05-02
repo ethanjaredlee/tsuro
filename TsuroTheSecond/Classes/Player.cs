@@ -9,7 +9,6 @@ namespace TsuroTheSecond
         public Position position;
         public List<Tile> Hand;
         public readonly int age;
-        public List<int> nextTilePosition;
         private IPlayer player;
 
         public Player(IPlayer p, int _age) {
@@ -19,50 +18,9 @@ namespace TsuroTheSecond
         }
         public void InitPlayerPosition(int x, int y, int port){
             position = new Position(x, y, port);
-            this.ExpectNextPosition();
+
         }
 
-        public void ExpectNextPosition()
-        {
-            
-            // invalid _onward
-            nextTilePosition = new List<int> { this.position.x, this.position.y };
-            switch(this.position.port / 2) {
-                case 0:
-                    // onward is the tile above
-                    nextTilePosition[1] -= 1;
-                    if (nextTilePosition[1] < 0) {
-                        throw new ArgumentException("I think the player is dead?");
-                    }
-                    break;
-                case 1:
-                    // onward is the tile to the right
-                    nextTilePosition[0] += 1;
-                    if (nextTilePosition[0] > Constants.boardSize - 1)
-                    {
-                        throw new ArgumentException("I think the player is dead?");
-                    }
-                    break;
-                case 2:
-                    // onward is the tile below
-                    nextTilePosition[1] += 1;
-                    if (nextTilePosition[1] > Constants.boardSize - 1)
-                    {
-                        throw new ArgumentException("I think the player is dead?");
-                    }
-                    break;
-                case 3:
-                    // onward is the tile to the left
-                    nextTilePosition[0] -= 1;
-                    if (nextTilePosition[0] < 0)
-                    {
-                        throw new ArgumentException("I think the player is dead?");
-                    }
-                    break;
-                default:
-                    throw new ArgumentException("Illegal onward value", "_onward");
-            }
-        }   
 
         public Boolean IsDead() {
             if ( (this.position.x < 0) || (this.position.x > 5) || (this.position.y < 0) || (this.position.y > 5) ) {
@@ -128,7 +86,6 @@ namespace TsuroTheSecond
                 }
             }
             this.position = cur_pos;
-            this.ExpectNextPosition();
         }
 
         public void AddTiletoHand(Tile tile){

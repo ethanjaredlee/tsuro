@@ -101,16 +101,15 @@ namespace TsuroTheSecond
         public Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
             // checks if placing a tile on the board will kill the player 
             Boolean playerAlive = true;
-            int todo_x = player.nextTilePosition[0];
-            int todo_y = player.nextTilePosition[1];
-            b.PlaceTile(tile, player.nextTilePosition[0], player.nextTilePosition[1]);
+            var origNext = player.position.WhatNext();
+            b.PlaceTile(tile, origNext.Item1, origNext.Item2);
             Position origPosition = player.position;
             player.UpdatePosition(b);
 
             playerAlive = !player.IsDead();
 
             // undoing changes to the board
-            b.PlaceTile(null, todo_x, todo_y);
+            b.PlaceTile(null, origNext.Item1, origNext.Item2);
             player.position = origPosition;
             return playerAlive;
         }
@@ -123,7 +122,8 @@ namespace TsuroTheSecond
         {
             Player currentPlayer = _alive[0];
             currentPlayer.RemoveTilefromHand(tile);
-            _board.PlaceTile(tile, currentPlayer.nextTilePosition[0], currentPlayer.nextTilePosition[1]);
+            var next = currentPlayer.position.WhatNext();
+            _board.PlaceTile(tile, next.Item1, next.Item2);
             List<Player> fatalities = new List<Player>();
             foreach (Player p in _alive) {
                 p.UpdatePosition(board);
