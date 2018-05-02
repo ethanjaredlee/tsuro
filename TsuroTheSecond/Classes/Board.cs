@@ -13,6 +13,10 @@ namespace TsuroTheSecond
 
         public Board(int size)
         {
+            if (size <= 0) {
+                throw new ArgumentException("Board size must be > 0");
+            }
+
             tiles = new List<List<Tile>>();
             for (int i = 0; i < size; i++)
             {
@@ -24,6 +28,9 @@ namespace TsuroTheSecond
 
         public void PlaceTile(Tile tile, int x, int y)
         {
+            if (x < 0 || x > 5 || y < 0 || y > 5) {
+                throw new ArgumentException("Tile placement is out of board range");
+            }
 
             this.tiles[x][y] = tile;
         }

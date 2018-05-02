@@ -9,7 +9,12 @@ namespace TsuroTheSecondTests
     [TestClass]
     public class ServerTest
     {
-        Server server = new Server();
+        Server server;
+
+        [TestInitialize]
+        public void Initialize() {
+            server = new Server();
+        }
 
         void AddTwoPlayers()
         {
