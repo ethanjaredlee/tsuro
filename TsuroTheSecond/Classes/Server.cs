@@ -74,7 +74,7 @@ namespace TsuroTheSecond
             if (tile == null) {
                 return false;
             }
-            if (ValidTilePlacement(b, player, tile) && player.TileinHand(tile)) {
+            if (b.ValidTilePlacement(player, tile) && player.TileinHand(tile)) {
                 return true;    
             } else {
                 // check hand lengh
@@ -89,7 +89,7 @@ namespace TsuroTheSecond
                         {
                             if ( other_tile.id != tile.id ) 
                             {
-                                return !(ValidTilePlacement(b, player, other_tile) && player.TileinHand(other_tile));
+                                return !(b.ValidTilePlacement(player, other_tile) && player.TileinHand(other_tile));
                             }
                         }
                         break;
@@ -99,7 +99,7 @@ namespace TsuroTheSecond
                         {
                             if (other_tile.id != tile.id)
                             {
-                                other_tiles.Add(!(ValidTilePlacement(b, player, other_tile) && player.TileinHand(other_tile)));
+                                other_tiles.Add(!(b.ValidTilePlacement(player, other_tile) && player.TileinHand(other_tile)));
                             }
                         }
 

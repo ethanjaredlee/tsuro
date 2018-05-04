@@ -94,12 +94,13 @@ namespace TsuroTheSecond
             List<Tile> result = new List<Tile>();
             for (int i = 0; i < player.Hand.Count; i++) {
                 for (int j = 0; j < 4; j++) {
-                    if (this.ValidTilePlacement(player, player.Hand[i].Rotate()) {
-                        result.Add(Hand[i]);
+                    player.Hand[i].Rotate();
+                    if (this.ValidTilePlacement(player, player.Hand[i])) {
+                        result.Add(player.Hand[i]);
                     }
                 }
             }
-
+            return result;
         }
 
         public void MovePlayer(Player player) {

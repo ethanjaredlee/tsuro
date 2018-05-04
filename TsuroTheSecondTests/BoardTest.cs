@@ -9,6 +9,27 @@ namespace TsuroTheSecondTests
     [TestClass]
     public class BoardTest
     {
+        Server server;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            server = new Server();
+        }
+
+        void AddFourPlayers()
+        {
+            MPlayer p1 = new MPlayer();
+            MPlayer p2 = new MPlayer();
+            MPlayer p3 = new MPlayer();
+            MPlayer p4 = new MPlayer();
+
+            server.AddPlayer(p1, "blue");
+            server.AddPlayer(p2, "green");
+            server.AddPlayer(p3, "red");
+            server.AddPlayer(p4, "hotpink");
+        }
+
         [TestMethod]
         public void TestConstructor() {
             Board board = new Board(6);
@@ -112,5 +133,25 @@ namespace TsuroTheSecondTests
         //    Assert.AreEqual(p.y, 5);
         //    Assert.AreEqual(p.port, 1);
         //}
+
+        [TestMethod]
+        public void TestValidTilePlacement()
+        {
+            AddFourPlayers();
+
+            server.board.AddPlayerToken(server.alive[0].Color, new Position(4, 6, 0));
+            Tile testTile = new Tile(1, new List<int> { 1, 2, 3, 4, 5, 6, 7, 0 });
+            Assert.IsTrue(server.board.ValidTilePlacement(server.alive[0], testTile));
+        }
+
+        [TestMethod]
+        public void TestValidTilePlacementFalse()
+        {
+            AddFourPlayers();
+
+            server.board.AddPlayerToken(server.alive[0].Color, new Position(4, 6, 0));
+            Tile testTile = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Assert.IsFalse(server.board.ValidTilePlacement(server.alive[0], testTile));
+        }
     }
 }
