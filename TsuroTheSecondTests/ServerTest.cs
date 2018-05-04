@@ -132,24 +132,24 @@ namespace TsuroTheSecondTests
             server.DrawTile(server.alive[0], server.deck);
         }
 
-        //[TestMethod]
-        //public void TestValidTilePlacement() {
-        //    AddFourPlayers();
+        [TestMethod]
+        public void TestValidTilePlacement() {
+            AddFourPlayers();
 
-        //    server.alive[0].InitPlayerPosition(4, 6, 0);
-        //    Tile testTile = new Tile(1, new List<int> { 1, 2, 3, 4, 5, 6, 7, 0 });
-        //    Assert.IsTrue(server.ValidTilePlacement(server.board, server.alive[0], testTile));
-        //}
+            server.board.AddPlayerToken(server.alive[0].Color, new Position(4, 6, 0));
+            Tile testTile = new Tile(1, new List<int> { 1, 2, 3, 4, 5, 6, 7, 0 });
+            Assert.IsTrue(server.ValidTilePlacement(server.board, server.alive[0], testTile));
+        }
 
-        //[TestMethod]
-        //public void TestValidTilePlacementFalse()
-        //{
-        //    AddFourPlayers();
+        [TestMethod]
+        public void TestValidTilePlacementFalse()
+        {
+            AddFourPlayers();
 
-        //    server.alive[0].InitPlayerPosition(4, 6, 0 );
-        //    Tile testTile = new Tile(1, new List<int> {0, 1, 2, 3, 4, 5, 6, 7});
-        //    Assert.IsFalse(server.ValidTilePlacement(server.board, server.alive[0], testTile));
-        //}
+            server.board.AddPlayerToken(server.alive[0].Color, new Position(4, 6, 0));
+            Tile testTile = new Tile(1, new List<int> {0, 1, 2, 3, 4, 5, 6, 7});
+            Assert.IsFalse(server.ValidTilePlacement(server.board, server.alive[0], testTile));
+        }
 
         [TestMethod]
         public void TestKillPlayer()

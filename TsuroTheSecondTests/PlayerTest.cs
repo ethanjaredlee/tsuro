@@ -417,7 +417,7 @@ namespace TsuroTheSecondTests
             player.AddTiletoHand(new Tile(2, new List<int> { 2, 1, 0, 3, 4, 5, 6, 7 }));
             player.AddTiletoHand(new Tile(3, new List<int> { 4, 1, 2, 3, 0, 5, 6, 7 }));
 
-            Assert.AreEqual(player.Hand.Count, 3);
+            Assert.AreEqual(3, player.Hand.Count);
 
             player.RemoveTilefromHand(testTile1);
             Assert.AreEqual(2, player.Hand.Count);

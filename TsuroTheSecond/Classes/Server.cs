@@ -42,6 +42,12 @@ namespace TsuroTheSecond
             alive.Add(new Player(p, color));
         }
 
+        public void InitPlayerPosition() {
+            for (int i = 0; i < alive.Count; i++) {
+                this.board.AddPlayerToken(alive[i].Color, alive[i].player.PlacePawn(this.board));
+            }
+        }
+
         public List<Tile> ShuffleDeck(List<Tile> deck)
         {
             // doesnt quite work the way we want it to yet
@@ -105,22 +111,7 @@ namespace TsuroTheSecond
             return false;
         }
 
-        public Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
-            // checks if placing a tile on the board will kill the player 
-            Boolean playerAlive = true;
-            var origNext = b.ReturnNextSpot(player);
-            b.PlaceTile(tile, origNext.Item1, origNext.Item2);
-            Position origPosition = b.ReturnPlayerSpot(player);
-            b.MovePlayer(player);
-
-            //playerAlive = !player.IsDead();
-            playerAlive = !b.IsDead(player);
-
-            // undoing changes to the board
-            b.PlaceTile(null, origNext.Item1, origNext.Item2);
-            b.tokenPositions[player.Color] = origPosition;
-            return playerAlive;
-        }
+        
 
         public (List<Tile>, List<Player>, List<Player>, Board, Boolean) PlayATurn(List<Tile> _deck, 
                                                                                   List<Player> _alive, 

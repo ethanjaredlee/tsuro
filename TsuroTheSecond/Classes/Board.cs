@@ -72,6 +72,36 @@ namespace TsuroTheSecond
                     (tokenPositions[player.Color].y > 5));
         }
 
+        public Boolean ValidTilePlacement(Player player, Tile tile)
+        {
+            // checks if placing a tile on the board will kill the player 
+            Boolean playerAlive = true;
+            var origNext = this.ReturnNextSpot(player);
+            this.PlaceTile(tile, origNext.Item1, origNext.Item2);
+            Position origPosition = this.ReturnPlayerSpot(player);
+            this.MovePlayer(player);
+
+            //playerAlive = !player.IsDead();
+            playerAlive = !this.IsDead(player);
+
+            // undoing changes to the board
+            this.PlaceTile(null, origNext.Item1, origNext.Item2);
+            this.tokenPositions[player.Color] = origPosition;
+            return playerAlive;
+        }
+
+        public List<Tile> AllPossibleTiles(Player player) {
+            List<Tile> result = new List<Tile>();
+            for (int i = 0; i < player.Hand.Count; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (this.ValidTilePlacement(player, player.Hand[i].Rotate()) {
+                        result.Add(Hand[i]);
+                    }
+                }
+            }
+
+        }
+
         public void MovePlayer(Player player) {
             Position cur_pos= tokenPositions[player.Color];
             List<int> nxt_pos = new List<int>(3) { 0, 0, 0 };
