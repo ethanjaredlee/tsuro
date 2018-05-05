@@ -37,7 +37,7 @@ namespace TsuroTheSecond
                 }
             }
             if(hand_cnt == this.Hand.Count) {
-                throw new Exception("Remove Tile was not effective");
+                throw new Exception("Remove Tile from hand was not effective");
             }
         }
 

@@ -134,9 +134,7 @@ namespace TsuroTheSecond
 
             if (_alive.Count == 1) {
                 WinGame(_alive);
-            }
-
-            if (_alive.Count == 0) {
+            } else if (_alive.Count == 0) {
                 WinGame(fatalities);
             }
 
@@ -145,6 +143,15 @@ namespace TsuroTheSecond
             }
 
             DrawTile(currentPlayer, _deck);
+
+            // put currentPlayer to end of _alive
+            for (int i = 0; i < _alive.Count; i++){
+                if(_alive[i].Color == currentPlayer.Color){
+                    Player move_to_end = _alive[i];
+                    _alive.Remove(move_to_end);
+                    _alive.Add(move_to_end);
+                }
+            }
 
             // fix this shouldnt return false
             return (_deck, _alive, _dead, _board, false);

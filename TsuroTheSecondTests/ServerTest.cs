@@ -206,242 +206,250 @@ namespace TsuroTheSecondTests
         {
         }
 
-        //[TestMethod]
-        //public void TestLegalPlayCheckLastPossibleMoveNotUndone()
-        //{
-        //    Server server = new Server();
-        //    MPlayer p1 = new MPlayer();
-        //    server.AddPlayer(p1, 12);
+        [TestMethod]
+        public void TestLegalPlayCheckLastPossibleMoveNotUndone()
+        {
+            Server server = new Server();
+            MPlayer p1 = new MPlayer();
+            server.AddPlayer(p1, "blue");
 
-        //    Tile testTile1 = new Tile(1, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile2 = new Tile(2, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile3 = new Tile(3, new List<int>(8) {
-        //        0, 5, 1, 4, 2, 7, 3, 6,
-        //    });
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
 
-        //    Player p_1 = server.alive[0];
-        //    p_1.InitPlayerPosition(4, 6, 0 );
-        //    p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
-        //    Boolean legalPlay = server.LegalPlay(p_1, server.board, testTile1);
-        //    Tile checkTile1 = new Tile(1, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
+            Player p_1 = server.alive[0];
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
+            Boolean legalPlay = server.LegalPlay(p_1, server.board, testTile1);
+            Assert.IsFalse(legalPlay);
+            Assert.AreEqual(3, p_1.Hand.Count);
+            for (int i = 1; i < 4; i++){
+                Assert.AreEqual(i, p_1.Hand[i-1].id);
+            }
+        }
 
-        //    for (int i = 0; i < 4; i++){
-        //        CollectionAssert.AreEqual(testTile1.paths[i], checkTile1.paths[i]);
-        //    }
-        //}
+        [TestMethod]
+        public void TestLegalPlayBoardUndo()
+        {
+            Server server = new Server();
+            MPlayer p1 = new MPlayer();
+            server.AddPlayer(p1, "blue");
 
-        //[TestMethod]
-        //public void TestLegalPlayBoardUndo()
-        //{
-        //    Server server = new Server();
-        //    MPlayer p1 = new MPlayer();
-        //    server.AddPlayer(p1, 12);
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
 
-        //    Tile testTile1 = new Tile(1, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile2 = new Tile(2, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile3 = new Tile(3, new List<int>(8) {
-        //        0, 5, 1, 4, 2, 7, 3, 6,
-        //    });
+            Player p_1 = server.alive[0];
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
+            Boolean legalPlay = server.LegalPlay(p_1, server.board, testTile1);
+            Assert.IsFalse(legalPlay);
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++) 
+                {
+                    Assert.IsNull(server.board.tiles[i][j]);
+                }
+            }
+        }
 
-        //    Player p_1 = server.alive[0];
-        //    p_1.InitPlayerPosition(4, 6, 0);
-        //    p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
-        //    Boolean legalPlay = server.LegalPlay(p_1, server.board, testTile1);
+        [TestMethod]
+        public void TestLegalPlayFalse2()
+        {
+            AddTwoPlayers();
 
-        //    Assert.IsNull(server.board.tiles[4][5]);
-        //}
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
 
-        //[TestMethod]
-        //public void TestLegalPlayFalse3()
-        //{
-        //    AddTwoPlayers();
+            Player p_1 = server.alive[0];
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            p_1.Hand = new List<Tile> { testTile1, testTile3 };
+            Assert.IsFalse(server.LegalPlay(p_1, server.board, testTile1));
+        }
 
-        //    Tile testTile1 = new Tile(1, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile2 = new Tile(2, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile3 = new Tile(3, new List<int>(8) {
-        //        0, 5, 1, 4, 2, 7, 3, 6,
-        //    });
+        [TestMethod]
+        public void TestLegalPlayTrue3()
+        {
+            AddTwoPlayers();
 
-        //    Player p_1 = server.alive[0];
-        //    Board board = new Board(6);
-        //    p_1.InitPlayerPosition(4, 6, 0 );
-        //    p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
-        //    Assert.IsFalse(server.LegalPlay(p_1, board, testTile1));
-        //}
-        //[TestMethod]
-        //public void TestLegalPlayFalse2()
-        //{
-        //    AddTwoPlayers();
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
 
-        //    Tile testTile1 = new Tile(1, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile3 = new Tile(3, new List<int>(8) {
-        //        0, 5, 1, 4, 2, 7, 3, 6,
-        //    });
+            Player p_1 = server.alive[0];
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
+            Assert.IsTrue(server.LegalPlay(p_1, server.board, testTile3));
+        }
 
-        //    Player p_1 = server.alive[0];
-        //    Board board = new Board(6);
-        //    p_1.InitPlayerPosition(4, 6, 0 );
-        //    p_1.Hand = new List<Tile> { testTile1, testTile3 };
-        //    Assert.IsFalse(server.LegalPlay(p_1, board, testTile1));
-        //}
+        [TestMethod]
+        public void TestLegalPlayTrue2()
+        {
+            AddTwoPlayers();
 
-        //[TestMethod]
-        //public void TestLegalPlayTrue3()
-        //{
-        //    AddTwoPlayers();
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
 
-        //    Tile testTile1 = new Tile(1, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile2 = new Tile(2, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile3 = new Tile(3, new List<int>(8) {
-        //        0, 5, 1, 4, 2, 7, 3, 6,
-        //    });
+            Player p_1 = server.alive[0];
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            p_1.Hand = new List<Tile> { testTile1, testTile3 };
+            Assert.IsTrue(server.LegalPlay(p_1, server.board, testTile3));
+        }
 
-        //    Player p_1 = server.alive[0];
-        //    Board board = new Board(6);
-        //    p_1.InitPlayerPosition(4, 6, 0 );
-        //    p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
-        //    Assert.IsTrue(server.LegalPlay(p_1, board, testTile3));
-        //}
+        [TestMethod]
+        public void TestLegalPlayTrue1_t()
+        {
+            AddTwoPlayers();
+
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
+            Player p_1 = server.alive[0];
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            p_1.Hand = new List<Tile> { testTile3 };
+            Assert.IsTrue(server.LegalPlay(p_1, server.board, testTile3));
+        }
+        [TestMethod]
+        public void TestLegalPlayFalse1()
+        {
+            AddTwoPlayers();
+
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+
+            Player p_1 = server.alive[0];
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            p_1.Hand = new List<Tile> { testTile1 };
+            Assert.IsTrue(server.LegalPlay(p_1, server.board, testTile1));
+        }
+        [TestMethod]
+        public void TestLegalPlayLastResort()
+        {
+            AddTwoPlayers();
+
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+
+            Player p_1 = server.alive[0];
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
+            Assert.IsTrue(server.LegalPlay(p_1, server.board, testTile1));
+        }
+
+        [TestMethod]
+        public void TestPlayTurn()
+        {
+            // alive[0] is blue, alive[1] is green
+            AddTwoPlayers();
+
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+            server.board.AddPlayerToken("green", new Position(0, -1, 4));
+
+            Tile playTile = new Tile(1, new List<int>{0, 7, 1, 2, 3, 4, 5, 6});
+            server.alive[0].Hand.Add(playTile);
 
 
-        //[TestMethod]
-        //public void TestLegalPlayTrue2()
-        //{
-        //    AddTwoPlayers();
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean) playResult = server.PlayATurn(server.deck, 
+                                                                                                   server.alive, 
+                                                                                                   server.dead, 
+                                                                                                   server.board, 
+                                                                                                   playTile);
+            Assert.AreEqual(1, server.alive.Count);
+            Assert.AreEqual(1, server.dead.Count);
+            // dead
+            Assert.AreEqual(-1, server.board.tokenPositions["blue"].x);
+            Assert.AreEqual(0, server.board.tokenPositions["blue"].y);
+            Assert.AreEqual(2, server.board.tokenPositions["blue"].port);
+            Assert.AreEqual(-1, server.board.tokenPositions[server.dead[0].Color].x);
+            Assert.AreEqual(0, server.board.tokenPositions[server.dead[0].Color].y);
+            Assert.AreEqual(2, server.board.tokenPositions[server.dead[0].Color].port);
+            // alive
+            Assert.AreEqual(0, server.board.tokenPositions["green"].x);
+            Assert.AreEqual(0, server.board.tokenPositions["green"].y);
+            Assert.AreEqual(2, server.board.tokenPositions["green"].port);
+            Assert.AreEqual(0, server.board.tokenPositions[server.alive[0].Color].x);
+            Assert.AreEqual(0, server.board.tokenPositions[server.alive[0].Color].y);
+            Assert.AreEqual(2, server.board.tokenPositions[server.alive[0].Color].port);
 
-        //    Tile testTile1 = new Tile(1, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile3 = new Tile(3, new List<int>(8) {
-        //        0, 5, 1, 4, 2, 7, 3, 6,
-        //    });
 
-        //    Player p_1 = server.alive[0];
-        //    Board board = new Board(6);
-        //    p_1.InitPlayerPosition(4, 6, 0 );
-        //    p_1.Hand = new List<Tile> { testTile1, testTile3 };
-        //    Assert.IsTrue(server.LegalPlay(p_1, board, testTile3));
-        //}
-        //[TestMethod]
-        //public void TestLegalPlayTrue1_t()
-        //{
-        //    AddTwoPlayers();
 
-        //    Tile testTile3 = new Tile(3, new List<int>(8) {
-        //        0, 5, 1, 4, 2, 7, 3, 6,
-        //    });
-        //    Player p_1 = server.alive[0];
-        //    Board board = new Board(6);
-        //    p_1.InitPlayerPosition(4, 6, 0);
-        //    p_1.Hand = new List<Tile> { testTile3 };
-        //    Assert.IsTrue(server.LegalPlay(p_1, board, testTile3));
-        //}
-        //[TestMethod]
-        //public void TestLegalPlayTrue1_f()
-        //{
-        //    AddTwoPlayers();
+        }
 
-        //    Tile testTile1 = new Tile(1, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
+        [TestMethod]
+        public void TestPlayTurn2TilePath()
+        {
+            AddTwoPlayers();
 
-        //    Player p_1 = server.alive[0];
-        //    Board board = new Board(6);
-        //    p_1.InitPlayerPosition(4, 6, 0);
-        //    p_1.Hand = new List<Tile> { testTile1 };
-        //    Assert.IsTrue(server.LegalPlay(p_1, board, testTile1));
-        //}
-        //[TestMethod]
-        //public void TestLegalPlayLastResort()
-        //{
-        //    AddTwoPlayers();
 
-        //    Tile testTile1 = new Tile(1, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile2 = new Tile(2, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
-        //    Tile testTile3 = new Tile(3, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
-        //    });
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+            server.board.AddPlayerToken("green", new Position(0, -1, 4));
 
-        //    Player p_1 = server.alive[0];
-        //    Board board = new Board(6);
-        //    p_1.InitPlayerPosition(4, 6, 0);
-        //    p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
-        //    Assert.IsTrue(server.LegalPlay(p_1, board, testTile1));
-        //}
 
-        //[TestMethod]
-        //public void TestPlayTurn()
-        //{
-        //    AddTwoPlayers();
+            Tile playTile = new Tile(1, new List<int> { 0, 4, 1, 2, 3, 5, 6, 7 });
+            server.alive[0].Hand.Add(playTile);
+            Assert.AreEqual("blue", server.alive[0].Color);
 
-        //    Tile playTile = new Tile(1, new List<int>{0, 7, 1, 2, 3, 4, 5, 6});
-        //    server.alive[0].Hand.Remove(playTile);
+            Tile secondTile = new Tile(2, new List<int> { 0, 7, 2, 6, 1, 3, 5, 4 });
+            server.board.PlaceTile(secondTile, 0, 1);
 
-        //    server.alive[0].InitPlayerPosition(0, -1, 5);
-        //    server.alive[1].InitPlayerPosition(0, -1, 4);
-             
-        //    (List<Tile>, List<Player>, List<Player>, Board, Boolean) playResult = server.PlayATurn(server.deck, 
-        //                                                                                           server.alive, 
-        //                                                                                           server.dead, 
-        //                                                                                           server.board, 
-        //                                                                                           playTile);
-        //    Assert.AreEqual(1, server.alive.Count);
-        //    Assert.AreEqual(1, server.dead.Count);
-        //    Assert.AreEqual(0, server.alive[0].position.x);
-        //    Assert.AreEqual(0, server.alive[0].position.y);
-        //    Assert.AreEqual(2, server.alive[0].position.port);
-           
-        //}
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean) playResult = server.PlayATurn(server.deck,
+                                                                                                   server.alive,
+                                                                                                   server.dead,
+                                                                                                   server.board,
+                                                                                                   playTile);
+            Assert.AreEqual(2, server.alive.Count);
+            Assert.AreEqual("green", server.alive[0].Color);
+            Assert.AreEqual("blue", server.alive[1].Color);
+            // 0th player should move to the end
+            Assert.AreEqual(0, server.board.tokenPositions["green"].x);
+            Assert.AreEqual(0, server.board.tokenPositions["green"].y);
+            Assert.AreEqual(2, server.board.tokenPositions["green"].port);
+            Assert.AreEqual(0, server.board.tokenPositions[server.alive[0].Color].x);
+            Assert.AreEqual(0, server.board.tokenPositions[server.alive[0].Color].y);
+            Assert.AreEqual(2, server.board.tokenPositions[server.alive[0].Color].port);
 
-        //[TestMethod]
-        //public void TestPlayTurn2TilePath()
-        //{
-        //    AddTwoPlayers();
+            Assert.AreEqual(0, server.board.tokenPositions["blue"].x);
+            Assert.AreEqual(1, server.board.tokenPositions["blue"].y);
+            Assert.AreEqual(3, server.board.tokenPositions["blue"].port);
+            Assert.AreEqual(0, server.board.tokenPositions[server.alive[1].Color].x);
+            Assert.AreEqual(1, server.board.tokenPositions[server.alive[1].Color].y);
+            Assert.AreEqual(3, server.board.tokenPositions[server.alive[1].Color].port);
 
-        //    server.alive[0].InitPlayerPosition(0, -1, 5 );
-        //    server.alive[1].InitPlayerPosition(0, -1, 4 );
-
-        //    Tile playTile = new Tile(1, new List<int> { 0, 4, 1, 2, 3, 5, 6, 7 });
-        //    server.alive[0].Hand.Remove(playTile);
-
-        //    Tile secondTile = new Tile(2, new List<int> { 0, 7, 2, 6, 1, 3, 5, 4 });
-        //    server.board.PlaceTile(secondTile, 0, 1);
-
-        //    (List<Tile>, List<Player>, List<Player>, Board, Boolean) playResult = server.PlayATurn(server.deck,
-        //                                                                                           server.alive,
-        //                                                                                           server.dead,
-        //                                                                                           server.board,
-        //                                                                                           playTile);
-        //    Assert.AreEqual(2, server.alive.Count);
-        //    // 0th player should move to the end
-        //    Assert.AreEqual(0, server.alive[1].position.x);
-        //    Assert.AreEqual(0, server.alive[1].position.y);
-        //    Assert.AreEqual(2, server.alive[1].position.port);
-        //}
+        }
 
         [TestMethod]
         public void TestPlayTurnOneWin()
