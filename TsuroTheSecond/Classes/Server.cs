@@ -44,7 +44,7 @@ namespace TsuroTheSecond
 
         public void InitPlayerPosition() {
             for (int i = 0; i < alive.Count; i++) {
-                this.board.AddPlayerToken(alive[i].Color, alive[i].player.PlacePawn(this.board));
+                this.board.AddPlayerToken(alive[i].Color, alive[i].iplayer.PlacePawn(this.board));
             }
         }
 

@@ -9,6 +9,14 @@ namespace TsuroTheSecondTests
     [TestClass]
     public class PlayerTest
     {
+        Server server;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            server = new Server();
+        }
+
         // go to line 223 to skip constructor tests
         Tile testTile1 = new Tile(1, new List<int>(8) {
             0, 1, 2, 3, 4, 5, 6, 7,
@@ -281,22 +289,84 @@ namespace TsuroTheSecondTests
             Assert.IsTrue(player.TileinHand(testTile1));
             Assert.IsFalse(player.TileinHand(testTile4));
         }
+
         [TestMethod]
-        public void TestMPlayer1PlayTurn()
+        public void TestMPlayer1PlayTurnAllIllegalHand()
         {
             MPlayer1 mPlayer = new MPlayer1("mark");
             List<string> other_colors = new List<string>(Constants.colors);
             other_colors.Remove("blue");
             mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
             Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
 
             player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
 
             Tile testTile4 = new Tile(4, new List<int>(8) {
                 0, 1, 2, 3, 4, 5, 6, 7,
             });
+            player.AddTiletoHand(testTile4);
 
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+            Assert.IsTrue(tobePlayed.CompareByPath(testTile1) || tobePlayed.CompareByPath(testTile4));
+        }
 
+        [TestMethod]
+        public void TestMPlayer1PlayTurnOneLegalHand()
+        {
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 2, 3, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+            Assert.IsTrue(tobePlayed.CompareByPath(testTile4));
+        }
+
+        [TestMethod]
+        public void TestMPlayer1PlayTurnMultiLegalHand()
+        {
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            player.AddTiletoHand(new Tile(1, new List<int> { 0, 3, 2, 1, 4, 5, 6, 7 }));
+
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 2, 3, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+
+            Assert.AreEqual(1, server.alive.Count);
+            if(tobePlayed.id == 1){
+                while (player.iplayer.PlayTurn(server.board, player.Hand, 33).CompareByPath(testTile1)){}
+            } else {
+                while (player.iplayer.PlayTurn(server.board, player.Hand, 33).CompareByPath(testTile4)){}
+            }
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    Assert.IsNull(server.board.tiles[i][j]);
+                }
+            }
         }
 
     }
