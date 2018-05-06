@@ -56,58 +56,68 @@ namespace TsuroTheSecond
             tokenPositions.Add(color, position);
         }
 
-        public (int, int) ReturnNextSpot(Player player) {
-            return tokenPositions[player.Color].WhatNext();
+        public (int, int) ReturnNextSpot(string color) {
+            return tokenPositions[color].WhatNext();
         }
 
-        public Position ReturnPlayerSpot(Player player)
+        public Position ReturnPlayerSpot(string color)
         {
-            return tokenPositions[player.Color];
+            return tokenPositions[color];
         }
 
-        public Boolean IsDead(Player player) {
-            return ((tokenPositions[player.Color].x < 0) ||
-                    (tokenPositions[player.Color].x > 5) ||
-                    (tokenPositions[player.Color].y < 0) ||
-                    (tokenPositions[player.Color].y > 5));
+        public Boolean IsDead(string color) {
+            return ((tokenPositions[color].x < 0) ||
+                    (tokenPositions[color].x > 5) ||
+                    (tokenPositions[color].y < 0) ||
+                    (tokenPositions[color].y > 5));
         }
 
-        public Boolean ValidTilePlacement(Player player, Tile tile)
+        public Boolean ValidTilePlacement(string color, Tile tile)
         {
             // checks if placing a tile on the board will kill the player 
             Boolean playerAlive = true;
-            var origNext = this.ReturnNextSpot(player);
-            Position origPosition = new Position(this.ReturnPlayerSpot(player));
+            var origNext = this.ReturnNextSpot(color);
+            Position origPosition = new Position(this.ReturnPlayerSpot(color));
             this.PlaceTile(tile, origNext.Item1, origNext.Item2);
-            this.MovePlayer(player);
+            this.MovePlayer(color);
 
             //playerAlive = !player.IsDead();
-            playerAlive = !this.IsDead(player);
+            playerAlive = !this.IsDead(color);
 
             // undoing changes to the board
             this.PlaceTile(null, origNext.Item1, origNext.Item2);
 
-            this.tokenPositions[player.Color].x = origPosition.x;
-            this.tokenPositions[player.Color].y = origPosition.y;
-            this.tokenPositions[player.Color].port = origPosition.port;
+            this.tokenPositions[color].x = origPosition.x;
+            this.tokenPositions[color].y = origPosition.y;
+            this.tokenPositions[color].port = origPosition.port;
             return playerAlive;
         }
 
-        public List<Tile> AllPossibleTiles(Player player) {
-            List<Tile> result = new List<Tile>();
-            for (int i = 0; i < player.Hand.Count; i++) {
+        public List<Tile> AllPossibleTiles(string color, List<Tile> hands) {
+            List<Tile> legal = new List<Tile>();
+            List<Tile> illegal = new List<Tile>();
+
+            int hand_size = hands.Count;
+            for (int i = 0; i < hand_size; i++) {
                 for (int j = 0; j < 4; j++) {
-                    player.Hand[i].Rotate();
-                    if (this.ValidTilePlacement(player, player.Hand[i])) {
-                        result.Add(player.Hand[i]);
+                    hands[i].Rotate();
+                    if (this.ValidTilePlacement(color, hands[i])) {
+                        legal.Add(hands[i]);
+                    } else {
+                        illegal.Add(hands[i]);
                     }
                 }
             }
-            return result;
+            // if none of the options are legal, return all illegal options
+            if(legal.Count > 0){
+                return legal;
+            } else {
+                return illegal;
+            }
         }
 
-        public void MovePlayer(Player player) {
-            Position cur_pos= tokenPositions[player.Color];
+        public void MovePlayer(string color) {
+            Position cur_pos= tokenPositions[color];
             List<int> nxt_pos = new List<int>(3) { 0, 0, 0 };
             int[] port_table = new int[] { 5, 4, 7, 6, 1, 0, 3, 2 };
             Tile nxt_tile = null;
@@ -173,7 +183,7 @@ namespace TsuroTheSecond
                 }
             }
 
-            tokenPositions[player.Color] = cur_pos;
+            tokenPositions[color] = cur_pos;
         }
     }
 }

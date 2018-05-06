@@ -44,7 +44,7 @@ namespace TsuroTheSecond
 
         public void InitPlayerPosition() {
             for (int i = 0; i < alive.Count; i++) {
-                this.board.AddPlayerToken(alive[i].Color, alive[i].player.PlacePawn(this.board));
+                this.board.AddPlayerToken(alive[i].Color, alive[i].iplayer.PlacePawn(this.board));
             }
         }
 
@@ -74,7 +74,7 @@ namespace TsuroTheSecond
             if (tile == null || !player.TileinHand(tile)) {
                 throw new Exception("Invalid Tile was passed into LegalPlay");
             }
-            List<Tile> all_options = b.AllPossibleTiles(player);
+            List<Tile> all_options = b.AllPossibleTiles(player.Color, player.Hand);
             // try if the tile is in all_options
             // If so, return true
             foreach(Tile goodTile in all_options){
@@ -108,13 +108,13 @@ namespace TsuroTheSecond
         {
             Player currentPlayer = _alive[0];
             currentPlayer.RemoveTilefromHand(tile);
-            var next = _board.ReturnNextSpot(currentPlayer);
+            var next = _board.ReturnNextSpot(currentPlayer.Color);
             _board.PlaceTile(tile, next.Item1, next.Item2);
 
             List<Player> fatalities = new List<Player>();
             foreach (Player p in _alive) {
-                _board.MovePlayer(p);
-                if (_board.IsDead(p)) {
+                _board.MovePlayer(p.Color);
+                if (_board.IsDead(p.Color)) {
                     fatalities.Add(p);
                 }
             }

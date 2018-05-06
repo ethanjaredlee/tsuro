@@ -9,8 +9,16 @@ namespace TsuroTheSecondTests
     [TestClass]
     public class PlayerTest
     {
+        Server server;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            server = new Server();
+        }
+
         // go to line 223 to skip constructor tests
-        public Tile testTile1 = new Tile(1, new List<int>(8) {
+        Tile testTile1 = new Tile(1, new List<int>(8) {
             0, 1, 2, 3, 4, 5, 6, 7,
         });
 
@@ -213,14 +221,7 @@ namespace TsuroTheSecondTests
         //    Player player_wrongx = new Player(new List<int> { 5, 6, 6 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
         //}
 
-        //[TestMethod]
-        //public void TestIsDead()
-        //{
-        //    Player player_wrongx = new Player(new List<int> { 5, 6, 1 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Assert.IsTrue(player_wrongx.IsDead());
-        //    player_wrongx.position[1] = 3;
-        //    Assert.IsTrue(!player_wrongx.IsDead());
-        //}
+
         [TestMethod]
         public void TestAddTiletoHand()
         {
@@ -232,156 +233,6 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(1, p1.Hand.Count);
             Assert.AreEqual(testTile1.id, (p1.Hand.Find(each => each.id == 1)).id);
         }
-
-
-        //[TestMethod]
-        //public void TestUpdatePositionBaseCase1()
-        //{
-        //    // start at 5, 6 and at port 0
-        //    MPlayer p_1 = new MPlayer();
-        //    Player p1 = new Player(p_1, 4);
-        //    p1.InitPlayerPosition(5, 6, 0);
-        //    //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Board board = new Board(6);
-        //    Tile testTile_1 = new Tile(1, new List<int>(8) {
-        //        0, 4, 1, 5, 2, 6, 3, 7
-        //    });
-        //    // places a tile that gives direct path up 
-        //    board.PlaceTile(testTile_1, 5, 5);
-        //    // move and update position of the player
-        //    p1.UpdatePosition(board);
-        //    // check position
-        //    Assert.IsFalse(p1.IsDead());
-        //    Assert.AreEqual(p1.position.x, 5);
-        //    Assert.AreEqual(p1.position.y, 5);
-        //    Assert.AreEqual(p1.position.port, 1);
-        //}
-
-        //[TestMethod]
-        //public void TestUpdatePositionInductiveCase()
-        //{
-        //    MPlayer p_1 = new MPlayer();
-        //    Player player1 = new Player(p_1, 4);
-        //    player1.InitPlayerPosition(5, 6, 0);
-        //    // start at 5, 6 and at port 0
-        //    //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Board board = new Board(6);
-        //    Tile testTile_1 = new Tile(1, new List<int>(8) {
-        //        0, 4, 1, 5, 2, 6, 3, 7
-        //    });
-        //    Tile testTile_2 = new Tile(2, new List<int>(8) {
-        //        4, 7, 0, 6, 1, 3, 5, 2
-        //    });
-        //    // places a tile that gives direct path up 
-        //    board.PlaceTile(testTile_1, 5, 5);
-        //    board.PlaceTile(testTile_2, 5, 4);
-        //    // move and update position of the player
-        //    player1.UpdatePosition(board);
-        //    // check position
-        //    Assert.IsFalse(player1.IsDead());
-        //    Assert.AreEqual(5, player1.position.x);
-        //    Assert.AreEqual(7, player1.position.port);
-        //    Assert.AreEqual(4, player1.position.y);
-        //}
-
-        //[TestMethod]
-        //public void TestUpdatePositionMultiMove()
-        //{
-        //    MPlayer p_1 = new MPlayer();
-        //    Player player1 = new Player(p_1, 4);
-        //    player1.InitPlayerPosition(5, 6, 0 );
-        //    MPlayer p_2 = new MPlayer();
-        //    Player player2 = new Player(p_2, 4);
-        //    player2.InitPlayerPosition(6, 4, 6 );
-        //    // start at 5, 6 and at port 0
-        //    //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Board board = new Board(6);
-        //    Tile testTile_1 = new Tile(1, new List<int>(8) {
-        //        0, 4, 1, 5, 2, 6, 3, 7
-        //    });
-        //    Tile testTile_2 = new Tile(2, new List<int>(8) {
-        //        4, 7, 0, 6, 1, 3, 5, 2
-        //    });
-        //    // places a tile that gives direct path up 
-        //    board.PlaceTile(testTile_1, 5, 5);
-        //    board.PlaceTile(testTile_2, 5, 4);
-        //    // move and update position of the player
-        //    player1.UpdatePosition(board);
-        //    player2.UpdatePosition(board);
-        //    // check position
-        //    Assert.IsFalse(player1.IsDead());
-        //    Assert.AreEqual(5, player1.position.x);
-        //    Assert.AreEqual(4, player1.position.y);
-        //    Assert.AreEqual(7, player1.position.port);
-
-
-        //    Assert.IsFalse(player2.IsDead());
-        //    Assert.AreEqual(5, player2.position.x);
-        //    Assert.AreEqual(4, player2.position.y);
-        //    Assert.AreEqual(1, player2.position.port);
-        //}
-
-        //[TestMethod]
-        //public void TestUpdatePositionMultiKill()
-        //{
-        //    MPlayer p_1 = new MPlayer();
-        //    Player player1 = new Player(p_1, 4);
-        //    player1.InitPlayerPosition(5, 6, 1);
-        //    MPlayer p_2 = new MPlayer();
-        //    Player player2 = new Player(p_2, 4);
-        //    player2.InitPlayerPosition(6, 4, 7);
-        //    // start at 5, 6 and at port 0
-        //    //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Board board = new Board(6);
-        //    Tile testTile_1 = new Tile(1, new List<int>(8) {
-        //        0, 4, 1, 5, 2, 6, 3, 7
-        //    });
-        //    Tile testTile_2 = new Tile(2, new List<int>(8) {
-        //        4, 7, 0, 6, 1, 3, 5, 2
-        //    });
-        //    // places a tile that gives direct path up 
-        //    board.PlaceTile(testTile_1, 5, 5);
-        //    board.PlaceTile(testTile_2, 5, 4);
-        //    // move and update position of the player
-        //    player1.UpdatePosition(board);
-        //    player2.UpdatePosition(board);
-        //    // check position
-        //    Assert.IsTrue(player1.IsDead());
-        //    Assert.AreEqual(6, player1.position.x);
-        //    Assert.AreEqual(4, player1.position.y);
-        //    Assert.AreEqual(7, player1.position.port);
-
-        //    Assert.IsTrue(player2.IsDead());
-        //    Assert.AreEqual(5, player2.position.x);
-        //    Assert.AreEqual(6, player2.position.y);
-        //    Assert.AreEqual(1, player2.position.port);
-        //}
-
-        //[TestMethod]
-        //public void TestUpdatePositionRotatedTile()
-        //{
-        //    // start at 5, 6 and at port 0
-        //    MPlayer p_1 = new MPlayer();
-        //    Player p1 = new Player(p_1, 4);
-        //    p1.InitPlayerPosition(6, 4, 7 );
-        //    //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Board board = new Board(6);
-        //    Tile testTile_2 = new Tile(2, new List<int>(8) {
-        //        4, 7, 0, 6, 1, 3, 5, 2
-        //    });
-        //    testTile_2.Rotate();
-        //    // places a tile that gives direct path up 
-        //    board.PlaceTile(testTile_2, 5, 4);
-        //    // move and update position of the player
-        //    p1.UpdatePosition(board);
-        //    // check position
-        //    Assert.IsFalse(p1.IsDead());
-        //    Assert.AreEqual(p1.position.x, 5);
-        //    Assert.AreEqual(p1.position.y, 4);
-        //    Assert.AreEqual(p1.position.port, 0);   
-        //}
-
-
 
         //[TestMethod]
         //public void TestInitPlayerPosition()
@@ -437,6 +288,435 @@ namespace TsuroTheSecondTests
 
             Assert.IsTrue(player.TileinHand(testTile1));
             Assert.IsFalse(player.TileinHand(testTile4));
+        }
+
+        [TestMethod]
+        public void TestMPlayer1PlayTurnNoLegalHand()
+        {
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            player.AddTiletoHand(testTile4);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+            Assert.IsTrue(tobePlayed.CompareByPath(testTile1) || tobePlayed.CompareByPath(testTile4));
+        }
+
+        [TestMethod]
+        public void TestMPlayer1PlayTurnOneLegalHand()
+        {
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 2, 3, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+            Assert.IsTrue(tobePlayed.CompareByPath(testTile4));
+        }
+
+        [TestMethod]
+        public void TestMPlayer1PlayTurnMultiLegalHand()
+        {
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            player.AddTiletoHand(new Tile(1, new List<int> { 0, 3, 2, 1, 4, 5, 6, 7 }));
+
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 2, 3, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+
+            Assert.AreEqual(1, server.alive.Count);
+            if(tobePlayed.id == 1){
+                while (player.iplayer.PlayTurn(server.board, player.Hand, 33).CompareByPath(testTile1)){}
+            } else {
+                while (player.iplayer.PlayTurn(server.board, player.Hand, 33).CompareByPath(testTile4)){}
+            }
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    Assert.IsNull(server.board.tiles[i][j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMPlayer2PlayTurnNoLegalHand()
+        {
+            MPlayer2 mPlayer = new MPlayer2("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            // symmetricity of 1
+            player.AddTiletoHand(testTile1);
+
+            // symmetricity of 4
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 3, 2, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+
+            // right of tile placement
+            Tile testTile5 = new Tile(5, new List<int>(8) {
+                6, 0, 7, 1, 2, 3, 4, 5
+            });
+            // below of tile placement
+            Tile testTile6 = new Tile(6, new List<int>(8) {
+                0, 7, 1, 6, 2, 3, 4, 5
+            });
+
+            server.board.PlaceTile(testTile5, 1, 0);
+            server.board.PlaceTile(testTile6, 0, 1);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+
+            Assert.IsTrue(testTile1.CompareByPath(tobePlayed));
+        }
+
+        [TestMethod]
+        public void TestMPlayer2PlayTurnOneLegalHand()
+        {
+            MPlayer2 mPlayer = new MPlayer2("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            // symmetricity of 1
+            player.AddTiletoHand(testTile1);
+
+            // symmetricity of 4
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 3, 2, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+            Assert.AreEqual(1, server.alive.Count);
+         
+            Assert.IsTrue(testTile4.CompareByPath(tobePlayed));
+
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    Assert.IsNull(server.board.tiles[i][j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMPlayer2PlayTurnMultiLegalHand()
+        {
+            MPlayer2 mPlayer = new MPlayer2("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            // symmetricity of 1, illegal
+            player.AddTiletoHand(testTile1);
+
+            // symmetricity of 4, legal
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 3, 2, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+            // symmetricity of 1, legal
+            Tile testTile5 = new Tile(5, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 6, 3
+            });
+            player.AddTiletoHand(testTile5);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 32);
+
+            Assert.IsTrue(testTile5.CompareByPath(tobePlayed));
+
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    Assert.IsNull(server.board.tiles[i][j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMPlayer2PlayTurnMultiLegalHandFirst()
+        {
+            MPlayer2 mPlayer = new MPlayer2("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            // symmetricity of 1, illegal
+            player.AddTiletoHand(testTile1);
+
+            // symmetricity of 4, legal
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 3, 2, 6, 4, 7
+            });
+            // symmetricity of 4, legal
+            Tile testTile5 = new Tile(5, new List<int>(8) {
+                0, 2, 1, 4, 3, 7, 5, 6
+            });
+            player.AddTiletoHand(testTile4);
+            player.AddTiletoHand(testTile5);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 32);
+
+            // same symmetricity, both 4 and 5 legal. But 4 was added to  hand first so it should be 4
+            Assert.IsTrue(testTile4.CompareByPath(tobePlayed));
+
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    Assert.IsNull(server.board.tiles[i][j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMPlayer2PlayTurnMultiLegalHandFirstFlipped()
+        {
+            MPlayer2 mPlayer = new MPlayer2("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            // symmetricity of 1, illegal
+            player.AddTiletoHand(testTile1);
+
+            // symmetricity of 4, legal
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 3, 2, 6, 4, 7
+            });
+            // symmetricity of 4, legal
+            Tile testTile5 = new Tile(5, new List<int>(8) {
+                0, 2, 1, 4, 3, 7, 5, 6
+            });
+            player.AddTiletoHand(testTile5);
+            player.AddTiletoHand(testTile4);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 32);
+
+            // same symmetricity, both 4 and 5 legal. But 4 was added to  hand first so it should be 4
+            Assert.IsTrue(testTile5.CompareByPath(tobePlayed));
+
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    Assert.IsNull(server.board.tiles[i][j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMPlayer3PlayTurnNoLegalHand()
+        {
+            MPlayer3 mPlayer = new MPlayer3("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            // symmetricity of 1
+            player.AddTiletoHand(testTile1);
+
+            // symmetricity of 4
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 3, 2, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+
+            // right of tile placement
+            Tile testTile5 = new Tile(5, new List<int>(8) {
+                6, 0, 7, 1, 2, 3, 4, 5
+            });
+            // below of tile placement
+            Tile testTile6 = new Tile(6, new List<int>(8) {
+                0, 7, 1, 6, 2, 3, 4, 5
+            });
+
+            server.board.PlaceTile(testTile5, 1, 0);
+            server.board.PlaceTile(testTile6, 0, 1);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+
+            Assert.IsTrue(testTile4.CompareByPath(tobePlayed));
+        }
+
+        [TestMethod]
+        public void TestMPlayer3PlayTurnOneLegalHand()
+        {
+            MPlayer3 mPlayer = new MPlayer3("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            // symmetricity of 1
+            player.AddTiletoHand(testTile1);
+
+            // symmetricity of 4
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 3, 2, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+            Assert.AreEqual(1, server.alive.Count);
+
+            Assert.IsTrue(testTile4.CompareByPath(tobePlayed));
+
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    Assert.IsNull(server.board.tiles[i][j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMPlayer3PlayTurnMultiLegalHand()
+        {
+            MPlayer3 mPlayer = new MPlayer3("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            // symmetricity of 1, illegal
+            player.AddTiletoHand(testTile1);
+
+            // symmetricity of 4
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 3, 2, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+            // symmetricity of 1, legal
+            Tile testTile5 = new Tile(5, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 6, 3
+            });
+            player.AddTiletoHand(testTile5);
+
+
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+            Assert.AreEqual(1, server.alive.Count);
+
+            Assert.IsTrue(testTile4.CompareByPath(tobePlayed));
+        }
+
+        [TestMethod]
+        public void TestMPlayer3PlayTurnMultiLegalHandFirst()
+        {
+            MPlayer3 mPlayer = new MPlayer3("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            // symmetricity of 1, illegal
+            player.AddTiletoHand(testTile1);
+
+            // symmetricity of 4
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 3, 2, 6, 4, 7
+            });
+            player.AddTiletoHand(testTile4);
+            // symmetricity of 4, legal
+            Tile testTile5 = new Tile(5, new List<int>(8) {
+                0, 2, 1, 4, 3, 7, 5, 6
+            });
+            player.AddTiletoHand(testTile5);
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+
+            Assert.IsTrue(testTile4.CompareByPath(tobePlayed));
+        }
+
+        [TestMethod]
+        public void TestMPlayer3PlayTurnMultiLegalHandFirstFlipped()
+        {
+            MPlayer3 mPlayer = new MPlayer3("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            server.AddPlayer(mPlayer, "blue");
+            Player player = new Player(mPlayer, "blue");
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+            // symmetricity of 1, illegal
+            player.AddTiletoHand(testTile1);
+
+            // symmetricity of 4
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 5, 1, 3, 2, 6, 4, 7
+            });
+            // symmetricity of 4, legal
+            Tile testTile5 = new Tile(5, new List<int>(8) {
+                0, 2, 1, 4, 3, 7, 5, 6
+            });
+            player.AddTiletoHand(testTile5);
+            player.AddTiletoHand(testTile4);
+
+            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+
+            Assert.IsTrue(testTile5.CompareByPath(tobePlayed));
         }
 
 

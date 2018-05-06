@@ -8,14 +8,14 @@ namespace TsuroTheSecond
     {
         public readonly string Color;
         public List<Tile> Hand;
-        public IPlayer player;
+        public IPlayer iplayer;
 
         public Player(IPlayer p, string c) {
             if (!Constants.colors.Contains(c)) {
                 throw new ArgumentException("Color not allowed");
             }
             Hand = new List<Tile>();
-            player = p;
+            iplayer = p;
             Color = c;
         }
 
