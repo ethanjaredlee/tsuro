@@ -42,8 +42,33 @@ namespace TsuroTheSecond
             alive.Add(new Player(p, color));
         }
 
-        public void InitPlayerPosition() {
+        public void ReplacePlayer(Player player) {
+            // might want a better way to do this
+            List<IPlayer> iplayers = new List<IPlayer>();
+            iplayers.Add(new MPlayer1(player.iplayer.GetName()));
+            iplayers.Add(new MPlayer2(player.iplayer.GetName()));
+            iplayers.Add(new MPlayer3(player.iplayer.GetName()));
+
+            Random random = new Random();
+            IPlayer replacement = iplayers[random.Next(0, 3)];
+
+            while (replacement.GetType() == player.iplayer.GetType()) {
+                replacement = iplayers[random.Next(0, 3)];
+            }
+
+            player.ReplaceIPlayer(replacement);
+        }
+
+        public void InitPlayerPositions() {
             for (int i = 0; i < alive.Count; i++) {
+                try {
+                    Position position = alive[i].iplayer.PlacePawn(this.board);
+                    Console.WriteLine(position);
+                } catch(ArgumentException) {
+                    // temp
+                    Console.WriteLine("bad thing caught");
+                    ReplacePlayer(alive[i]);
+                }
                 this.board.AddPlayerToken(alive[i].Color, alive[i].iplayer.PlacePawn(this.board));
             }
         }
@@ -51,21 +76,21 @@ namespace TsuroTheSecond
         public List<Tile> ShuffleDeck(List<Tile> deck)
         {
             // doesnt quite work the way we want it to yet
-            List<Tile> shuffledDeck = new List<Tile>(new Tile[deck.Count]);
-            Random rng = new Random();
-            int n = deck.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = rng.Next(n + 1);
-                int rot = rng.Next(0, 3);
-                Tile tile = deck[k];
-                deck[k] = deck[n];
-                for (int i = 0; i < rot; i++) {
-                    tile.Rotate();
-                }
-                deck[n] = tile;
-            }
+            //List<Tile> shuffledDeck = new List<Tile>(new Tile[deck.Count]);
+            //Random rng = new Random();
+            //int n = deck.Count;
+            //while (n > 1)
+            //{
+            //    n--;
+            //    int k = rng.Next(n + 1);
+            //    int rot = rng.Next(0, 3);
+            //    Tile tile = deck[k];
+            //    deck[k] = deck[n];
+            //    for (int i = 0; i < rot; i++) {
+            //        tile.Rotate();
+            //    }
+            //    deck[n] = tile;
+            //}
             return deck;
         }
 
@@ -189,10 +214,29 @@ namespace TsuroTheSecond
             Server server = new Server();
 
             // add players
+            MPlayer1 mplayer1 = new MPlayer1("Adam");
+            MPlayer2 mplayer2 = new MPlayer2("John");
+            MPlayer3 mplayer3 = new MPlayer3("Cathy");
+
+            server.AddPlayer(mplayer1, "blue");
+            server.AddPlayer(mplayer1, "green");
+            server.AddPlayer(mplayer1, "hotpink");
 
             // init positions of players
+            server.InitPlayerPositions();
+
+            server.ShuffleDeck(server.deck);
 
             // game loop
+            bool game = true;
+            while (game && server.alive.Count > 0) {
+                Player currentPlayer = server.alive[0];
+                Tile playTile = currentPlayer.iplayer.PlayTurn(server.board, currentPlayer.Hand, server.deck.Count);
+                if (!server.LegalPlay(currentPlayer, server.board, playTile)) {
+                    server.ReplacePlayer(currentPlayer);
+                    Console.WriteLine("Player cheated and has been replaced");
+                }
+            }
                 // pop from alive
                 // player plays turn
                 // checks if its legal

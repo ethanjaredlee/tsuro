@@ -258,6 +258,20 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(Exception), "Player hand is already full!")]
+        public void TestAddTileToFullHand()
+        {
+            // should fail
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            Player player = new Player(mPlayer, "blue");
+
+            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+            player.AddTiletoHand(new Tile(2, new List<int> { 2, 1, 0, 3, 4, 5, 6, 7 }));
+            player.AddTiletoHand(new Tile(3, new List<int> { 4, 1, 2, 3, 0, 5, 6, 7 }));
+            player.AddTiletoHand(new Tile(4, new List<int> { 3, 1, 2, 4, 0, 5, 6, 7 }));
+        }
+
+        [TestMethod]
         public void TestRemoveTilefromHand()
         {
             // should fail
@@ -272,6 +286,17 @@ namespace TsuroTheSecondTests
 
             player.RemoveTilefromHand(testTile1);
             Assert.AreEqual(2, player.Hand.Count);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception), "Player hand is already empty!")]
+        public void TestRemoveTilefromEmptyHand()
+        {
+            // should fail
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            Player player = new Player(mPlayer, "blue");
+
+            player.RemoveTilefromHand(testTile1);
         }
 
         [TestMethod]
@@ -717,6 +742,17 @@ namespace TsuroTheSecondTests
             Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
 
             Assert.IsTrue(testTile5.CompareByPath(tobePlayed));
+        }
+
+        [TestMethod]
+        public void TestReplacePlayer()
+        {
+            MPlayer1 mPlayer1 = new MPlayer1("john");
+            MPlayer2 replacement = new MPlayer2("adam");
+
+            Player player = new Player(mPlayer1, "blue");
+            player.ReplaceIPlayer(replacement);
+            Assert.AreEqual("adam", player.iplayer.GetName());
         }
 
 

@@ -18,18 +18,18 @@ namespace TsuroTheSecondTests
 
         void AddTwoPlayers()
         {
-            MPlayer p1 = new MPlayer();
-            MPlayer p2 = new MPlayer();
+            MPlayer1 p1 = new MPlayer1("john");
+            MPlayer2 p2 = new MPlayer2("mike");
 
             server.AddPlayer(p1, "blue");
             server.AddPlayer(p2, "green");
         }
 
         void AddFourPlayers(){
-            MPlayer p1 = new MPlayer();
-            MPlayer p2 = new MPlayer();
-            MPlayer p3 = new MPlayer();
-            MPlayer p4 = new MPlayer();
+            MPlayer1 p1 = new MPlayer1("jim");
+            MPlayer2 p2 = new MPlayer2("john");
+            MPlayer3 p3 = new MPlayer3("mike");
+            MPlayer1 p4 = new MPlayer1("mickey");
 
             server.AddPlayer(p1, "blue");
             server.AddPlayer(p2, "green");
@@ -495,8 +495,58 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void TestPlayTurnOneWin()
+        public void ReplacePlayer() {
+            // this is a random function we're testing
+            AddFourPlayers();
+            var origType = server.alive[0].iplayer.GetType();
+            server.ReplacePlayer(server.alive[0]);
+
+            Assert.AreNotEqual(origType, server.alive[0].iplayer.GetType());
+        }
+
+        class InitPositionCheatPlayer : IPlayer
         {
+            // player that throws a init position error
+            public String GetName()
+            {
+                return "InitPositionCheatPlayer";
+            }
+
+            public void Initialize(string color, List<string> other_colors)
+            {
+            }
+
+            public Position PlacePawn(Board board)
+            {
+                // this position isn't legal
+                Console.WriteLine("before init p");
+                Position p = new Position(1, 2, 3);
+                Console.WriteLine("after init p");
+
+                return p;
+            }
+
+            public Tile PlayTurn(Board board, List<Tile> hand, int unused)
+            {
+                return null;
+            }
+
+            public void EndGame(Board board, List<string> colors)
+            {
+            }
+        }
+
+        [TestMethod]
+        public void TestPlayerCheatInitPlayerPosition()
+        {
+            InitPositionCheatPlayer cheat = new InitPositionCheatPlayer();
+            server.AddPlayer(cheat, "hotpink");
+            AddTwoPlayers();
+            server.InitPlayerPositions();
+            //Console.WriteLine(server.board.tokenPositions["blue"].x);
+            //Console.WriteLine(server.board.tokenPositions["blue"].y);
+            //Console.WriteLine(server.board.tokenPositions["blue"].port);
+            Assert.AreNotEqual(cheat.GetType(), server.alive[0].iplayer.GetType());
         }
     }
 }

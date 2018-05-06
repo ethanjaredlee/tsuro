@@ -16,8 +16,9 @@ namespace TsuroTheSecond
             }
             else
             {
-                throw new ArgumentException("Illegal position to initialize player", "_x, _y, _port");
+                throw new ArgumentException("Illegal position to initialize player");
             }
+
             switch (port / 2)
             {
                 case 0:

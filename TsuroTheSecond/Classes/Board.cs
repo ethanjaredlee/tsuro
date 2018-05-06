@@ -36,6 +36,7 @@ namespace TsuroTheSecond
         }
 
         public Boolean FreeTokenSpot(Position position) {
+            Console.WriteLine(!tokenPositions.ContainsValue(position));
             return !tokenPositions.ContainsValue(position);
         }
 
@@ -49,6 +50,7 @@ namespace TsuroTheSecond
 
             foreach (Position pos in tokenPositions.Values) {
                 if (pos.x == position.x && pos.y == position.y && pos.port == position.port) {
+                    Console.WriteLine(color);
                     throw new Exception("Initializing a second player at used position");
                 }
             }

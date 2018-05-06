@@ -34,8 +34,8 @@ namespace TsuroTheSecond
             while (!board.FreeTokenSpot(position)) {
                 // make this thoroughly checking every position on the board
                 // but for right now just check all the top tiles
-                position.x += 1; 
-                if (position.x > Constants.boardSize-1) {
+                Position newPosition = new Position(position.x, position.y+1, position.port);
+                if (newPosition.y > Constants.boardSize-1) {
                     throw new Exception("incomplete place pawn check");
                 }
             }
