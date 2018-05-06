@@ -371,6 +371,49 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        public void TestLegalPlayFalseWithRotation()
+        {
+            AddTwoPlayers();
+
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 1, 2, 7, 3, 6, 4, 5,
+            });
+
+            Player p_1 = server.alive[0];
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
+            // testTile3 will kill without rotation, but with rotation won't kill.
+            // Thus, testTile3 is a valid option, making legalPlay of testTile1 false.
+            Assert.IsFalse(server.LegalPlay(p_1, server.board, testTile1));
+        }
+        [TestMethod]
+        public void TestLegalPlayTrueWithRotation()
+        {
+            AddTwoPlayers();
+
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 1, 2, 7, 3, 6, 4, 5,
+            });
+            Player p_1 = server.alive[0];
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
+            // testTile3 will kill without rotation, but with rotation won't kill.
+            Assert.IsTrue(server.LegalPlay(p_1, server.board, testTile3));
+        }
+
+        [TestMethod]
         public void TestPlayTurn()
         {
             // alive[0] is blue, alive[1] is green

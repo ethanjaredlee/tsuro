@@ -70,45 +70,34 @@ namespace TsuroTheSecond
         }
 
         public Boolean LegalPlay(Player player, Board b, Tile tile) {
-            // keep this in for iterating through the loop
-            if (tile == null) {
-                return false;
+            // Check for valid tile
+            if (tile == null || !player.TileinHand(tile)) {
+                throw new Exception("Invalid Tile was passed into LegalPlay");
             }
-            if (b.ValidTilePlacement(player, tile) && player.TileinHand(tile)) {
-                return true;    
-            } else {
-                // check hand lengh
-                // if 1, return true;
-                // if 2, try the other one and if legal for that tile, return false else return true;
-                // if 3, try the other two and if both of them are invalid return true;
-                switch (player.Hand.Count) {
-                    case 1:
-                        return true;
-                    case 2:
-                        foreach(Tile other_tile in player.Hand) 
-                        {
-                            if ( other_tile.id != tile.id ) 
-                            {
-                                return !(b.ValidTilePlacement(player, other_tile) && player.TileinHand(other_tile));
-                            }
-                        }
-                        break;
-                    case 3:
-                        List<bool> other_tiles = new List<bool>();
-                        foreach (Tile other_tile in player.Hand)
-                        {
-                            if (other_tile.id != tile.id)
-                            {
-                                other_tiles.Add(!(b.ValidTilePlacement(player, other_tile) && player.TileinHand(other_tile)));
-                            }
-                        }
-
-                        return (other_tiles[0] && other_tiles[1]);
-                    default:
-                        break;
+            List<Tile> all_options = b.AllPossibleTiles(player);
+            // try if the tile is in all_options
+            // If so, return true
+            foreach(Tile goodTile in all_options){
+                if(goodTile.CompareByPath(tile)){
+                    return true;
                 }
             }
-            return false;
+            // try if other tiles are in the options
+            // If so, return false
+            foreach(Tile hand_tile in player.Hand){
+                if( hand_tile.id != tile.id ){
+                    foreach (Tile goodTile in all_options)
+                    {
+                        if (goodTile.CompareByPath(hand_tile))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            // If all rotated tiles fail,
+            // return true
+            return true;
         }
 
         public (List<Tile>, List<Player>, List<Player>, Board, Boolean) PlayATurn(List<Tile> _deck, 
