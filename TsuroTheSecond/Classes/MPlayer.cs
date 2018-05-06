@@ -18,7 +18,7 @@ namespace TsuroTheSecond
         {
         }
 
-        public List<int> PlacePawn(Board board)
+        public Position PlacePawn(Board board)
         {
             return null;
         }

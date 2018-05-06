@@ -41,6 +41,13 @@ namespace TsuroTheSecond
                     throw new ArgumentException("Illegal onward value", "_onward");
             }
         }
+        public Position(Position copy)
+        {
+            x = copy.x;
+            y = copy.y;
+            port = copy.port;
+        }
+
 
         public (int, int) WhatNext(){
             // invalid _onward

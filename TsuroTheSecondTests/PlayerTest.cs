@@ -27,18 +27,18 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestConstructor()
         {
-            MPlayer p_0 = new MPlayer();
-            Player player = new Player(p_0, 4);
-            player.InitPlayerPosition(-1, 2, 3 );
-            MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 2);
-            player1.InitPlayerPosition( 6, 3, 6 );
-            MPlayer p_2 = new MPlayer();
-            Player player2 = new Player(p_2, 2);
-            player1.InitPlayerPosition( 3, -1, 4);
-            MPlayer p_3 = new MPlayer();
-            Player player3 = new Player(p_3, 2);
-            player1.InitPlayerPosition( 5, 6, 0 );
+            for (int i = 0; i < Constants.colors.Count; i++) {
+                MPlayer player = new MPlayer();
+                Player p = new Player(player, Constants.colors[i]);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Color not allowed")]
+        public void TestBadColorConstructor()
+        {
+            MPlayer mPlayer = new MPlayer();
+            Player player = new Player(mPlayer, "turquoise");
         }
 
         //[TestMethod]
@@ -226,7 +226,7 @@ namespace TsuroTheSecondTests
         {
             // takes tile and adds the player to the Hand
             MPlayer machine = new MPlayer();
-            Player p1 = new Player(machine, 1);
+            Player p1 = new Player(machine, "green");
             Assert.AreEqual(0, p1.Hand.Count);
             p1.AddTiletoHand(testTile1);
             Assert.AreEqual(1, p1.Hand.Count);
@@ -234,184 +234,210 @@ namespace TsuroTheSecondTests
         }
 
 
-        [TestMethod]
-        public void TestUpdatePositionBaseCase1()
-        {
-            // start at 5, 6 and at port 0
-            MPlayer p_1 = new MPlayer();
-            Player p1 = new Player(p_1, 4);
-            p1.InitPlayerPosition(5, 6, 0);
-            //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-            Board board = new Board(6);
-            Tile testTile_1 = new Tile(1, new List<int>(8) {
-                0, 4, 1, 5, 2, 6, 3, 7
-            });
-            // places a tile that gives direct path up 
-            board.PlaceTile(testTile_1, 5, 5);
-            // move and update position of the player
-            p1.UpdatePosition(board);
-            // check position
-            Assert.IsFalse(p1.IsDead());
-            Assert.AreEqual(p1.position.x, 5);
-            Assert.AreEqual(p1.position.y, 5);
-            Assert.AreEqual(p1.position.port, 1);
-        }
-        [TestMethod]
-        public void TestUpdatePositionInductiveCase()
-        {
-            MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 4);
-            player1.InitPlayerPosition(5, 6, 0);
-            // start at 5, 6 and at port 0
-            //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-            Board board = new Board(6);
-            Tile testTile_1 = new Tile(1, new List<int>(8) {
-                0, 4, 1, 5, 2, 6, 3, 7
-            });
-            Tile testTile_2 = new Tile(2, new List<int>(8) {
-                4, 7, 0, 6, 1, 3, 5, 2
-            });
-            // places a tile that gives direct path up 
-            board.PlaceTile(testTile_1, 5, 5);
-            board.PlaceTile(testTile_2, 5, 4);
-            // move and update position of the player
-            player1.UpdatePosition(board);
-            // check position
-            Assert.IsFalse(player1.IsDead());
-            Assert.AreEqual(5, player1.position.x);
-            Assert.AreEqual(7, player1.position.port);
-            Assert.AreEqual(4, player1.position.y);
-        }
-
-        [TestMethod]
-        public void TestUpdatePositionMultiMove()
-        {
-            MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 4);
-            player1.InitPlayerPosition(5, 6, 0 );
-            MPlayer p_2 = new MPlayer();
-            Player player2 = new Player(p_2, 4);
-            player2.InitPlayerPosition(6, 4, 6 );
-            // start at 5, 6 and at port 0
-            //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-            Board board = new Board(6);
-            Tile testTile_1 = new Tile(1, new List<int>(8) {
-                0, 4, 1, 5, 2, 6, 3, 7
-            });
-            Tile testTile_2 = new Tile(2, new List<int>(8) {
-                4, 7, 0, 6, 1, 3, 5, 2
-            });
-            // places a tile that gives direct path up 
-            board.PlaceTile(testTile_1, 5, 5);
-            board.PlaceTile(testTile_2, 5, 4);
-            // move and update position of the player
-            player1.UpdatePosition(board);
-            player2.UpdatePosition(board);
-            // check position
-            Assert.IsFalse(player1.IsDead());
-            Assert.AreEqual(5, player1.position.x);
-            Assert.AreEqual(4, player1.position.y);
-            Assert.AreEqual(7, player1.position.port);
-
-
-            Assert.IsFalse(player2.IsDead());
-            Assert.AreEqual(5, player2.position.x);
-            Assert.AreEqual(4, player2.position.y);
-            Assert.AreEqual(1, player2.position.port);
-        }
-
-        [TestMethod]
-        public void TestUpdatePositionMultiKill()
-        {
-            MPlayer p_1 = new MPlayer();
-            Player player1 = new Player(p_1, 4);
-            player1.InitPlayerPosition(5, 6, 1);
-            MPlayer p_2 = new MPlayer();
-            Player player2 = new Player(p_2, 4);
-            player2.InitPlayerPosition(6, 4, 7);
-            // start at 5, 6 and at port 0
-            //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-            Board board = new Board(6);
-            Tile testTile_1 = new Tile(1, new List<int>(8) {
-                0, 4, 1, 5, 2, 6, 3, 7
-            });
-            Tile testTile_2 = new Tile(2, new List<int>(8) {
-                4, 7, 0, 6, 1, 3, 5, 2
-            });
-            // places a tile that gives direct path up 
-            board.PlaceTile(testTile_1, 5, 5);
-            board.PlaceTile(testTile_2, 5, 4);
-            // move and update position of the player
-            player1.UpdatePosition(board);
-            player2.UpdatePosition(board);
-            // check position
-            Assert.IsTrue(player1.IsDead());
-            Assert.AreEqual(6, player1.position.x);
-            Assert.AreEqual(4, player1.position.y);
-            Assert.AreEqual(7, player1.position.port);
-
-            Assert.IsTrue(player2.IsDead());
-            Assert.AreEqual(5, player2.position.x);
-            Assert.AreEqual(6, player2.position.y);
-            Assert.AreEqual(1, player2.position.port);
-        }
-
-        [TestMethod]
-        public void TestUpdatePositionRotatedTile()
-        {
-            // start at 5, 6 and at port 0
-            MPlayer p_1 = new MPlayer();
-            Player p1 = new Player(p_1, 4);
-            p1.InitPlayerPosition(6, 4, 7 );
-            //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-            Board board = new Board(6);
-            Tile testTile_2 = new Tile(2, new List<int>(8) {
-                4, 7, 0, 6, 1, 3, 5, 2
-            });
-            testTile_2.Rotate();
-            // places a tile that gives direct path up 
-            board.PlaceTile(testTile_2, 5, 4);
-            // move and update position of the player
-            p1.UpdatePosition(board);
-            // check position
-            Assert.IsFalse(p1.IsDead());
-            Assert.AreEqual(p1.position.x, 5);
-            Assert.AreEqual(p1.position.y, 4);
-            Assert.AreEqual(p1.position.port, 0);   
-        }
-
-
-
-        [TestMethod]
-        public void TestInitPlayerPosition()
-        {
-            MPlayer machine = new MPlayer();
-            Player p1 = new Player(machine, 1);
-            p1.InitPlayerPosition(0, -1, 4);
-            Assert.AreEqual(0, p1.position.x);
-            Assert.AreEqual(-1, p1.position.y);
-            Assert.AreEqual(4, p1.position.port);
-        }
-
         //[TestMethod]
-        //public void TestRemoveTilefromHand()
+        //public void TestUpdatePositionBaseCase1()
         //{
-        //    // should fail
-        //    Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Assert.AreEqual(player1.Hand.Count, 3);
-        //    player1.RemoveTilefromHand(testTile1);
-        //    Assert.AreEqual(2, player1.Hand.Count);
-        //}
-        //[TestMethod]
-        //public void TestTileinHand()
-        //{
-        //    Tile testTile4 = new Tile(4, new List<int>(8) {
-        //        0, 1, 2, 3, 4, 5, 6, 7,
+        //    // start at 5, 6 and at port 0
+        //    MPlayer p_1 = new MPlayer();
+        //    Player p1 = new Player(p_1, 4);
+        //    p1.InitPlayerPosition(5, 6, 0);
+        //    //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
+        //    Board board = new Board(6);
+        //    Tile testTile_1 = new Tile(1, new List<int>(8) {
+        //        0, 4, 1, 5, 2, 6, 3, 7
         //    });
-        //    Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
-        //    Assert.IsTrue(player1.TileinHand(testTile1));
-        //    Assert.IsFalse(player1.TileinHand(testTile4));
+        //    // places a tile that gives direct path up 
+        //    board.PlaceTile(testTile_1, 5, 5);
+        //    // move and update position of the player
+        //    p1.UpdatePosition(board);
+        //    // check position
+        //    Assert.IsFalse(p1.IsDead());
+        //    Assert.AreEqual(p1.position.x, 5);
+        //    Assert.AreEqual(p1.position.y, 5);
+        //    Assert.AreEqual(p1.position.port, 1);
         //}
+
+        //[TestMethod]
+        //public void TestUpdatePositionInductiveCase()
+        //{
+        //    MPlayer p_1 = new MPlayer();
+        //    Player player1 = new Player(p_1, 4);
+        //    player1.InitPlayerPosition(5, 6, 0);
+        //    // start at 5, 6 and at port 0
+        //    //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
+        //    Board board = new Board(6);
+        //    Tile testTile_1 = new Tile(1, new List<int>(8) {
+        //        0, 4, 1, 5, 2, 6, 3, 7
+        //    });
+        //    Tile testTile_2 = new Tile(2, new List<int>(8) {
+        //        4, 7, 0, 6, 1, 3, 5, 2
+        //    });
+        //    // places a tile that gives direct path up 
+        //    board.PlaceTile(testTile_1, 5, 5);
+        //    board.PlaceTile(testTile_2, 5, 4);
+        //    // move and update position of the player
+        //    player1.UpdatePosition(board);
+        //    // check position
+        //    Assert.IsFalse(player1.IsDead());
+        //    Assert.AreEqual(5, player1.position.x);
+        //    Assert.AreEqual(7, player1.position.port);
+        //    Assert.AreEqual(4, player1.position.y);
+        //}
+
+        //[TestMethod]
+        //public void TestUpdatePositionMultiMove()
+        //{
+        //    MPlayer p_1 = new MPlayer();
+        //    Player player1 = new Player(p_1, 4);
+        //    player1.InitPlayerPosition(5, 6, 0 );
+        //    MPlayer p_2 = new MPlayer();
+        //    Player player2 = new Player(p_2, 4);
+        //    player2.InitPlayerPosition(6, 4, 6 );
+        //    // start at 5, 6 and at port 0
+        //    //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
+        //    Board board = new Board(6);
+        //    Tile testTile_1 = new Tile(1, new List<int>(8) {
+        //        0, 4, 1, 5, 2, 6, 3, 7
+        //    });
+        //    Tile testTile_2 = new Tile(2, new List<int>(8) {
+        //        4, 7, 0, 6, 1, 3, 5, 2
+        //    });
+        //    // places a tile that gives direct path up 
+        //    board.PlaceTile(testTile_1, 5, 5);
+        //    board.PlaceTile(testTile_2, 5, 4);
+        //    // move and update position of the player
+        //    player1.UpdatePosition(board);
+        //    player2.UpdatePosition(board);
+        //    // check position
+        //    Assert.IsFalse(player1.IsDead());
+        //    Assert.AreEqual(5, player1.position.x);
+        //    Assert.AreEqual(4, player1.position.y);
+        //    Assert.AreEqual(7, player1.position.port);
+
+
+        //    Assert.IsFalse(player2.IsDead());
+        //    Assert.AreEqual(5, player2.position.x);
+        //    Assert.AreEqual(4, player2.position.y);
+        //    Assert.AreEqual(1, player2.position.port);
+        //}
+
+        //[TestMethod]
+        //public void TestUpdatePositionMultiKill()
+        //{
+        //    MPlayer p_1 = new MPlayer();
+        //    Player player1 = new Player(p_1, 4);
+        //    player1.InitPlayerPosition(5, 6, 1);
+        //    MPlayer p_2 = new MPlayer();
+        //    Player player2 = new Player(p_2, 4);
+        //    player2.InitPlayerPosition(6, 4, 7);
+        //    // start at 5, 6 and at port 0
+        //    //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
+        //    Board board = new Board(6);
+        //    Tile testTile_1 = new Tile(1, new List<int>(8) {
+        //        0, 4, 1, 5, 2, 6, 3, 7
+        //    });
+        //    Tile testTile_2 = new Tile(2, new List<int>(8) {
+        //        4, 7, 0, 6, 1, 3, 5, 2
+        //    });
+        //    // places a tile that gives direct path up 
+        //    board.PlaceTile(testTile_1, 5, 5);
+        //    board.PlaceTile(testTile_2, 5, 4);
+        //    // move and update position of the player
+        //    player1.UpdatePosition(board);
+        //    player2.UpdatePosition(board);
+        //    // check position
+        //    Assert.IsTrue(player1.IsDead());
+        //    Assert.AreEqual(6, player1.position.x);
+        //    Assert.AreEqual(4, player1.position.y);
+        //    Assert.AreEqual(7, player1.position.port);
+
+        //    Assert.IsTrue(player2.IsDead());
+        //    Assert.AreEqual(5, player2.position.x);
+        //    Assert.AreEqual(6, player2.position.y);
+        //    Assert.AreEqual(1, player2.position.port);
+        //}
+
+        //[TestMethod]
+        //public void TestUpdatePositionRotatedTile()
+        //{
+        //    // start at 5, 6 and at port 0
+        //    MPlayer p_1 = new MPlayer();
+        //    Player p1 = new Player(p_1, 4);
+        //    p1.InitPlayerPosition(6, 4, 7 );
+        //    //Player player1 = new Player(new List<int> { 5, 6, 0 }, new List<Tile> { testTile1, testTile2, testTile3 }, 78, "blue");
+        //    Board board = new Board(6);
+        //    Tile testTile_2 = new Tile(2, new List<int>(8) {
+        //        4, 7, 0, 6, 1, 3, 5, 2
+        //    });
+        //    testTile_2.Rotate();
+        //    // places a tile that gives direct path up 
+        //    board.PlaceTile(testTile_2, 5, 4);
+        //    // move and update position of the player
+        //    p1.UpdatePosition(board);
+        //    // check position
+        //    Assert.IsFalse(p1.IsDead());
+        //    Assert.AreEqual(p1.position.x, 5);
+        //    Assert.AreEqual(p1.position.y, 4);
+        //    Assert.AreEqual(p1.position.port, 0);   
+        //}
+
+
+
+        //[TestMethod]
+        //public void TestInitPlayerPosition()
+        //{
+        //    MPlayer machine = new MPlayer();
+        //    Player p1 = new Player(machine, 1);
+        //    p1.InitPlayerPosition(0, -1, 4);
+        //    Assert.AreEqual(0, p1.position.x);
+        //    Assert.AreEqual(-1, p1.position.y);
+        //    Assert.AreEqual(4, p1.position.port);
+        //}
+
+        [TestMethod]
+        public void TestAddTileFromHand()
+        {
+            // should fail
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            Player player = new Player(mPlayer, "blue");
+
+            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+
+            Assert.AreEqual(player.Hand.Count, 1);
+        }
+
+        [TestMethod]
+        public void TestRemoveTilefromHand()
+        {
+            // should fail
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            Player player = new Player(mPlayer, "blue");
+
+            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+            player.AddTiletoHand(new Tile(2, new List<int> { 2, 1, 0, 3, 4, 5, 6, 7 }));
+            player.AddTiletoHand(new Tile(3, new List<int> { 4, 1, 2, 3, 0, 5, 6, 7 }));
+
+            Assert.AreEqual(3, player.Hand.Count);
+
+            player.RemoveTilefromHand(testTile1);
+            Assert.AreEqual(2, player.Hand.Count);
+        }
+
+        [TestMethod]
+        public void TestTileinHand()
+        {
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            Player player = new Player(mPlayer, "blue");
+
+            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+
+            Assert.IsTrue(player.TileinHand(testTile1));
+            Assert.IsFalse(player.TileinHand(testTile4));
+        }
 
 
     }

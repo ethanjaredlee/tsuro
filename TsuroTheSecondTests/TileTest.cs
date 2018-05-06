@@ -10,34 +10,34 @@ namespace TsuroTheSecondTests
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "There must be 8 unique ports specified")]
-        public void CheckConstructorTooManyPorts()
+        public void TestConstructorTooManyPorts()
         {
             Tile testTile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8 });
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "There must be 8 unique ports specified")]
-        public void CheckConstructorTooFewPorts()
+        public void TestConstructorTooFewPorts()
         {
             Tile testTile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6 });
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Ports must be in range 0 to 7")]
-        public void CheckConstructorPathValuesTooGreat()
+        public void TestConstructorPathValuesTooGreat()
         {
             Tile testTile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 9});
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Ports must be in range 0 to 7")]
-        public void CheckConstructorPathValuesTooSmall()
+        public void TestConstructorPathValuesTooSmall()
         {
             Tile testTile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, -7 });
         }
 
         [TestMethod]
-        public void CheckFindEndofPath()
+        public void TestFindEndofPath()
         {
             List<int> paths = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
             Tile testTile1 = new Tile(1, paths);
@@ -52,7 +52,7 @@ namespace TsuroTheSecondTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Start is out of range")]
-        public void CheckFindEndofPathStartTooBig()
+        public void TestFindEndofPathStartTooBig()
         {
             Tile testTile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
             int end = testTile1.FindEndofPath(9);
@@ -60,7 +60,7 @@ namespace TsuroTheSecondTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Start is out of range")]
-        public void CheckFindEndofPathStartTooSmall()
+        public void TestFindEndofPathStartTooSmall()
         {
             Tile testTile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
             int end = testTile1.FindEndofPath(-1);
@@ -68,7 +68,7 @@ namespace TsuroTheSecondTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Port doesn't exist in tile")]
-        public void CheckFindEndofPathPortDoesntExist()
+        public void TestFindEndofPathPortDoesntExist()
         {
             Tile testTile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
             testTile1.paths[0][0] = 2;
@@ -77,7 +77,7 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void CheckRotate()
+        public void TestRotate()
         {
             Tile testTile1 = new Tile(1, new List<int>{0, 1, 2, 3, 4, 5, 6, 7});
             testTile1.Rotate();
@@ -91,7 +91,7 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void CheckJudgeSymmetric1()
+        public void TestJudgeSymmetric1()
         {
             Tile testTile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
             Tile testTile2 = new Tile(2, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
@@ -102,7 +102,7 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void CheckJudgeSymmetric4()
+        public void TestJudgeSymmetric4()
         {
             Tile testTile1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
             Tile testTile2 = new Tile(2, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
@@ -113,5 +113,23 @@ namespace TsuroTheSecondTests
 
         }
 
+        [TestMethod]
+        public void TestCompareByPath_t()
+        {
+            Tile testTile1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Tile testTile2 = new Tile(2, new List<int> { 1, 3, 2, 6, 4, 7, 0, 5 });
+
+            Assert.IsTrue(testTile1.CompareByPath(testTile2));
+            Assert.IsTrue(testTile2.CompareByPath(testTile1));
+
+        }
+        [TestMethod]
+        public void TestCompareByPath_f()
+        {
+            Tile testTile1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Tile testTile2 = new Tile(2, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Assert.IsFalse(testTile1.CompareByPath(testTile2));
+            Assert.IsFalse(testTile2.CompareByPath(testTile1));
+        }
     }
 }

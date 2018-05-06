@@ -23,16 +23,29 @@ namespace TsuroTheSecond
             board = new Board(Constants.boardSize);
         }
 
-        public void AddPlayer(IPlayer p, int age) {
+        public void AddPlayer(IPlayer p, string color) {
+            if (!Constants.colors.Contains(color)) {
+                throw new ArgumentException("Invalid color");
+            }
+
+            List<string> colors = alive.Select(x => x.Color).ToList();
+            if (colors.Contains(color)) {
+                throw new ArgumentException("Duplicate color");
+            }
+
             // somehow check that at least 2 players are in teh game?
 
             if (alive.Count >= 8) {
                 throw new InvalidOperationException("Only 8 players allowed in game");
             }
             // todo organize alive by age and don't let players pick duplicate colors
-            alive.Add(new Player(p, age));
-            alive = alive.OrderBy(x => x.age).ToList();
-            alive.Reverse();
+            alive.Add(new Player(p, color));
+        }
+
+        public void InitPlayerPosition() {
+            for (int i = 0; i < alive.Count; i++) {
+                this.board.AddPlayerToken(alive[i].Color, alive[i].player.PlacePawn(this.board));
+            }
         }
 
         public List<Tile> ShuffleDeck(List<Tile> deck)
@@ -57,61 +70,34 @@ namespace TsuroTheSecond
         }
 
         public Boolean LegalPlay(Player player, Board b, Tile tile) {
-            // keep this in for iterating through the loop
-            if (tile == null) {
-                return false;
+            // Check for valid tile
+            if (tile == null || !player.TileinHand(tile)) {
+                throw new Exception("Invalid Tile was passed into LegalPlay");
             }
-            if (ValidTilePlacement(b, player, tile) && player.TileinHand(tile)) {
-                return true;    
-            } else {
-                // check hand lengh
-                // if 1, return true;
-                // if 2, try the other one and if legal for that tile, return false else return true;
-                // if 3, try the other two and if both of them are invalid return true;
-                switch (player.Hand.Count) {
-                    case 1:
-                        return true;
-                    case 2:
-                        foreach(Tile other_tile in player.Hand) 
-                        {
-                            if ( other_tile.id != tile.id ) 
-                            {
-                                return !(ValidTilePlacement(b, player, other_tile) && player.TileinHand(other_tile));
-                            }
-                        }
-                        break;
-                    case 3:
-                        List<bool> other_tiles = new List<bool>();
-                        foreach (Tile other_tile in player.Hand)
-                        {
-                            if (other_tile.id != tile.id)
-                            {
-                                other_tiles.Add(!(ValidTilePlacement(b, player, other_tile) && player.TileinHand(other_tile)));
-                            }
-                        }
-
-                        return (other_tiles[0] && other_tiles[1]);
-                    default:
-                        break;
+            List<Tile> all_options = b.AllPossibleTiles(player);
+            // try if the tile is in all_options
+            // If so, return true
+            foreach(Tile goodTile in all_options){
+                if(goodTile.CompareByPath(tile)){
+                    return true;
                 }
             }
-            return false;
-        }
-
-        public Boolean ValidTilePlacement(Board b, Player player, Tile tile) {
-            // checks if placing a tile on the board will kill the player 
-            Boolean playerAlive = true;
-            var origNext = player.position.WhatNext();
-            b.PlaceTile(tile, origNext.Item1, origNext.Item2);
-            Position origPosition = player.position;
-            player.UpdatePosition(b);
-
-            playerAlive = !player.IsDead();
-
-            // undoing changes to the board
-            b.PlaceTile(null, origNext.Item1, origNext.Item2);
-            player.position = origPosition;
-            return playerAlive;
+            // try if other tiles are in the options
+            // If so, return false
+            foreach(Tile hand_tile in player.Hand){
+                if( hand_tile.id != tile.id ){
+                    foreach (Tile goodTile in all_options)
+                    {
+                        if (goodTile.CompareByPath(hand_tile))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            // If all rotated tiles fail,
+            // return true
+            return true;
         }
 
         public (List<Tile>, List<Player>, List<Player>, Board, Boolean) PlayATurn(List<Tile> _deck, 
@@ -122,21 +108,20 @@ namespace TsuroTheSecond
         {
             Player currentPlayer = _alive[0];
             currentPlayer.RemoveTilefromHand(tile);
-            var next = currentPlayer.position.WhatNext();
+            var next = _board.ReturnNextSpot(currentPlayer);
             _board.PlaceTile(tile, next.Item1, next.Item2);
+
             List<Player> fatalities = new List<Player>();
             foreach (Player p in _alive) {
-                p.UpdatePosition(board);
-                if (p.IsDead()) {
+                _board.MovePlayer(p);
+                if (_board.IsDead(p)) {
                     fatalities.Add(p);
                 }
             }
 
             if (_alive.Count == 1) {
                 WinGame(_alive);
-            }
-
-            if (_alive.Count == 0) {
+            } else if (_alive.Count == 0) {
                 WinGame(fatalities);
             }
 
@@ -145,6 +130,15 @@ namespace TsuroTheSecond
             }
 
             DrawTile(currentPlayer, _deck);
+
+            // put currentPlayer to end of _alive
+            for (int i = 0; i < _alive.Count; i++){
+                if(_alive[i].Color == currentPlayer.Color){
+                    Player move_to_end = _alive[i];
+                    _alive.Remove(move_to_end);
+                    _alive.Add(move_to_end);
+                }
+            }
 
             // fix this shouldnt return false
             return (_deck, _alive, _dead, _board, false);
@@ -195,10 +189,6 @@ namespace TsuroTheSecond
             Server server = new Server();
 
             // add players
-            MPlayer1 player1 = new MPlayer1("joe");
-            MPlayer1 player2 = new MPlayer1("bob");
-            server.AddPlayer(player1, 20);
-            server.AddPlayer(player2, 12);
 
             // init positions of players
 

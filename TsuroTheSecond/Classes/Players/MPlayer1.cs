@@ -25,16 +25,16 @@ namespace TsuroTheSecond
             other_players = other_colors;
         }
 
-        public List<int> PlacePawn(Board board)
+        public Position PlacePawn(Board board)
         {
             // the board should hold other player start positions so that it can be checked
             // if other players are already at this spot
-            List<int> position = new List<int> { 0, -1, 5 };
+            Position position = new Position(0, -1, 5);
             while (!board.FreeTokenSpot(position)) {
                 // make this thoroughly checking every position on the board
                 // but for right now just check all the top tiles
-                position[0] += 1; 
-                if (position[0] > Constants.boardSize-1) {
+                position.x += 1; 
+                if (position.x > Constants.boardSize-1) {
                     throw new Exception("incomplete place pawn check");
                 }
             }
