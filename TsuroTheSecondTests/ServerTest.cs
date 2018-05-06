@@ -235,6 +235,58 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        public void TestIllegalPlayNullTile()
+        {
+            Server server = new Server();
+            MPlayer1 mp1 = new MPlayer1("jim");
+            server.AddPlayer(mp1, "blue");
+
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 7, 6, 5,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
+
+            Player p1 = server.alive[0];
+            var origClass = p1.iplayer.GetType();
+            bool legalPlay = server.LegalPlay(p1, server.board, null);
+            Assert.IsFalse(legalPlay);
+            Assert.AreNotEqual(origClass, server.alive[0].iplayer.GetType());
+        }
+
+        [TestMethod]
+        public void TestIllegalPlayTileNotInHand()
+        {
+            Server server = new Server();
+            MPlayer1 mp1 = new MPlayer1("jim");
+            server.AddPlayer(mp1, "blue");
+
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 7, 6, 5,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
+
+            Tile otherTile = new Tile(4, new List<int>(8) {
+                1, 2, 3, 4, 5, 6, 7, 0
+            });
+
+            Player p1 = server.alive[0];
+            var origClass = p1.iplayer.GetType();
+            bool legalPlay = server.LegalPlay(p1, server.board, otherTile);
+            Assert.IsFalse(legalPlay);
+            Assert.AreNotEqual(origClass, server.alive[0].iplayer.GetType());
+        }
+
+        [TestMethod]
         public void TestLegalPlayBoardUndo()
         {
             Server server = new Server();
@@ -518,11 +570,7 @@ namespace TsuroTheSecondTests
 
             public Position PlacePawn(Board board)
             {
-                // this position isn't legal
-                Console.WriteLine("before init p");
                 Position p = new Position(1, 2, 3);
-                Console.WriteLine("after init p");
-
                 return p;
             }
 
@@ -543,9 +591,6 @@ namespace TsuroTheSecondTests
             server.AddPlayer(cheat, "hotpink");
             AddTwoPlayers();
             server.InitPlayerPositions();
-            //Console.WriteLine(server.board.tokenPositions["blue"].x);
-            //Console.WriteLine(server.board.tokenPositions["blue"].y);
-            //Console.WriteLine(server.board.tokenPositions["blue"].port);
             Assert.AreNotEqual(cheat.GetType(), server.alive[0].iplayer.GetType());
         }
     }

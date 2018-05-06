@@ -64,8 +64,8 @@ namespace TsuroTheSecond
                 try {
                     Position position = alive[i].iplayer.PlacePawn(this.board);
                 } catch(ArgumentException) {
-                    // temp
                     ReplacePlayer(alive[i]);
+                    Console.WriteLine("Player has initialized at an invalid position and been replaced");
                 }
                 this.board.AddPlayerToken(alive[i].Color, alive[i].iplayer.PlacePawn(this.board));
             }
@@ -95,8 +95,11 @@ namespace TsuroTheSecond
         public Boolean LegalPlay(Player player, Board b, Tile tile) {
             // Check for valid tile
             if (tile == null || !player.TileinHand(tile)) {
-                throw new Exception("Invalid Tile was passed into LegalPlay");
+                ReplacePlayer(player);
+                Console.WriteLine("Player yielded an illegal tile and has been replaced");
+                return false;
             }
+
             List<Tile> all_options = b.AllPossibleTiles(player.Color, player.Hand);
             // try if the tile is in all_options
             // If so, return true
@@ -113,6 +116,8 @@ namespace TsuroTheSecond
                     {
                         if (goodTile.CompareByPath(hand_tile))
                         {
+                            ReplacePlayer(player);
+                            Console.WriteLine("Player has played an illegal tile and has been replaced");
                             return false;
                         }
                     }

@@ -70,6 +70,12 @@ namespace TsuroTheSecond
             return this.x == position.x && this.y == position.y && this.port == position.port;
 		}
 
+		public override int GetHashCode()
+		{
+            String s = this.x.ToString() + this.y.ToString() + this.port.ToString();
+            return s.GetHashCode();
+		}
+
 		public (int, int) WhatNext(){
             // invalid _onward
             int next_x = x;

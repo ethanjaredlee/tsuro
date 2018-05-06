@@ -50,8 +50,7 @@ namespace TsuroTheSecond
             }
 
             foreach (Position pos in tokenPositions.Values) {
-                if (pos.x == position.x && pos.y == position.y && pos.port == position.port) {
-                    Console.WriteLine(color);
+                if (pos == position) {
                     throw new Exception("Initializing a second player at used position");
                 }
             }
