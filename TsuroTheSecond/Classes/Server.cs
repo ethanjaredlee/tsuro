@@ -17,7 +17,7 @@ namespace TsuroTheSecond
         public Server() {
             // initializes the game
             dragonQueue = new List<Player>();
-            deck = new List<Tile>(Constants.tiles);
+            deck = ShuffleDeck(Constants.tiles);
             alive = new List<Player>();
             dead = new List<Player>();
             board = new Board(Constants.boardSize);
@@ -74,22 +74,26 @@ namespace TsuroTheSecond
         public List<Tile> ShuffleDeck(List<Tile> deck)
         {
             // doesnt quite work the way we want it to yet
-            //List<Tile> shuffledDeck = new List<Tile>(new Tile[deck.Count]);
-            //Random rng = new Random();
-            //int n = deck.Count;
-            //while (n > 1)
-            //{
-            //    n--;
-            //    int k = rng.Next(n + 1);
-            //    int rot = rng.Next(0, 3);
-            //    Tile tile = deck[k];
-            //    deck[k] = deck[n];
-            //    for (int i = 0; i < rot; i++) {
-            //        tile.Rotate();
-            //    }
-            //    deck[n] = tile;
-            //}
-            return deck;
+            List<Tile> shuffledDeck = new List<Tile>();
+            Random rng = new Random();
+            HashSet<int> chosen = new HashSet<int>();
+
+            while (shuffledDeck.Count < deck.Count)
+            {
+                int k = rng.Next(deck.Count);
+                if (chosen.Contains(k)) { continue; }
+
+                Tile tile = deck[k];
+                int r = rng.Next(4);
+
+                for (int i = 0; i < r; i++) {
+                    tile.Rotate();
+                }
+
+                shuffledDeck.Add(tile);
+                chosen.Add(k);
+            }
+            return shuffledDeck;
         }
 
         public Boolean LegalPlay(Player player, Board b, Tile tile) {

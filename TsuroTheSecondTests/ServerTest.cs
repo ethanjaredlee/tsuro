@@ -47,6 +47,7 @@ namespace TsuroTheSecondTests
         {
             // test that no tile is a rotated version of any other tile
             // there are only 35 such tiles possible
+            Console.WriteLine(server.deck.Count);
             HashSet<string> tileCombinations = new HashSet<string>();
             foreach (Tile t in server.deck) {
                 string tilePathMap = t.PathMap();
@@ -82,6 +83,14 @@ namespace TsuroTheSecondTests
             server.DrawTile(server.alive[0], server.deck);
             Assert.AreEqual(1, server.alive[0].Hand.Count);
             Assert.AreEqual(34, server.deck.Count);
+        }
+
+        [TestMethod]
+        public void TestShuffleDeck()
+        {
+            var shuffledDeck = server.ShuffleDeck(Constants.tiles);
+            Assert.AreEqual(35, shuffledDeck.Count);
+            Assert.AreNotEqual(Constants.tiles, shuffledDeck);
         }
 
         [TestMethod]
@@ -304,9 +313,13 @@ namespace TsuroTheSecondTests
             });
 
             Player p_1 = server.alive[0];
+
+            var origClass = p_1.iplayer.GetType();
+
             server.board.AddPlayerToken("blue", new Position(4, 6, 0));
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             Boolean legalPlay = server.LegalPlay(p_1, server.board, testTile1);
+            Assert.AreNotEqual(origClass, server.alive[0].iplayer.GetType());
             Assert.IsFalse(legalPlay);
             for (int i = 0; i < 6; i++)
             {
