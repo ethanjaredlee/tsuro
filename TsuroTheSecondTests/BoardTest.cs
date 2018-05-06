@@ -16,6 +16,14 @@ namespace TsuroTheSecondTests
         {
             server = new Server();
         }
+        void AddTwoPlayers()
+        {
+            MPlayer p1 = new MPlayer();
+            MPlayer p2 = new MPlayer();
+
+            server.AddPlayer(p1, "blue");
+            server.AddPlayer(p2, "green");
+        }
 
         void AddFourPlayers()
         {
@@ -152,6 +160,40 @@ namespace TsuroTheSecondTests
             server.board.AddPlayerToken(server.alive[0].Color, new Position(4, 6, 0));
             Tile testTile = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
             Assert.IsFalse(server.board.ValidTilePlacement(server.alive[0], testTile));
+        }
+
+        [TestMethod]
+        public void TestAllPossibleTilesFullHand()
+        {
+            AddTwoPlayers();
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+            server.board.AddPlayerToken("green", new Position(4, 6, 1));
+
+
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 5, 1, 4, 2, 7, 3, 6,
+            });
+            Tile testTile4 = new Tile(4, new List<int>(8)
+            {
+                0, 4, 1, 5, 2, 6, 3, 7
+            });
+
+            server.alive[0].Hand = new List<Tile> { testTile1, testTile2, testTile3 };
+
+            List<Tile> every_combi_blue = server.board.AllPossibleTiles(server.alive[0]);
+            // only testTile3 is valid.
+            Assert.AreEqual(4, every_combi_blue.Count);
+            server.alive[1].Hand = new List<Tile> { testTile1, testTile3, testTile4 };
+            List<Tile> every_combi_green = server.board.AllPossibleTiles(server.alive[1]);
+
+            Assert.AreEqual(8, every_combi_green.Count);
+
         }
     }
 }

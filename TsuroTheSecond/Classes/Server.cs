@@ -111,8 +111,6 @@ namespace TsuroTheSecond
             return false;
         }
 
-        
-
         public (List<Tile>, List<Player>, List<Player>, Board, Boolean) PlayATurn(List<Tile> _deck, 
                                                                                   List<Player> _alive, 
                                                                                   List<Player> _dead, 

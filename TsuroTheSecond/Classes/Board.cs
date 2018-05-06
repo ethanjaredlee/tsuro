@@ -77,8 +77,8 @@ namespace TsuroTheSecond
             // checks if placing a tile on the board will kill the player 
             Boolean playerAlive = true;
             var origNext = this.ReturnNextSpot(player);
+            Position origPosition = new Position(this.ReturnPlayerSpot(player));
             this.PlaceTile(tile, origNext.Item1, origNext.Item2);
-            Position origPosition = this.ReturnPlayerSpot(player);
             this.MovePlayer(player);
 
             //playerAlive = !player.IsDead();
@@ -86,7 +86,10 @@ namespace TsuroTheSecond
 
             // undoing changes to the board
             this.PlaceTile(null, origNext.Item1, origNext.Item2);
-            this.tokenPositions[player.Color] = origPosition;
+
+            this.tokenPositions[player.Color].x = origPosition.x;
+            this.tokenPositions[player.Color].y = origPosition.y;
+            this.tokenPositions[player.Color].port = origPosition.port;
             return playerAlive;
         }
 

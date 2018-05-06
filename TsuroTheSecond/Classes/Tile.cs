@@ -98,5 +98,9 @@ namespace TsuroTheSecond
             }
         }
 
+        public Boolean CompareByPath(Tile comparison){
+            return this.PathMap() == comparison.PathMap();
+        }
+
     }
 }
