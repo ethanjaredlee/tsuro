@@ -42,6 +42,7 @@ namespace TsuroTheSecond
                     throw new ArgumentException("Illegal onward value", "_onward");
             }
         }
+
         public Position(Position copy)
         {
             x = copy.x;
@@ -49,8 +50,27 @@ namespace TsuroTheSecond
             port = copy.port;
         }
 
+        public static bool operator ==(Position a, Position b) {
+            return a.x == b.x && a.y == b.y && a.port == b.port;
+        }
 
-        public (int, int) WhatNext(){
+        public static bool operator !=(Position a, Position b)
+        {
+            return !(a.x == b.x && a.y == b.y && a.port == b.port);
+        }
+
+		public override bool Equals(object obj)
+		{
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+
+            Position position = (Position)obj;
+            return this.x == position.x && this.y == position.y && this.port == position.port;
+		}
+
+		public (int, int) WhatNext(){
             // invalid _onward
             int next_x = x;
             int next_y = y;

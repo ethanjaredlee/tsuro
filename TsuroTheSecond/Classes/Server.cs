@@ -63,10 +63,8 @@ namespace TsuroTheSecond
             for (int i = 0; i < alive.Count; i++) {
                 try {
                     Position position = alive[i].iplayer.PlacePawn(this.board);
-                    Console.WriteLine(position);
                 } catch(ArgumentException) {
                     // temp
-                    Console.WriteLine("bad thing caught");
                     ReplacePlayer(alive[i]);
                 }
                 this.board.AddPlayerToken(alive[i].Color, alive[i].iplayer.PlacePawn(this.board));

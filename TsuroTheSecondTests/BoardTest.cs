@@ -87,6 +87,21 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        public void TestTakenTokenSpot() {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
+            Assert.IsFalse(board.FreeTokenSpot(new Position(0, -1, 5)));
+        }
+
+        [TestMethod]
+        public void TestFreeTokenSpot()
+        {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
+            Assert.IsTrue(board.FreeTokenSpot(new Position(0, -1, 4)));
+        }
+
+        [TestMethod]
         public void TestAddPlayerToken() {
             Board board = new Board(6);
             board.AddPlayerToken("blue", new Position(0, -1, 5));
