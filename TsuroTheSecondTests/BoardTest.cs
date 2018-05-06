@@ -325,5 +325,27 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(8, every_combi_green.Count);
 
         }
+        [TestMethod]
+        public void TestAllPossibleTilesNoLegal()
+        {
+            AddTwoPlayers();
+            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
+
+            Tile testTile1 = new Tile(1, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile2 = new Tile(2, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+            Tile testTile3 = new Tile(3, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+
+            server.alive[0].Hand = new List<Tile> { testTile1, testTile2, testTile3 };
+
+            List<Tile> every_combi_blue = server.board.AllPossibleTiles(server.alive[0].Color, server.alive[0].Hand);
+            // only testTile3 is valid.
+            Assert.AreEqual(12, every_combi_blue.Count);
+        }
     }
 }

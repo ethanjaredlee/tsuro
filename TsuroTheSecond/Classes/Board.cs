@@ -94,17 +94,26 @@ namespace TsuroTheSecond
         }
 
         public List<Tile> AllPossibleTiles(string color, List<Tile> hands) {
-            List<Tile> result = new List<Tile>();
+            List<Tile> legal = new List<Tile>();
+            List<Tile> illegal = new List<Tile>();
+
             int hand_size = hands.Count;
             for (int i = 0; i < hand_size; i++) {
                 for (int j = 0; j < 4; j++) {
                     hands[i].Rotate();
                     if (this.ValidTilePlacement(color, hands[i])) {
-                        result.Add(hands[i]);
+                        legal.Add(hands[i]);
+                    } else {
+                        illegal.Add(hands[i]);
                     }
                 }
             }
-            return result;
+            // if none of the options are legal, return all illegal options
+            if(legal.Count > 0){
+                return legal;
+            } else {
+                return illegal;
+            }
         }
 
         public void MovePlayer(string color) {

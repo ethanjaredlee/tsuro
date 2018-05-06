@@ -281,7 +281,23 @@ namespace TsuroTheSecondTests
             Assert.IsTrue(player.TileinHand(testTile1));
             Assert.IsFalse(player.TileinHand(testTile4));
         }
+        [TestMethod]
+        public void TestMPlayer1PlayTurn()
+        {
+            MPlayer1 mPlayer = new MPlayer1("mark");
+            List<string> other_colors = new List<string>(Constants.colors);
+            other_colors.Remove("blue");
+            mPlayer.Initialize("blue", other_colors);
+            Player player = new Player(mPlayer, "blue");
 
+            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+
+            Tile testTile4 = new Tile(4, new List<int>(8) {
+                0, 1, 2, 3, 4, 5, 6, 7,
+            });
+
+
+        }
 
     }
 }
