@@ -27,6 +27,8 @@ namespace TsuroTheSecond
                 List<int> p = new List<int> { path[i], path[i + 1] };
                 this.paths.Add(p);
             }
+
+            this.JudgeSymmetric();
         }
 
 
@@ -90,7 +92,6 @@ namespace TsuroTheSecond
                 this.Rotate();
             }
             sym = rotatos_paths.Count;
-            Console.WriteLine(sym);
             if (sym == 1 || sym == 2 || sym == 4) {
                 this.symmetricity = sym;
             } else {
