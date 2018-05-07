@@ -340,6 +340,7 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(8, every_combi_green.Count);
 
         }
+
         [TestMethod]
         public void TestAllPossibleTilesNoLegal()
         {

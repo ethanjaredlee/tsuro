@@ -13,8 +13,11 @@ namespace TsuroTheSecond
         public List<Player> dead;
         public Board board;
         public List<Player> dragonQueue; // whoever is the first person of the queue has the tile
+        public enum State { start, ready, loop, safe, end };
+        public State gameState;
 
         public Server() {
+            gameState = State.start;
             // initializes the game
             dragonQueue = new List<Player>();
             deck = ShuffleDeck(Constants.tiles);
@@ -24,6 +27,10 @@ namespace TsuroTheSecond
         }
 
         public void AddPlayer(IPlayer p, string color) {
+            if (gameState != State.start) {
+                throw new Exception("Invalid game state");
+            }
+
             if (!Constants.colors.Contains(color)) {
                 throw new ArgumentException("Invalid color");
             }
@@ -60,12 +67,20 @@ namespace TsuroTheSecond
         }
 
         public void InitPlayerPositions() {
+            foreach(Player p in alive) {
+                p.iplayer.Initialize(p.Color, alive.Select(x => x.Color).ToList());
+            }
+            if (gameState != State.start && alive.Count < 3)
+            {
+                throw new Exception("Invalid game state");
+            }
+            gameState = State.loop;
             for (int i = 0; i < alive.Count; i++) {
                 try {
                     Position position = alive[i].iplayer.PlacePawn(this.board);
                 } catch(ArgumentException) {
+                    Console.WriteLine("Player initialized invalid position and has been replaced");
                     ReplacePlayer(alive[i]);
-                    Console.WriteLine("Player has initialized at an invalid position and been replaced");
                 }
                 this.board.AddPlayerToken(alive[i].Color, alive[i].iplayer.PlacePawn(this.board));
             }
@@ -97,6 +112,12 @@ namespace TsuroTheSecond
         }
 
         public Boolean LegalPlay(Player player, Board b, Tile tile) {
+            if (gameState != State.loop)
+            {
+                throw new Exception("Invalid game state");
+            }
+            gameState = State.safe;
+
             // Check for valid tile
             if (tile == null || !player.TileinHand(tile)) {
                 ReplacePlayer(player);
@@ -132,14 +153,53 @@ namespace TsuroTheSecond
             return true;
         }
 
-        public (List<Tile>, List<Player>, List<Player>, Board, Boolean) PlayATurn(List<Tile> _deck, 
+        public (List<Tile>, List<Player>, List<Player>, Board, object) PlayATurn(List<Tile> _deck, 
                                                                                   List<Player> _alive, 
                                                                                   List<Player> _dead, 
                                                                                   Board _board, 
                                                                                   Tile tile) 
         {
+            if (gameState != State.safe) {
+                throw new Exception("Invalid game state");
+            }
+            gameState = State.loop;
+
             Player currentPlayer = _alive[0];
-            currentPlayer.RemoveTilefromHand(tile);
+
+            if (currentPlayer.Hand.Count > 2) {
+                throw new ArgumentException("Player should have 2 or less tiles in hand");
+            }
+
+            // check to make sure player tiles in hand and tile to be played are unique
+            HashSet<string> tilePaths = new HashSet<string>();
+            tilePaths.Add(tile.PathMap());
+            foreach(Tile t in currentPlayer.Hand) {
+                tilePaths.Add(t.PathMap());
+            }
+
+            if (tilePaths.Count != currentPlayer.Hand.Count + 1) {
+                throw new ArgumentException("Tile to be played and tiles in hand are not unique");
+            }
+
+            int tileCount = 0;
+            foreach(List<Tile> row in _board.tiles) {
+                foreach(Tile t in row) {
+                    if (t == null) { continue; }
+                    tilePaths.Add(t.PathMap());
+                    tileCount++;
+                } 
+            }
+
+            int total = currentPlayer.Hand.Count + 1 + tileCount;
+            if (tilePaths.Count != total) {
+                Console.WriteLine(currentPlayer.Hand.Count);
+                Console.WriteLine(tileCount);
+                Console.WriteLine(tilePaths.Count);
+                Console.WriteLine(total);
+                throw new ArgumentException("Tile to be placed, tiles in hand, and tiles on board are not unique");
+            }
+
+
             var next = _board.ReturnNextSpot(currentPlayer.Color);
             _board.PlaceTile(tile, next.Item1, next.Item2);
 
@@ -239,10 +299,6 @@ namespace TsuroTheSecond
             while (game && server.alive.Count > 0) {
                 Player currentPlayer = server.alive[0];
                 Tile playTile = currentPlayer.iplayer.PlayTurn(server.board, currentPlayer.Hand, server.deck.Count);
-                if (!server.LegalPlay(currentPlayer, server.board, playTile)) {
-                    server.ReplacePlayer(currentPlayer);
-                    Console.WriteLine("Player cheated and has been replaced");
-                }
             }
                 // pop from alive
                 // player plays turn

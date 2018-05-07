@@ -21,12 +21,14 @@ namespace TsuroTheSecond
 
         public void AddTiletoHand(Tile tile){
             if( this.Hand.Count >= 3 ) {
+                // this should only be called by server ... and should break in server
                 throw new Exception("Player hand is already full!");
             }
             this.Hand.Add(tile);
         }
 
         public void RemoveTilefromHand(Tile tile) {
+            // this should only be called by server
             if( this.Hand.Count <= 0 ) {
                 throw new Exception("Player hand is already empty!");
             }
@@ -48,14 +50,6 @@ namespace TsuroTheSecond
                 return true;
             }
         }
-
-        //public Position PlacePawn(Board board) {
-        //    try {
-        //        Position position = iplayer.PlacePawn(board);
-        //    } catch {
-                
-        //    }
-        //}
 
         public void ReplaceIPlayer(IPlayer player) {
             this.iplayer = player;

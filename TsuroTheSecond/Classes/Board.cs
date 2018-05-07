@@ -36,8 +36,6 @@ namespace TsuroTheSecond
         }
 
         public Boolean FreeTokenSpot(Position position) {
-            Console.WriteLine(!tokenPositions.ContainsValue(position));
-            Console.WriteLine(position.x.ToString() + position.y.ToString() + position.port.ToString());
             return !tokenPositions.ContainsValue(position);
         }
 

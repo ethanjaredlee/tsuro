@@ -9,9 +9,12 @@ namespace TsuroTheSecond
         private string name;
         private string color;
         private List<string> other_players;
+        private enum State { start, initialized, loop, end };
+        private State playerState;
 
         public MPlayer1(string _name)
         {
+            playerState = State.start;
             name = _name;
         }
 
@@ -20,14 +23,22 @@ namespace TsuroTheSecond
             return name;
         }
 
-        public void Initialize(string _color, List<string> other_colors)
+        public void Initialize(string _color, List<string> colors)
         {
+            if (playerState != State.start)
+            {
+                throw new Exception("Player should be in start state");
+            }
             color = _color;
-            other_players = other_colors;
+            other_players = colors;
+            playerState = State.initialized;
         }
 
         public Position PlacePawn(Board board)
         {
+            if (playerState != State.initialized) {
+                throw new Exception("Player should be in initialized state");
+            }
             // the board should hold other player start positions so that it can be checked
             // if other players are already at this spot
             Position position = new Position(0, -1, 5);
@@ -44,6 +55,10 @@ namespace TsuroTheSecond
 
         public Tile PlayTurn(Board board, List<Tile> hand, int unused)
         {
+            if (playerState != State.loop)
+            {
+                throw new Exception("Player is in wrong state");
+            }
             Random random = new Random();
             // all legal options
             List<Tile> legal_options = board.AllPossibleTiles(this.color, hand);
@@ -61,6 +76,11 @@ namespace TsuroTheSecond
 
         public void EndGame(Board board, List<string> colors)
         {
+            if (playerState != State.loop)
+            {
+                throw new Exception("Player is in wrong state");
+            }
+            playerState = State.end;
             if (colors.Contains(color)) {
                 Console.WriteLine("You win!");
             } else {
