@@ -319,46 +319,33 @@ namespace TsuroTheSecondTests
         public void TestMPlayer1PlayTurnNoLegalHand()
         {
             MPlayer1 mPlayer = new MPlayer1("mark");
-            List<string> other_colors = new List<string>(Constants.colors);
-            other_colors.Remove("blue");
-            mPlayer.Initialize("blue", other_colors);
-            server.AddPlayer(mPlayer, "blue");
             Player player = new Player(mPlayer, "blue");
-            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
-
-            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
-
-            Tile testTile4 = new Tile(4, new List<int>(8) {
-                0, 1, 2, 3, 4, 5, 6, 7,
-            });
-            player.AddTiletoHand(testTile4);
-
-            server.gameState = Server.State.safe;
-            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
-            Assert.IsTrue(tobePlayed.CompareByPath(testTile1) || tobePlayed.CompareByPath(testTile4));
+            Board board = new Board(6);
+            player.iplayer.Initialize(player.Color, new List<string> {"red", "hotpink"});
+            Position p = player.iplayer.PlacePawn(board); // this position should be (0, -1, 5)
+            board.AddPlayerToken("blue", p);
+            Tile t = player.iplayer.PlayTurn(board, new List<Tile> { Constants.tiles[0] }, 35); // both these tiles should kill player
+            board.PlaceTile(t, 0, 0);
+            board.MovePlayer("blue");
+            Assert.IsTrue(board.IsDead("blue"));
         }
 
         [TestMethod]
         public void TestMPlayer1PlayTurnOneLegalHand()
         {
             MPlayer1 mPlayer = new MPlayer1("mark");
-            List<string> other_colors = new List<string>(Constants.colors);
-            other_colors.Remove("blue");
-            mPlayer.Initialize("blue", other_colors);
-            server.AddPlayer(mPlayer, "blue");
             Player player = new Player(mPlayer, "blue");
-            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
-
-            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
-
-            Tile testTile4 = new Tile(4, new List<int>(8) {
-                0, 5, 1, 2, 3, 6, 4, 7
-            });
-            player.AddTiletoHand(testTile4);
-
-            server.gameState = Server.State.safe;
-            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
-            Assert.IsTrue(tobePlayed.CompareByPath(testTile4));
+            Board board = new Board(6);
+            player.iplayer.Initialize(player.Color, new List<string> { "red", "hotpink" });
+            Position p = player.iplayer.PlacePawn(board); // this position should be (0, -1, 5)
+            board.AddPlayerToken("blue", p);
+            Tile t = player.iplayer.PlayTurn(board, new List<Tile> { Constants.tiles[0], Constants.tiles[1] }, 35); // both these tiles should kill player
+            board.PlaceTile(t, 0, 0);
+            board.MovePlayer("blue");
+            Assert.AreEqual(2, t.id);
+            Assert.IsFalse(board.IsDead("blue"));
+            // will randomly select an orientation that will leave the player at port 5 or 2
+            Assert.IsTrue(board.tokenPositions["blue"].port == 5 || board.tokenPositions["blue"].port == 2);
         }
 
         [TestMethod]

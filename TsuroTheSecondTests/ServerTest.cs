@@ -501,6 +501,7 @@ namespace TsuroTheSecondTests
             server.InitPlayerPositions();
             server.board.tokenPositions["blue"] = new Position(0, -1, 5);
             server.board.tokenPositions["green"] = new Position(0, -1, 4);
+            server.board.tokenPositions["hotpink"] = new Position(1, -1, 4);
 
             Tile playTile = new Tile(1, new List<int>{0, 7, 1, 2, 3, 4, 5, 6});
 
@@ -511,7 +512,7 @@ namespace TsuroTheSecondTests
                                                                                                    server.dead, 
                                                                                                    server.board, 
                                                                                                    playTile);
-            Assert.AreEqual(1, server.alive.Count);
+            Assert.AreEqual(2, server.alive.Count);
             Assert.AreEqual(1, server.dead.Count);
             // dead
             Assert.AreEqual(-1, server.board.tokenPositions["blue"].x);

@@ -342,6 +342,17 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        public void TestAllPossibleTiles1Legal() {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
+            List<Tile> legalTiles = board.AllPossibleTiles("blue", new List<Tile> { Constants.tiles[0], Constants.tiles[1] });
+            Assert.AreEqual(2, legalTiles.Count);
+
+            board.MovePlayer("blue");
+            Assert.IsFalse(board.IsDead("blue"));
+        }
+
+        [TestMethod]
         public void TestAllPossibleTilesNoLegal()
         {
             AddTwoPlayers();
