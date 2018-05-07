@@ -100,8 +100,11 @@ namespace TsuroTheSecond
             int hand_size = hands.Count;
             for (int i = 0; i < hand_size; i++) {
                 for (int j = 0; j < 4; j++) {
-                    hands[i].Rotate();
-                    if (this.ValidTilePlacement(color, hands[i])) {
+                    Tile tile = hands[i].Copy();
+                    for (int k = 0; k < j; k++) {
+                        tile.Rotate(); 
+                    }
+                    if (this.ValidTilePlacement(color, tile)) {
                         legal.Add(hands[i]);
                     } else {
                         illegal.Add(hands[i]);

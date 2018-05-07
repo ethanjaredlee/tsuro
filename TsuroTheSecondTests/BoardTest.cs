@@ -308,6 +308,54 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        public void TestValidTilePlacementFalse1() {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
+            Assert.IsFalse(board.ValidTilePlacement("blue", Constants.tiles[0]));
+        }
+
+        [TestMethod]
+        public void TestValidTilePlacementFalse2()
+        {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
+            Assert.IsFalse(board.ValidTilePlacement("blue", Constants.tiles[1]));
+        }
+
+        [TestMethod]
+        public void TestValidTilePlacementFalse3()
+        {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
+            Tile tile = Constants.tiles[1];
+            tile.Rotate();
+            tile.Rotate();
+            Assert.IsFalse(board.ValidTilePlacement("blue", Constants.tiles[1]));
+        }
+
+        [TestMethod]
+        public void TestValidTilePlacementTrue1()
+        {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
+            Tile tile = Constants.tiles[1];
+            tile.Rotate();
+            Assert.IsTrue(board.ValidTilePlacement("blue", Constants.tiles[1]));
+        }
+
+        [TestMethod]
+        public void TestValidTilePlacementTrue2()
+        {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
+            Tile tile = Constants.tiles[1];
+            tile.Rotate();
+            tile.Rotate();
+            tile.Rotate();
+            Assert.IsTrue(board.ValidTilePlacement("blue", Constants.tiles[1]));
+        }
+
+        [TestMethod]
         public void TestAllPossibleTilesFullHand()
         {
             AddTwoPlayers();

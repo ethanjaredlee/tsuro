@@ -31,6 +31,15 @@ namespace TsuroTheSecond
             this.JudgeSymmetric();
         }
 
+        public Tile(int _id, List<List<int>> path) {
+            this.paths = path;
+            this.id = _id;
+        }
+
+        public Tile Copy() {
+            return new Tile(this.id, this.paths);
+        }
+
         public void Rotate() {
             foreach(List<int> item in this.paths){
                 item[0] = (item[0] + 2) % 8;
