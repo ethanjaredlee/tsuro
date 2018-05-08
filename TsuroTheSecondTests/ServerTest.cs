@@ -101,7 +101,7 @@ namespace TsuroTheSecondTests
         {
             AddThreePlayers();
 
-            MPlayer mPlayer = new MPlayer();
+            MPlayer1 mPlayer = new MPlayer1("harry");
             server.AddPlayer(mPlayer, "blue");
         }
 
@@ -111,7 +111,7 @@ namespace TsuroTheSecondTests
         {
             AddThreePlayers();
 
-            MPlayer mPlayer = new MPlayer();
+            MPlayer1 mPlayer = new MPlayer1("john");
             server.AddPlayer(mPlayer, "not blue");
         }
 
@@ -221,7 +221,7 @@ namespace TsuroTheSecondTests
         public void TestLegalPlayCheckLastPossibleMoveNotUndone()
         {
             Server server = new Server();
-            MPlayer p1 = new MPlayer();
+            MPlayer1 p1 = new MPlayer1("john");
             server.AddPlayer(p1, "blue");
 
             Tile testTile1 = new Tile(1, new List<int>(8) {
@@ -304,7 +304,7 @@ namespace TsuroTheSecondTests
         public void TestLegalPlayBoardUndo()
         {
             Server server = new Server();
-            MPlayer p1 = new MPlayer();
+            MPlayer1 p1 = new MPlayer1("john");
             server.AddPlayer(p1, "blue");
 
             Tile testTile1 = new Tile(1, new List<int>(8) {
@@ -716,7 +716,7 @@ namespace TsuroTheSecondTests
         public void TestPlayerCheatInitPlayerPosition()
         {
             InitPositionCheatPlayer cheat = new InitPositionCheatPlayer();
-            server.AddPlayer(cheat, "hotpink");
+            server.AddPlayer(cheat, "orange");
             AddThreePlayers();
             server.InitPlayerPositions();
             Assert.AreNotEqual(cheat.GetType(), server.alive[0].iplayer.GetType());

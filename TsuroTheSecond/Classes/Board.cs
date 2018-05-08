@@ -79,13 +79,7 @@ namespace TsuroTheSecond
             var origNext = this.ReturnNextSpot(color);
             Position origPosition = new Position(this.ReturnPlayerSpot(color));
             this.PlaceTile(tile, origNext.Item1, origNext.Item2);
-            Console.WriteLine(this.tokenPositions[color].x);
-            Console.WriteLine(this.tokenPositions[color].y);
-            Console.WriteLine(this.tokenPositions[color].port);
             this.MovePlayer(color);
-            Console.WriteLine(this.tokenPositions[color].x);
-            Console.WriteLine(this.tokenPositions[color].y);
-            Console.WriteLine(this.tokenPositions[color].port);
 
 
             //playerAlive = !player.IsDead();
@@ -119,6 +113,7 @@ namespace TsuroTheSecond
                 }
             }
             // if none of the options are legal, return all illegal options
+            Console.WriteLine("legal count: " + legal.Count.ToString());
             if(legal.Count > 0){
                 return legal;
             } else {

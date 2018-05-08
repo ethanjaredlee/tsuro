@@ -10,17 +10,23 @@ namespace TsuroTheSecondTests
     public class BoardTest
     {
         Server server;
+        List<Tile> tiles;
 
         [TestInitialize]
         public void Initialize()
         {
             server = new Server();
-
+            tiles = new List<Tile>{
+                new Tile(1, new List<int>{0, 1, 2, 3, 4, 5, 6, 7}),
+                new Tile(2, new List<int>{0, 1, 2, 4, 3, 6, 5, 7}),
+                new Tile(3, new List<int>{0, 6, 1, 5, 2, 4, 3, 7}),
+                new Tile(4, new List<int>{0, 5, 1, 4, 2, 7, 3, 6}),
+            };
         }
         void AddTwoPlayers()
         {
-            MPlayer p1 = new MPlayer();
-            MPlayer p2 = new MPlayer();
+            MPlayer1 p1 = new MPlayer1("john");
+            MPlayer1 p2 = new MPlayer1("john");
 
             server.AddPlayer(p1, "blue");
             server.AddPlayer(p2, "green");
@@ -28,10 +34,10 @@ namespace TsuroTheSecondTests
 
         void AddFourPlayers()
         {
-            MPlayer p1 = new MPlayer();
-            MPlayer p2 = new MPlayer();
-            MPlayer p3 = new MPlayer();
-            MPlayer p4 = new MPlayer();
+            MPlayer1 p1 = new MPlayer1("john");
+            MPlayer1 p2 = new MPlayer1("jim");
+            MPlayer1 p3 = new MPlayer1("harry");
+            MPlayer1 p4 = new MPlayer1("miles");
 
             server.AddPlayer(p1, "blue");
             server.AddPlayer(p2, "green");
@@ -313,7 +319,7 @@ namespace TsuroTheSecondTests
             AddFourPlayers();
 
             server.board.AddPlayerToken(server.alive[0].Color, new Position(0, -1, 5));
-            Assert.IsFalse(server.board.ValidTilePlacement(server.alive[0].Color, Constants.tiles[0]));
+            Assert.IsFalse(server.board.ValidTilePlacement(server.alive[0].Color, tiles[0]));
         }
 
         [TestMethod]
@@ -322,9 +328,9 @@ namespace TsuroTheSecondTests
             AddFourPlayers();
 
             server.board.AddPlayerToken(server.alive[0].Color, new Position(0, -1, 5));
-            Console.WriteLine(Constants.tiles[1].id);
-            Constants.tiles[1].PrintMe();
-            Assert.IsFalse(server.board.ValidTilePlacement(server.alive[0].Color, Constants.tiles[1]));
+            //Console.WriteLine(tiles[1].id);
+            //Constants.tiles[1].PrintMe();
+            Assert.IsFalse(server.board.ValidTilePlacement(server.alive[0].Color, tiles[1]));
         }
 
         [TestMethod]
@@ -333,7 +339,7 @@ namespace TsuroTheSecondTests
             AddFourPlayers();
 
             server.board.AddPlayerToken(server.alive[0].Color, new Position(0, -1, 5));
-            Tile tile = new Tile (Constants.tiles[1]);
+            Tile tile = new Tile (tiles[1]);
             tile.Rotate();
             tile.Rotate();
             Assert.IsFalse(server.board.ValidTilePlacement(server.alive[0].Color, tile));
@@ -346,7 +352,7 @@ namespace TsuroTheSecondTests
 
             server.board.AddPlayerToken(server.alive[0].Color, new Position(0, -1, 5));
 
-            Tile tile = new Tile(Constants.tiles[1]);
+            Tile tile = new Tile(tiles[1]);
             tile.Rotate();
             Assert.IsTrue(server.board.ValidTilePlacement(server.alive[0].Color, tile));
         }
@@ -357,7 +363,7 @@ namespace TsuroTheSecondTests
             AddFourPlayers();
 
             server.board.AddPlayerToken(server.alive[0].Color, new Position(0, -1, 5));
-            Tile tile = new Tile(Constants.tiles[1]);
+            Tile tile = new Tile(tiles[1]);
             tile.Rotate();
             tile.Rotate();
             tile.Rotate();
@@ -403,12 +409,28 @@ namespace TsuroTheSecondTests
         public void TestAllPossibleTiles1Legal() {
             server.board.AddPlayerToken("blue", new Position(0, -1, 5));
             // one tile is illegal, second tile is legal(only one version is legal if rotated)
-            List<Tile> legalTiles = server.board.AllPossibleTiles("blue", new List<Tile> { Constants.tiles[0], new Tile(1, new List<int>{0, 1, 2, 7, 3, 4, 5, 6}) });
+            List<Tile> legalTiles = server.board.AllPossibleTiles("blue", new List<Tile> { tiles[0], new Tile(1, new List<int>{0, 1, 2, 7, 3, 4, 5, 6}) });
             foreach( Tile each in legalTiles){
                 each.PrintMe();
             }
             Assert.AreEqual(1, legalTiles.Count);
 
+        }
+
+        [TestMethod]
+        public void TestCheckAllPossibleTilesReturn()
+        {
+            Board board = new Board(6);
+            board.tokenPositions["blue"] = new Position(0, -1, 5);
+            List<Tile> allTiles = board.AllPossibleTiles("blue", new List<Tile>{
+                new Tile(1, new List<int>{0, 1, 2, 3, 4, 5, 6, 7}),
+                new Tile(2, new List<int>{0, 1, 2, 4, 3, 6, 5, 7})
+            });
+
+            Assert.AreEqual(2, allTiles.Count);
+
+            board.MovePlayer("blue");
+            Assert.IsFalse(board.IsDead("blue"));
         }
 
         [TestMethod]

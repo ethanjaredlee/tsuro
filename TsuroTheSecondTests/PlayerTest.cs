@@ -10,11 +10,28 @@ namespace TsuroTheSecondTests
     public class PlayerTest
     {
         Server server;
+        RandomPlayer rplayer;
+        LeastSymmetricPlayer lplayer;
+        MostSymmetricPlayer mplayer;
+        Player randBlue;
+        List<Tile> tiles;
 
         [TestInitialize]
         public void Initialize()
         {
             server = new Server();
+            rplayer = new RandomPlayer("jim");
+            lplayer = new LeastSymmetricPlayer("reggie");
+            mplayer = new MostSymmetricPlayer("michael");
+
+            randBlue = new Player(rplayer, "blue");
+            tiles = new List<Tile>{
+                new Tile(1, new List<int>{0, 1, 2, 3, 4, 5, 6, 7}),
+                new Tile(2, new List<int>{0, 1, 2, 4, 3, 6, 5, 7}),
+                new Tile(3, new List<int>{0, 6, 1, 5, 2, 4, 3, 7}),
+                new Tile(4, new List<int>{0, 5, 1, 4, 2, 7, 3, 6}),
+                new Tile(5, new List<int>{0, 2, 1, 4, 3, 7, 5, 6}),
+            };
         }
 
         // go to line 223 to skip constructor tests
@@ -33,10 +50,30 @@ namespace TsuroTheSecondTests
         });
 
         [TestMethod]
-        public void TestConstructor()
+        public void TestConstructorRandomPlayer()
         {
             for (int i = 0; i < Constants.colors.Count; i++) {
-                MPlayer player = new MPlayer();
+                RandomPlayer player = new RandomPlayer("john");
+                Player p = new Player(player, Constants.colors[i]);
+            }
+        }
+
+        [TestMethod]
+        public void TestConstructorMostSymmetricPlayer()
+        {
+            for (int i = 0; i < Constants.colors.Count; i++)
+            {
+                MostSymmetricPlayer player = new MostSymmetricPlayer("john");
+                Player p = new Player(player, Constants.colors[i]);
+            }
+        }
+
+        [TestMethod]
+        public void TestConstructorLeastSymmetricPlayer()
+        {
+            for (int i = 0; i < Constants.colors.Count; i++)
+            {
+                LeastSymmetricPlayer player = new LeastSymmetricPlayer("john");
                 Player p = new Player(player, Constants.colors[i]);
             }
         }
@@ -45,7 +82,7 @@ namespace TsuroTheSecondTests
         [ExpectedException(typeof(ArgumentException), "Color not allowed")]
         public void TestBadColorConstructor()
         {
-            MPlayer mPlayer = new MPlayer();
+            RandomPlayer mPlayer = new RandomPlayer("time");
             Player player = new Player(mPlayer, "turquoise");
         }
 
@@ -226,12 +263,12 @@ namespace TsuroTheSecondTests
         public void TestAddTiletoHand()
         {
             // takes tile and adds the player to the Hand
-            MPlayer machine = new MPlayer();
-            Player p1 = new Player(machine, "green");
-            Assert.AreEqual(0, p1.Hand.Count);
-            p1.AddTiletoHand(testTile1);
-            Assert.AreEqual(1, p1.Hand.Count);
-            Assert.AreEqual(testTile1.id, (p1.Hand.Find(each => each.id == 1)).id);
+
+            Assert.AreEqual(0, randBlue.Hand.Count);
+            randBlue.AddTiletoHand(testTile1);
+
+            Assert.AreEqual(1, randBlue.Hand.Count);
+            Assert.AreEqual(testTile1.id, (randBlue.Hand.Find(each => each.id == 1)).id);
         }
 
         //[TestMethod]
@@ -249,97 +286,83 @@ namespace TsuroTheSecondTests
         public void TestAddTileFromHand()
         {
             // should fail
-            MPlayer1 mPlayer = new MPlayer1("mark");
-            Player player = new Player(mPlayer, "blue");
+            randBlue.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
 
-            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
-
-            Assert.AreEqual(player.Hand.Count, 1);
+            Assert.AreEqual(randBlue.Hand.Count, 1);
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception), "Player hand is already full!")]
         public void TestAddTileToFullHand()
         {
-            // should fail
-            MPlayer1 mPlayer = new MPlayer1("mark");
-            Player player = new Player(mPlayer, "blue");
-
-            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
-            player.AddTiletoHand(new Tile(2, new List<int> { 2, 1, 0, 3, 4, 5, 6, 7 }));
-            player.AddTiletoHand(new Tile(3, new List<int> { 4, 1, 2, 3, 0, 5, 6, 7 }));
-            player.AddTiletoHand(new Tile(4, new List<int> { 3, 1, 2, 4, 0, 5, 6, 7 }));
+            randBlue.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+            randBlue.AddTiletoHand(new Tile(2, new List<int> { 2, 1, 0, 3, 4, 5, 6, 7 }));
+            randBlue.AddTiletoHand(new Tile(3, new List<int> { 4, 1, 2, 3, 0, 5, 6, 7 }));
+            randBlue.AddTiletoHand(new Tile(4, new List<int> { 3, 1, 2, 4, 0, 5, 6, 7 }));
         }
 
         [TestMethod]
         public void TestRemoveTilefromHand()
         {
-            // should fail
-            MPlayer1 mPlayer = new MPlayer1("mark");
-            Player player = new Player(mPlayer, "blue");
+            randBlue.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+            randBlue.AddTiletoHand(new Tile(2, new List<int> { 2, 1, 0, 3, 4, 5, 6, 7 }));
+            randBlue.AddTiletoHand(new Tile(3, new List<int> { 4, 1, 2, 3, 0, 5, 6, 7 }));
 
-            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
-            player.AddTiletoHand(new Tile(2, new List<int> { 2, 1, 0, 3, 4, 5, 6, 7 }));
-            player.AddTiletoHand(new Tile(3, new List<int> { 4, 1, 2, 3, 0, 5, 6, 7 }));
+            Assert.AreEqual(3, randBlue.Hand.Count);
 
-            Assert.AreEqual(3, player.Hand.Count);
-
-            player.RemoveTilefromHand(testTile1);
-            Assert.AreEqual(2, player.Hand.Count);
+            randBlue.RemoveTilefromHand(testTile1);
+            Assert.AreEqual(2, randBlue.Hand.Count);
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception), "Player hand is already empty!")]
         public void TestRemoveTilefromEmptyHand()
         {
-            // should fail
-            MPlayer1 mPlayer = new MPlayer1("mark");
-            Player player = new Player(mPlayer, "blue");
-
-            player.RemoveTilefromHand(testTile1);
+            randBlue.RemoveTilefromHand(testTile1);
         }
 
         [TestMethod]
         public void TestTileinHand()
         {
-            MPlayer1 mPlayer = new MPlayer1("mark");
-            Player player = new Player(mPlayer, "blue");
-
-            player.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
+            randBlue.AddTiletoHand(new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }));
 
             Tile testTile4 = new Tile(4, new List<int>(8) {
                 0, 1, 2, 3, 4, 5, 6, 7,
             });
 
-            Assert.IsTrue(player.TileinHand(testTile1));
-            Assert.IsFalse(player.TileinHand(testTile4));
+            Assert.IsTrue(randBlue.TileinHand(testTile1));
+            Assert.IsFalse(randBlue.TileinHand(testTile4));
         }
 
         [TestMethod]
-        public void TestMPlayer1PlayTurnNoLegalHand()
+        public void TestRandomPlayerPlayTurnNoLegalHand()
         {
-            MPlayer1 mPlayer = new MPlayer1("mark");
-            Player player = new Player(mPlayer, "blue");
             Board board = new Board(6);
-            player.iplayer.Initialize(player.Color, new List<string> {"red", "hotpink"});
-            Position p = player.iplayer.PlacePawn(board); // this position should be (0, -1, 5)
+            randBlue.iplayer.Initialize(randBlue.Color, new List<string> {"red", "hotpink"});
+
+            Position p = randBlue.iplayer.PlacePawn(board); // this position should be (0, -1, 5)
+
             board.AddPlayerToken("blue", p);
-            Tile t = player.iplayer.PlayTurn(board, new List<Tile> { Constants.tiles[0] }, 35); // both these tiles should kill player
+            board.tokenPositions["blue"] = new Position(0, -1, 5); // we want to set new position so player dies
+            Tile t = randBlue.iplayer.PlayTurn(board, new List<Tile> { tiles[0] }, 35); // both these tiles should kill player
             board.PlaceTile(t, 0, 0);
             board.MovePlayer("blue");
             Assert.IsTrue(board.IsDead("blue"));
         }
 
         [TestMethod]
-        public void TestMPlayer1PlayTurnOneLegalHand()
+        public void TestRandomPlayerPlayTurnOneLegalHand()
         {
-            MPlayer1 mPlayer = new MPlayer1("mark");
-            Player player = new Player(mPlayer, "blue");
             Board board = new Board(6);
-            player.iplayer.Initialize(player.Color, new List<string> { "red", "hotpink" });
-            Position p = player.iplayer.PlacePawn(board); // this position should be (0, -1, 5)
+            randBlue.iplayer.Initialize(randBlue.Color, new List<string> { "blue", "red", "hotpink" });
+            Position p = randBlue.iplayer.PlacePawn(board);
             board.AddPlayerToken("blue", p);
-            Tile t = player.iplayer.PlayTurn(board, new List<Tile> { Constants.tiles[0], Constants.tiles[1] }, 35); // both these tiles should kill player
+            board.tokenPositions["blue"] = new Position(0, -1, 5); // we want to set new position so player dies
+
+            Tile tile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile tile2 = new Tile(2, new List<int> { 0, 1, 2, 4, 3, 6, 5, 7 });
+            Tile t = randBlue.iplayer.PlayTurn(board, new List<Tile> { tile1, tile2}, 35); // both these tiles should kill player
+
             board.PlaceTile(t, 0, 0);
             board.MovePlayer("blue");
             Assert.AreEqual(2, t.id);
@@ -349,7 +372,7 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void TestMPlayer1PlayTurnMultiLegalHand()
+        public void TestRandomPlayerPlayTurnMultiLegalHand()
         {
             MPlayer1 mPlayer = new MPlayer1("mark");
             List<string> other_colors = new List<string>(Constants.colors);

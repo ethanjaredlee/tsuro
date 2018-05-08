@@ -67,12 +67,13 @@ namespace TsuroTheSecond
         }
 
         public void InitPlayerPositions() {
-            foreach(Player p in alive) {
-                p.iplayer.Initialize(p.Color, alive.Select(x => x.Color).ToList());
-            }
             if (gameState != State.start && alive.Count < 3)
             {
                 throw new Exception("Invalid game state");
+            }
+
+            foreach(Player p in alive) {
+                p.iplayer.Initialize(p.Color, alive.Select(x => x.Color).ToList());
             }
             gameState = State.loop;
             for (int i = 0; i < alive.Count; i++) {

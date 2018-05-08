@@ -10,4 +10,7 @@
     <Folder Include="Classes\" />
     <Folder Include="Classes\Players\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Classes\Players\EmptyClass.cs" />
+  </ItemGroup>
 </Project>
