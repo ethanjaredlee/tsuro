@@ -31,6 +31,12 @@ namespace TsuroTheSecond
             this.JudgeSymmetric();
         }
 
+        public Tile (Tile tile){
+            this.id = tile.id;
+            this.paths = tile.paths;
+            this.symmetricity = tile.symmetricity;
+        }
+
         public Tile(int _id, List<List<int>> path) {
             this.paths = path;
             this.id = _id;
