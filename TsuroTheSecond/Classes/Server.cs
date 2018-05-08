@@ -127,6 +127,12 @@ namespace TsuroTheSecond
             }
 
             List<Tile> all_options = b.AllPossibleTiles(player.Color, player.Hand);
+
+            // if there's no options that don't kill you, then any tile is legal
+            if (all_options.Count == 0) {
+                return true;
+            }
+
             // try if the tile is in all_options
             // If so, return true
             foreach(Tile goodTile in all_options){
@@ -134,24 +140,10 @@ namespace TsuroTheSecond
                     return true;
                 }
             }
-            // try if other tiles are in the options
-            // If so, return false
-            foreach(Tile hand_tile in player.Hand){
-                if( hand_tile.id != tile.id ){
-                    foreach (Tile goodTile in all_options)
-                    {
-                        if (goodTile.CompareByPath(hand_tile))
-                        {
-                            ReplacePlayer(player);
-                            Console.WriteLine("Player has played an illegal tile and has been replaced");
-                            return false;
-                        }
-                    }
-                }
-            }
-            // If all rotated tiles fail,
-            // return true
-            return true;
+
+            ReplacePlayer(player);
+            Console.WriteLine("Player has played an illegal tile and has been replaced");
+            return false;
         }
 
         public (List<Tile>, List<Player>, List<Player>, Board, object) PlayATurn(List<Tile> _deck, 

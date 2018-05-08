@@ -372,40 +372,62 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void TestRandomPlayerPlayTurnMultiLegalHand()
-        {
-            MPlayer1 mPlayer = new MPlayer1("mark");
-            List<string> other_colors = new List<string>(Constants.colors);
-            other_colors.Remove("blue");
-            mPlayer.Initialize("blue", other_colors);
-            server.AddPlayer(mPlayer, "blue");
-            Player player = new Player(mPlayer, "blue");
-            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+        public void TestRandomPlayerPlayTurnMutlipleLegalTiles() {
+            Board board = new Board(6);
+            randBlue.iplayer.Initialize(randBlue.Color, new List<string> { "blue", "red", "hotpink" });
+            Position p = randBlue.iplayer.PlacePawn(board);
+            board.AddPlayerToken("blue", p);
+            board.tokenPositions["blue"] = new Position(0, -1, 5); // we want to set new position so player dies
 
-            player.AddTiletoHand(new Tile(1, new List<int> { 0, 3, 2, 1, 4, 5, 6, 7 }));
+            Tile tile1 = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            Tile tile2 = new Tile(2, new List<int> { 0, 1, 2, 4, 3, 6, 5, 7 });
+            Tile tile3 = new Tile(6, new List<int> { 0, 4, 1, 7, 2, 3, 5, 6 });
+            Tile t = randBlue.iplayer.PlayTurn(board, new List<Tile> { tile1, tile2, tile3 }, 35); // both these tiles should kill player
 
-            Tile testTile4 = new Tile(4, new List<int>(8) {
-                0, 5, 1, 2, 3, 6, 4, 7
-            });
-            player.AddTiletoHand(testTile4);
 
-            server.gameState = Server.State.safe;
-            Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+            Assert.IsTrue(t.id == 2 || t.id == 6);
+            board.PlaceTile(t, 0, 0);
+            board.MovePlayer("blue");
 
-            Assert.AreEqual(1, server.alive.Count);
-            if(tobePlayed.id == 1){
-                while (player.iplayer.PlayTurn(server.board, player.Hand, 33).CompareByPath(testTile1)){}
-            } else {
-                while (player.iplayer.PlayTurn(server.board, player.Hand, 33).CompareByPath(testTile4)){}
-            }
-            for (int i = 0; i < 6; i++)
-            {
-                for (int j = 0; j < 6; j++)
-                {
-                    Assert.IsNull(server.board.tiles[i][j]);
-                }
-            }
+            Assert.IsFalse(board.IsDead("blue"));
         }
+
+        // not entirely sure what youre trying to test here
+        //[TestMethod]
+        //public void TestRandomPlayerPlayTurnMultiLegalHand()
+        //{
+        //    MPlayer1 mPlayer = new MPlayer1("mark");
+        //    List<string> other_colors = new List<string>(Constants.colors);
+        //    other_colors.Remove("blue");
+        //    mPlayer.Initialize("blue", other_colors);
+        //    server.AddPlayer(mPlayer, "blue");
+        //    Player player = new Player(mPlayer, "blue");
+        //    server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+
+        //    player.AddTiletoHand(new Tile(1, new List<int> { 0, 3, 2, 1, 4, 5, 6, 7 }));
+
+        //    Tile testTile4 = new Tile(4, new List<int>(8) {
+        //        0, 5, 1, 2, 3, 6, 4, 7
+        //    });
+        //    player.AddTiletoHand(testTile4);
+
+        //    server.gameState = Server.State.safe;
+        //    Tile tobePlayed = player.iplayer.PlayTurn(server.board, player.Hand, 33);
+
+        //    Assert.AreEqual(1, server.alive.Count);
+        //    if(tobePlayed.id == 1){
+        //        while (player.iplayer.PlayTurn(server.board, player.Hand, 33).CompareByPath(testTile1)){}
+        //    } else {
+        //        while (player.iplayer.PlayTurn(server.board, player.Hand, 33).CompareByPath(testTile4)){}
+        //    }
+        //    for (int i = 0; i < 6; i++)
+        //    {
+        //        for (int j = 0; j < 6; j++)
+        //        {
+        //            Assert.IsNull(server.board.tiles[i][j]);
+        //        }
+        //    }
+        //}
 
         [TestMethod]
         public void TestMPlayer2PlayTurnNoLegalHand()

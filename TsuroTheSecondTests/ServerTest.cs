@@ -18,9 +18,9 @@ namespace TsuroTheSecondTests
 
         void AddThreePlayers()
         {
-            MPlayer1 p1 = new MPlayer1("john");
-            MPlayer2 p2 = new MPlayer2("mike");
-            MPlayer3 p3 = new MPlayer3("jim");
+            RandomPlayer p1 = new RandomPlayer("john");
+            RandomPlayer p2 = new RandomPlayer("jim");
+            RandomPlayer p3 = new RandomPlayer("george");
 
             server.AddPlayer(p1, "blue");
             server.AddPlayer(p2, "green");
@@ -28,10 +28,10 @@ namespace TsuroTheSecondTests
         }
 
         void AddFourPlayers(){
-            MPlayer1 p1 = new MPlayer1("jim");
-            MPlayer2 p2 = new MPlayer2("john");
-            MPlayer3 p3 = new MPlayer3("mike");
-            MPlayer1 p4 = new MPlayer1("mickey");
+            RandomPlayer p1 = new RandomPlayer("john");
+            RandomPlayer p2 = new RandomPlayer("jim");
+            RandomPlayer p3 = new RandomPlayer("george");
+            RandomPlayer p4 = new RandomPlayer("jimmy");
 
             server.AddPlayer(p1, "blue");
             server.AddPlayer(p2, "green");
@@ -489,7 +489,7 @@ namespace TsuroTheSecondTests
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             // testTile3 will kill without rotation, but with rotation won't kill.
             server.gameState = Server.State.loop;
-            Assert.IsTrue(server.LegalPlay(p_1, server.board, testTile3));
+            Assert.IsFalse(server.LegalPlay(p_1, server.board, testTile3));
         }
 
         [TestMethod]
@@ -504,7 +504,6 @@ namespace TsuroTheSecondTests
             server.board.tokenPositions["hotpink"] = new Position(1, -1, 4);
 
             Tile playTile = new Tile(1, new List<int>{0, 7, 1, 2, 3, 4, 5, 6});
-
 
             server.gameState = Server.State.safe;
             (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck, 
