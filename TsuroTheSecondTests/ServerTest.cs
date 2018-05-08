@@ -499,9 +499,10 @@ namespace TsuroTheSecondTests
             AddThreePlayers();
 
             server.InitPlayerPositions();
-            server.board.tokenPositions["blue"] = new Position(0, -1, 5);
-            server.board.tokenPositions["green"] = new Position(0, -1, 4);
-            server.board.tokenPositions["hotpink"] = new Position(1, -1, 4);
+
+            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
+            server.board.AddPlayerToken("green", new Position(0, -1, 4));
+            server.board.AddPlayerToken("hotpink", new Position(1, -1, 4));
 
             Tile playTile = new Tile(1, new List<int>{0, 7, 1, 2, 3, 4, 5, 6});
 
@@ -540,9 +541,10 @@ namespace TsuroTheSecondTests
 
             server.board.AddPlayerToken("blue", new Position(0, -1, 5));
             server.board.AddPlayerToken("green", new Position(0, -1, 4));
+            server.board.AddPlayerToken("hotpink", new Position(4, -1, 4));
 
 
-            Tile playTile = new Tile(1, new List<int> { 0, 4, 1, 2, 3, 5, 6, 7 });
+            Tile playTile = new Tile(1, new List<int> { 0, 4, 1, 5, 3, 2, 6, 7 });
             Assert.AreEqual("blue", server.alive[0].Color);
 
             Tile secondTile = new Tile(2, new List<int> { 0, 7, 2, 6, 1, 3, 5, 4 });
@@ -555,15 +557,17 @@ namespace TsuroTheSecondTests
                                                                                                    server.board,
                                                                                                    playTile);
             Assert.AreEqual(2, server.alive.Count);
-            Assert.AreEqual("green", server.alive[0].Color);
+            Assert.AreEqual(1, server.dead.Count);
+            Assert.AreEqual("hotpink", server.alive[0].Color);
             Assert.AreEqual("blue", server.alive[1].Color);
+            Assert.AreEqual("green", server.dead[0].Color);
             // 0th player should move to the end
-            Assert.AreEqual(0, server.board.tokenPositions["green"].x);
-            Assert.AreEqual(0, server.board.tokenPositions["green"].y);
+            Assert.AreEqual(-1, server.board.tokenPositions["green"].x);
+            Assert.AreEqual(1, server.board.tokenPositions["green"].y);
             Assert.AreEqual(2, server.board.tokenPositions["green"].port);
-            Assert.AreEqual(0, server.board.tokenPositions[server.alive[0].Color].x);
-            Assert.AreEqual(0, server.board.tokenPositions[server.alive[0].Color].y);
-            Assert.AreEqual(2, server.board.tokenPositions[server.alive[0].Color].port);
+            Assert.AreEqual(-1, server.board.tokenPositions[server.dead[0].Color].x);
+            Assert.AreEqual(1, server.board.tokenPositions[server.dead[0].Color].y);
+            Assert.AreEqual(2, server.board.tokenPositions[server.dead[0].Color].port);
 
             Assert.AreEqual(0, server.board.tokenPositions["blue"].x);
             Assert.AreEqual(1, server.board.tokenPositions["blue"].y);

@@ -10,6 +10,7 @@ namespace TsuroTheSecond
         // where each pawn is, and what color it is" - hw5
         public readonly List<List<Tile>> tiles;
         public readonly Dictionary<string, Position> tokenPositions;
+        public readonly Dictionary<string, Position> initialPositions;
 
         public Board(int size)
         {
@@ -24,6 +25,7 @@ namespace TsuroTheSecond
             }
 
             tokenPositions = new Dictionary<string, Position>();
+            initialPositions = new Dictionary<string, Position>();
         }
 
         public void PlaceTile(Tile tile, int x, int y)
@@ -54,6 +56,7 @@ namespace TsuroTheSecond
             }
 
             tokenPositions.Add(color, position);
+            initialPositions.Add(color, position);
         }
 
         public (int, int) ReturnNextSpot(string color) {
@@ -66,6 +69,7 @@ namespace TsuroTheSecond
         }
 
         public Boolean IsDead(string color) {
+            if (initialPositions[color] == tokenPositions[color]) return false;
             return ((tokenPositions[color].x < 0) ||
                     (tokenPositions[color].x > 5) ||
                     (tokenPositions[color].y < 0) ||

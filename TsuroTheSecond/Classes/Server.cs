@@ -52,9 +52,9 @@ namespace TsuroTheSecond
         public void ReplacePlayer(Player player) {
             // might want a better way to do this
             List<IPlayer> iplayers = new List<IPlayer>();
-            iplayers.Add(new MPlayer1(player.iplayer.GetName()));
-            iplayers.Add(new MPlayer2(player.iplayer.GetName()));
-            iplayers.Add(new MPlayer3(player.iplayer.GetName()));
+            iplayers.Add(new RandomPlayer(player.iplayer.GetName()));
+            iplayers.Add(new LeastSymmetricPlayer(player.iplayer.GetName()));
+            iplayers.Add(new MostSymmetricPlayer(player.iplayer.GetName()));
 
             Random random = new Random();
             IPlayer replacement = iplayers[random.Next(0, 3)];
@@ -63,10 +63,19 @@ namespace TsuroTheSecond
                 replacement = iplayers[random.Next(0, 3)];
             }
 
+            List<string> colorCopy = new List<string>();
+            foreach (string color in Constants.colors) {
+                if (color != player.Color) {
+                    colorCopy.Add(color);
+                }
+            }
+
+            replacement.Initialize(player.Color, colorCopy);
             player.ReplaceIPlayer(replacement);
         }
 
         public void InitPlayerPositions() {
+            Position position;
             if (gameState != State.start && alive.Count < 3)
             {
                 throw new Exception("Invalid game state");
@@ -76,15 +85,40 @@ namespace TsuroTheSecond
                 p.iplayer.Initialize(p.Color, alive.Select(x => x.Color).ToList());
             }
             gameState = State.loop;
-            for (int i = 0; i < alive.Count; i++) {
-                try {
-                    Position position = alive[i].iplayer.PlacePawn(this.board);
-                } catch(ArgumentException) {
-                    Console.WriteLine("Player initialized invalid position and has been replaced");
-                    ReplacePlayer(alive[i]);
+
+            foreach(Player p in alive) {
+                position = new Position(6, 1, 7);
+                try
+                {
+                    position = p.iplayer.PlacePawn(this.board);
+                    break;
                 }
-                this.board.AddPlayerToken(alive[i].Color, alive[i].iplayer.PlacePawn(this.board));
+                catch (ArgumentException)
+                {
+                    Console.WriteLine("Player initialized invalid position and has been replaced");
+                    ReplacePlayer(p);
+                }
+                Console.WriteLine("added player! " + p.Color);
+                this.board.AddPlayerToken(p.Color, position);
             }
+            // board.AddPlayerToken for all players
+            //for (int i = 0; i < alive.Count; i++) {
+            //    // this seems hacky and unsafe
+            //    while (true) {
+            //        try
+            //        {
+            //            position = alive[i].iplayer.PlacePawn(this.board);
+            //            break;
+            //        }
+            //        catch (ArgumentException)
+            //        {
+            //            Console.WriteLine("Player initialized invalid position and has been replaced");
+            //            ReplacePlayer(alive[i]);
+            //        }
+            //    }
+            //    Console.WriteLine("added player! " + alive[i].Color);
+            //    this.board.AddPlayerToken(alive[i].Color, position);
+            //}
         }
 
         public List<Tile> ShuffleDeck(List<Tile> deck)

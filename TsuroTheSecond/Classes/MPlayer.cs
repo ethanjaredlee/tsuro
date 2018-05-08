@@ -45,14 +45,13 @@ namespace TsuroTheSecond
             {
                 // make this thoroughly checking every position on the board
                 // but for right now just check all the top tiles
-                Position newPosition = new Position(position.x, position.y + 1, position.port);
-                if (newPosition.y > Constants.boardSize - 1)
+                position.x++;
+                if (position.x > Constants.boardSize - 1)
                 {
                     throw new Exception("incomplete place pawn check");
                 }
             }
             playerState = State.loop;
-            Console.WriteLine(playerState);
             return position;
         }
 

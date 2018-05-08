@@ -144,22 +144,25 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestIsDead()
         {
-            AddTwoPlayers();
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
+            Tile tile = new Tile(1, new List<int> { 0, 2, 3, 4, 5, 6, 7, 1 });
+            board.PlaceTile(tile, 0, 0);
+            board.MovePlayer("blue");
 
-            Tile testTile1 = new Tile(1, new List<int>(8) {
-                0, 1, 2, 3, 4, 5, 6, 7,
-            });
-            Tile testTile2 = new Tile(2, new List<int>(8) {
-                0, 1, 2, 3, 4, 5, 6, 7,
-            });
-            Tile testTile3 = new Tile(3, new List<int>(8) {
-                0, 1, 2, 7, 3, 6, 4, 5,
-            });
-            Player p_1 = server.alive[0];
-            server.board.AddPlayerToken("blue", new Position(4, 6, 0));
-            Assert.IsTrue(server.board.IsDead("blue"));
-            server.board.tokenPositions["blue"].y = 5; 
-            Assert.IsTrue(!server.board.IsDead("blue"));
+            Assert.IsFalse(board.IsDead("blue"));
+        }
+
+        [TestMethod]
+        public void TestIsDeadActuallyDead()
+        {
+            Board board = new Board(6);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
+            Tile tile = new Tile(1, new List<int> { 0, 1, 3, 4, 5, 6, 7, 2 });
+            board.PlaceTile(tile, 0, 0);
+            board.MovePlayer("blue");
+
+            Assert.IsTrue(board.IsDead("blue"));
         }
 
         [TestMethod]
@@ -421,7 +424,7 @@ namespace TsuroTheSecondTests
         public void TestCheckAllPossibleTilesReturn()
         {
             Board board = new Board(6);
-            board.tokenPositions["blue"] = new Position(0, -1, 5);
+            board.AddPlayerToken("blue", new Position(0, -1, 5));
             List<Tile> allTiles = board.AllPossibleTiles("blue", new List<Tile>{
                 new Tile(1, new List<int>{0, 1, 2, 3, 4, 5, 6, 7}),
                 new Tile(2, new List<int>{0, 1, 2, 4, 3, 6, 5, 7})
