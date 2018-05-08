@@ -33,7 +33,12 @@ namespace TsuroTheSecond
 
         public Tile (Tile tile){
             this.id = tile.id;
-            this.paths = tile.paths;
+            this.paths = new List<List<int>>{
+                new List<int>{tile.paths[0][0], tile.paths[0][1]},
+                new List<int>{tile.paths[1][0], tile.paths[1][1]},
+                new List<int>{tile.paths[2][0], tile.paths[2][1]},
+                new List<int>{tile.paths[3][0], tile.paths[3][1]},
+            };
             this.symmetricity = tile.symmetricity;
         }
 

@@ -106,9 +106,9 @@ namespace TsuroTheSecond
                         tile.Rotate(); 
                     }
                     if (this.ValidTilePlacement(color, tile)) {
-                        legal.Add(hands[i]);
+                        legal.Add(tile);
                     } else {
-                        illegal.Add(hands[i]);
+                        illegal.Add(tile);
                     }
                 }
             }

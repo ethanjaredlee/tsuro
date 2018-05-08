@@ -428,7 +428,7 @@ namespace TsuroTheSecondTests
             });
 
             Assert.AreEqual(2, allTiles.Count);
-
+            board.PlaceTile(allTiles[0], 0, 0);
             board.MovePlayer("blue");
             Assert.IsFalse(board.IsDead("blue"));
         }
