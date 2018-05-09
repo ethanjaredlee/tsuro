@@ -5,6 +5,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsuroTheSecond", "TsuroTheS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TsuroTheSecondTests", "TsuroTheSecondTests\TsuroTheSecondTests.csproj", "{6A08FF9D-915E-4ABE-B4BA-F8B94B259B1A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{844AEE26-7CE9-4D7E-A371-B9A087121E36}"
+	ProjectSection(SolutionItems) = preProject
+		TsuroTheSecond.sln = TsuroTheSecond.sln
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
