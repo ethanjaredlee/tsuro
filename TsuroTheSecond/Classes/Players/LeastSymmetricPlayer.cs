@@ -25,7 +25,7 @@ namespace TsuroTheSecond
                 }
             }
             // new list of legal tiles sorted by symmetricity.
-            List<Tile> sorted_legal_options = unique_legal_options.Values.ToList().OrderBy(obj => obj.symmetricity).ToList();
+            List<Tile> sorted_legal_options = unique_legal_options.Values.ToList().OrderByDescending(obj => obj.symmetricity).ToList();
             return sorted_legal_options[0];
         }
     }
