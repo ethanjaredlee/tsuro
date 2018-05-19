@@ -12,7 +12,8 @@ namespace TsuroTheSecondTests
         Server server;
 
         [TestInitialize]
-        public void Initialize() {
+        public void Initialize()
+        {
             server = new Server();
         }
 
@@ -27,7 +28,8 @@ namespace TsuroTheSecondTests
             server.AddPlayer(p3, "hotpink");
         }
 
-        void AddFourPlayers(){
+        void AddFourPlayers()
+        {
             RandomPlayer p1 = new RandomPlayer("john");
             RandomPlayer p2 = new RandomPlayer("jim");
             RandomPlayer p3 = new RandomPlayer("george");
@@ -51,7 +53,8 @@ namespace TsuroTheSecondTests
             // there are only 35 such tiles possible
             Console.WriteLine(server.deck.Count);
             HashSet<string> tileCombinations = new HashSet<string>();
-            foreach (Tile t in server.deck) {
+            foreach (Tile t in server.deck)
+            {
                 string tilePathMap = t.PathMap();
                 tileCombinations.Add(tilePathMap);
             }
@@ -76,13 +79,22 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(Exception), "Not enough players in game")]
+        public void TestSinglePlayerGame()
+        {
+            LeastSymmetricPlayer player = new LeastSymmetricPlayer("john");
+            server.AddPlayer(player, "blue");
+            server.InitPlayerPositions();
+        }
+
+        [TestMethod]
         public void TestDraw()
         {
             AddThreePlayers();
 
             Assert.AreEqual(0, server.alive[0].Hand.Count);
             Assert.AreEqual(35, server.deck.Count);
-            server.DrawTile(server.alive[0], server.deck);
+            server.DrawTile(server.alive[0]);
             Assert.AreEqual(1, server.alive[0].Hand.Count);
             Assert.AreEqual(34, server.deck.Count);
         }
@@ -121,10 +133,10 @@ namespace TsuroTheSecondTests
         {
             AddThreePlayers();
 
-            server.DrawTile(server.alive[0], server.deck);
-            server.DrawTile(server.alive[0], server.deck);
-            server.DrawTile(server.alive[0], server.deck);
-            server.DrawTile(server.alive[0], server.deck);
+            server.DrawTile(server.alive[0]);
+            server.DrawTile(server.alive[0]);
+            server.DrawTile(server.alive[0]);
+            server.DrawTile(server.alive[0]);
         }
 
         [TestMethod]
@@ -140,7 +152,7 @@ namespace TsuroTheSecondTests
                 new Tile(1, new List<int>{1, 2, 3, 4, 5, 6, 7, 0}),
             };
 
-            server.DrawTile(server.alive[0], server.deck);
+            server.DrawTile(server.alive[0]);
         }
 
         [TestMethod]
@@ -150,7 +162,7 @@ namespace TsuroTheSecondTests
 
             Assert.AreEqual(0, server.alive[0].Hand.Count);
             Assert.AreEqual(35, server.deck.Count);
-            server.DrawTile(server.alive[0], server.deck);
+            server.DrawTile(server.alive[0]);
             Assert.AreEqual(0, server.dead.Count);
             Assert.AreEqual(4, server.alive.Count);
             Assert.AreEqual(34, server.deck.Count);
@@ -168,15 +180,15 @@ namespace TsuroTheSecondTests
 
             // manually shorten deck to 5 cards
             server.deck = server.deck.GetRange(0, 5);
-            server.DrawTile(server.alive[0], server.deck);
-            server.DrawTile(server.alive[1], server.deck);
-            server.DrawTile(server.alive[2], server.deck);
-            server.DrawTile(server.alive[3], server.deck);
-            server.DrawTile(server.alive[0], server.deck);
+            server.DrawTile(server.alive[0]);
+            server.DrawTile(server.alive[1]);
+            server.DrawTile(server.alive[2]);
+            server.DrawTile(server.alive[3]);
+            server.DrawTile(server.alive[0]);
             Assert.AreEqual(0, server.deck.Count);
             Assert.AreEqual(0, server.dragonQueue.Count);
 
-            server.DrawTile(server.alive[1], server.deck);
+            server.DrawTile(server.alive[1]);
             Assert.AreEqual(1, server.dragonQueue.Count);
             Assert.AreEqual(server.alive[1], server.dragonQueue[0]);
 
@@ -195,13 +207,13 @@ namespace TsuroTheSecondTests
             AddFourPlayers(); 
 
             server.deck = server.deck.GetRange(0, 5);
-            server.DrawTile(server.alive[0], server.deck);
-            server.DrawTile(server.alive[1], server.deck);
-            server.DrawTile(server.alive[2], server.deck);
-            server.DrawTile(server.alive[3], server.deck);
-            server.DrawTile(server.alive[0], server.deck);
+            server.DrawTile(server.alive[0]);
+            server.DrawTile(server.alive[1]);
+            server.DrawTile(server.alive[2]);
+            server.DrawTile(server.alive[3]);
+            server.DrawTile(server.alive[0]);
             // player 1 has the dragon tile
-            server.DrawTile(server.alive[1], server.deck);
+            server.DrawTile(server.alive[1]);
             server.KillPlayer(server.alive[1]);
             Assert.AreEqual(1, server.deck.Count);
             Assert.AreEqual(0, server.dragonQueue.Count);
@@ -220,7 +232,6 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestLegalPlayCheckLastPossibleMoveNotUndone()
         {
-            Server server = new Server();
             MPlayer1 p1 = new MPlayer1("john");
             server.AddPlayer(p1, "blue");
 
@@ -249,7 +260,6 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestIllegalPlayNullTile()
         {
-            Server server = new Server();
             MPlayer1 mp1 = new MPlayer1("jim");
             server.AddPlayer(mp1, "blue");
 
@@ -274,7 +284,6 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestIllegalPlayTileNotInHand()
         {
-            Server server = new Server();
             MPlayer1 mp1 = new MPlayer1("jim");
             server.AddPlayer(mp1, "blue");
 
@@ -303,7 +312,6 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestLegalPlayBoardUndo()
         {
-            Server server = new Server();
             MPlayer1 p1 = new MPlayer1("john");
             server.AddPlayer(p1, "blue");
 
@@ -507,7 +515,7 @@ namespace TsuroTheSecondTests
             Tile playTile = new Tile(1, new List<int>{0, 7, 1, 2, 3, 4, 5, 6});
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck, 
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) playResult = server.PlayATurn(server.deck, 
                                                                                                    server.alive, 
                                                                                                    server.dead, 
                                                                                                    server.board, 
@@ -529,8 +537,11 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(0, server.board.tokenPositions[server.alive[0].Color].y);
             Assert.AreEqual(2, server.board.tokenPositions[server.alive[0].Color].port);
 
-
-
+            Assert.AreEqual(server.deck, playResult.Item1);
+            Assert.AreEqual(server.alive, playResult.Item2);
+            Assert.AreEqual(server.dead, playResult.Item3);
+            Assert.AreEqual(server.board, playResult.Item4);
+            Assert.IsFalse(playResult.Item5);
         }
 
         [TestMethod]
@@ -551,7 +562,7 @@ namespace TsuroTheSecondTests
             server.board.PlaceTile(secondTile, 0, 1);
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) playResult = server.PlayATurn(server.deck,
                                                                                                    server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
@@ -591,7 +602,7 @@ namespace TsuroTheSecondTests
             }
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) playResult = server.PlayATurn(server.deck,
                                                                                                    server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
@@ -609,7 +620,7 @@ namespace TsuroTheSecondTests
             server.alive[0].AddTiletoHand(Constants.tiles[0]);
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) playResult = server.PlayATurn(server.deck,
                                                                                                    server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
@@ -629,7 +640,7 @@ namespace TsuroTheSecondTests
             server.alive[0].AddTiletoHand(tile);
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) playResult = server.PlayATurn(server.deck,
                                                                                                    server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
@@ -650,7 +661,7 @@ namespace TsuroTheSecondTests
             server.board.PlaceTile(Constants.tiles[0], 0, 0);
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) playResult = server.PlayATurn(server.deck,
                                                                                                    server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,
@@ -670,7 +681,7 @@ namespace TsuroTheSecondTests
             server.board.PlaceTile(Constants.tiles[0], 0, 0);
 
             server.gameState = Server.State.safe;
-            (List<Tile>, List<Player>, List<Player>, Board, object) playResult = server.PlayATurn(server.deck,
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) playResult = server.PlayATurn(server.deck,
                                                                                                    server.alive,
                                                                                                    server.dead,
                                                                                                    server.board,

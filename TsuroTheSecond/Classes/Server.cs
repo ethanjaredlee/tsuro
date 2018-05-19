@@ -7,6 +7,7 @@ namespace TsuroTheSecond
 {
     public class Server 
     {
+        // TODO: refactor so that everything mutates the fields and doesn't really use inputs
 
         public List<Tile> deck;
         public List<Player> alive;
@@ -51,10 +52,11 @@ namespace TsuroTheSecond
 
         public void ReplacePlayer(Player player) {
             // might want a better way to do this
-            List<IPlayer> iplayers = new List<IPlayer>();
-            iplayers.Add(new RandomPlayer(player.iplayer.GetName()));
-            iplayers.Add(new LeastSymmetricPlayer(player.iplayer.GetName()));
-            iplayers.Add(new MostSymmetricPlayer(player.iplayer.GetName()));
+            List<IPlayer> iplayers = new List<IPlayer>{
+                new RandomPlayer(player.iplayer.GetName()),
+                new LeastSymmetricPlayer(player.iplayer.GetName()),
+                new MostSymmetricPlayer(player.iplayer.GetName()),
+            };
 
             Random random = new Random();
             IPlayer replacement = iplayers[random.Next(0, 3)];
@@ -76,9 +78,13 @@ namespace TsuroTheSecond
 
         public void InitPlayerPositions() {
             Position position;
-            if (gameState != State.start && alive.Count < 3)
+            if (gameState != State.start)
             {
                 throw new Exception("Invalid game state");
+            }
+
+            if (alive.Count < 2) {
+                throw new Exception("Not enough players in game");
             }
 
             foreach(Player p in alive) {
@@ -180,7 +186,7 @@ namespace TsuroTheSecond
             return false;
         }
 
-        public (List<Tile>, List<Player>, List<Player>, Board, object) PlayATurn(List<Tile> _deck, 
+        public (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) PlayATurn(List<Tile> _deck, 
                                                                                   List<Player> _alive, 
                                                                                   List<Player> _dead, 
                                                                                   Board _board, 
@@ -219,10 +225,6 @@ namespace TsuroTheSecond
 
             int total = currentPlayer.Hand.Count + 1 + tileCount;
             if (tilePaths.Count != total) {
-                Console.WriteLine(currentPlayer.Hand.Count);
-                Console.WriteLine(tileCount);
-                Console.WriteLine(tilePaths.Count);
-                Console.WriteLine(total);
                 throw new ArgumentException("Tile to be placed, tiles in hand, and tiles on board are not unique");
             }
 
@@ -238,19 +240,25 @@ namespace TsuroTheSecond
                 }
             }
 
+            Boolean gameOver = _alive.Count == 1 || _alive.Count == 0;
+            // can decide to return here if thats better
+            // everything under here isn't necessary if game is over
             if (_alive.Count == 1) {
-                WinGame(_alive);
+                return (_deck, _alive, _dead, _board, true, _alive);
             } else if (_alive.Count == 0) {
-                WinGame(fatalities);
+                return (_deck, _alive, _dead, _board, true, fatalities);
             }
 
             foreach (Player p in fatalities) {
                 KillPlayer(p);
             }
 
-            DrawTile(currentPlayer, _deck);
+            if (!board.IsDead(currentPlayer.Color)) {
+                DrawTile(currentPlayer);
+            }
 
             // put currentPlayer to end of _alive
+            // check if this is necessary?
             for (int i = 0; i < _alive.Count; i++){
                 if(_alive[i].Color == currentPlayer.Color){
                     Player move_to_end = _alive[i];
@@ -259,8 +267,7 @@ namespace TsuroTheSecond
                 }
             }
 
-            // fix this shouldnt return false
-            return (_deck, _alive, _dead, _board, false);
+            return (_deck, _alive, _dead, _board, false, null);
         }
 
         public void KillPlayer(Player player) {
@@ -276,30 +283,59 @@ namespace TsuroTheSecond
                 deck.AddRange(player.Hand);
                 int dragonCount = dragonQueue.Count;
                 for (int i = 0; i < dragonCount; i++) {
-                    DrawTile(dragonQueue[i], deck);
+                    DrawTile(dragonQueue[i]);
                     dragonQueue.Remove(dragonQueue[i]);
                 }
             }
         }
 
         public void WinGame(List<Player> winners) {
+            List<string> winColors = winners.Select(w => w.Color).ToList();
+            foreach (Player p in alive) {
+                p.iplayer.EndGame(board, winColors);
+            }
+
+            foreach (Player p in dead) {
+                p.iplayer.EndGame(board, winColors);
+            }
         }
 
-        public void DrawTile(Player player, List<Tile> d) {
-            // how is this supposed to work with an interface?
-            Console.WriteLine(d.Count);
+        public void DrawTile(Player player) {
+
             if (player.Hand.Count >= 3) {
                 throw new InvalidOperationException("Player can't have more than 3 cards in hand");
             }
 
-            if (d.Count <= 0) {
+            if (deck.Count <= 0) {
                 dragonQueue.Add(player);   
             } else {
-                Tile t = d[0];
-                d.RemoveAt(0);
+                Tile t = deck[0];
+                deck.RemoveAt(0);
                 player.AddTiletoHand(t); 
             }
 
+        }
+
+        public void Play(Dictionary<string, IPlayer> players) {
+            // input: players is color, IPlayer
+            foreach (KeyValuePair<string, IPlayer> p in players) {
+                AddPlayer(p.Value, p.Key);
+            }
+
+            InitPlayerPositions();
+            ShuffleDeck(this.deck);
+
+            Boolean game = true;
+            while (game && alive.Count > 0) {
+                Player currentPlayer = alive[0];
+                Tile playTile = currentPlayer.iplayer.PlayTurn(board, currentPlayer.Hand, deck.Count);
+                if (!LegalPlay(currentPlayer, board, playTile)) {
+                    ReplacePlayer(currentPlayer); 
+                }
+
+                // playturn
+                PlayATurn(deck, alive, dead, board, playTile);
+            }
         }
 
         static void Main(string[] args)
