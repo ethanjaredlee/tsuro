@@ -76,7 +76,12 @@ namespace TsuroTheSecond
             return s.GetHashCode();
 		}
 
-		public (int, int) WhatNext(){
+        public override string ToString()
+        {
+            return "<Position(" + x + "," + y + "," + port + ")>";
+        }
+
+        public (int, int) WhatNext(){
             // invalid _onward
             int next_x = x;
             int next_y = y;

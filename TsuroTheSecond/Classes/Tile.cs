@@ -78,14 +78,17 @@ namespace TsuroTheSecond
             throw new ArgumentException("Port doesn't exist in tile");
         }
 
-        public void PrintMe()
+        public override string ToString()
         {
+            string repr = "<Tile(id=" + this.id;
+            if (this.id < 10) repr += " ";
+            repr += " | ";
             foreach (List<int> each in this.paths){
-                Console.WriteLine(each[0]);
-                Console.WriteLine(" leads to ");
-                Console.WriteLine(each[1]);
-                Console.WriteLine("\n");
+                repr += "[" + each[0] + "," + each[1] + "],";
             }
+            repr = repr.Substring(0, repr.Length - 1);
+            repr += ")>";
+            return repr;
         }
         public string PathMap(){
             // init all to -1.

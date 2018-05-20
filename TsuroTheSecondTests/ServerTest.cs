@@ -19,9 +19,9 @@ namespace TsuroTheSecondTests
 
         void AddThreePlayers()
         {
-            RandomPlayer p1 = new RandomPlayer("john");
-            RandomPlayer p2 = new RandomPlayer("jim");
-            RandomPlayer p3 = new RandomPlayer("george");
+            RandomPlayer p1 = new RandomPlayer("blue");
+            RandomPlayer p2 = new RandomPlayer("green");
+            RandomPlayer p3 = new RandomPlayer("hotpink");
 
             server.AddPlayer(p1, "blue");
             server.AddPlayer(p2, "green");
@@ -30,10 +30,10 @@ namespace TsuroTheSecondTests
 
         void AddFourPlayers()
         {
-            RandomPlayer p1 = new RandomPlayer("john");
-            RandomPlayer p2 = new RandomPlayer("jim");
-            RandomPlayer p3 = new RandomPlayer("george");
-            RandomPlayer p4 = new RandomPlayer("jimmy");
+            RandomPlayer p1 = new RandomPlayer("blue");
+            RandomPlayer p2 = new RandomPlayer("green");
+            RandomPlayer p3 = new RandomPlayer("red");
+            RandomPlayer p4 = new RandomPlayer("hotpink");
 
             server.AddPlayer(p1, "blue");
             server.AddPlayer(p2, "green");
@@ -519,9 +519,13 @@ namespace TsuroTheSecondTests
 
             server.InitPlayerPositions();
 
-            server.board.AddPlayerToken("blue", new Position(0, -1, 5));
-            server.board.AddPlayerToken("green", new Position(0, -1, 4));
-            server.board.AddPlayerToken("hotpink", new Position(1, -1, 4));
+            server.board.initialPositions["blue"] = new Position(0, -1, 5);
+            server.board.initialPositions["green"] = new Position(0, -1, 4);
+            server.board.initialPositions["hotpink"] = new Position(1, -1, 4);
+
+            server.board.tokenPositions["blue"] = new Position(0, -1, 5);
+            server.board.tokenPositions["green"] = new Position(0, -1, 4);
+            server.board.tokenPositions["hotpink"] = new Position(1, -1, 4);
 
             Tile playTile = new Tile(1, new List<int>{0, 7, 1, 2, 3, 4, 5, 6});
 

@@ -6,6 +6,7 @@ namespace TsuroTheSecond
     public class Constants
     {
         public const int boardSize = 6;
+        public const bool verbose = true;
         public static readonly List<string> colors = new List<string>
         {
             "blue",

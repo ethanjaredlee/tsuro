@@ -64,11 +64,11 @@ namespace TsuroTheSecond
             playerState = State.end;
             if (colors.Contains(color))
             {
-                Console.WriteLine("You win!");
+                Console.WriteLine(color + " won!");
             }
             else
             {
-                Console.WriteLine("You lose!");
+                Console.WriteLine(color + " lost!");
             }
         }
     }

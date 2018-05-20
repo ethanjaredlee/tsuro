@@ -92,9 +92,7 @@ namespace TsuroTheSecond
             // undoing changes to the board
             this.PlaceTile(null, origNext.Item1, origNext.Item2);
 
-            this.tokenPositions[color].x = origPosition.x;
-            this.tokenPositions[color].y = origPosition.y;
-            this.tokenPositions[color].port = origPosition.port;
+            this.tokenPositions[color] = origPosition;
             return playerAlive;
         }
 
@@ -190,6 +188,7 @@ namespace TsuroTheSecond
                     }
                     heading = cur_pos.port / 2;
                 }
+
             }
 
             tokenPositions[color] = cur_pos;

@@ -414,7 +414,7 @@ namespace TsuroTheSecondTests
             // one tile is illegal, second tile is legal(only one version is legal if rotated)
             List<Tile> legalTiles = server.board.AllPossibleTiles("blue", new List<Tile> { tiles[0], new Tile(1, new List<int>{0, 1, 2, 7, 3, 4, 5, 6}) });
             foreach( Tile each in legalTiles){
-                each.PrintMe();
+                Console.WriteLine(each);
             }
             Assert.AreEqual(1, legalTiles.Count);
 

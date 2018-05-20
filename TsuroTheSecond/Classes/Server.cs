@@ -48,6 +48,7 @@ namespace TsuroTheSecond
             }
             // todo organize alive by age and don't let players pick duplicate colors
             alive.Add(new Player(p, color));
+            if (Constants.verbose) Console.WriteLine("Added player " + p.GetName() + ", color: " + color);
         }
 
         public void ReplacePlayer(Player player) {
@@ -77,7 +78,8 @@ namespace TsuroTheSecond
         }
 
         public void InitPlayerPositions() {
-            Console.WriteLine("Initializing " + alive.Count + " player positions");
+            if (Constants.verbose) Console.WriteLine("Initializing " + alive.Count + " player positions");
+
             Position position;
             if (gameState != State.start)
             {
@@ -104,7 +106,7 @@ namespace TsuroTheSecond
                     Console.WriteLine("Player initialized invalid position and has been replaced");
                     ReplacePlayer(p);
                 }
-                Console.WriteLine("added player! " + p.Color);
+                if (Constants.verbose) Console.WriteLine("Added player to board " + p.Color);
                 this.board.AddPlayerToken(p.Color, position);
             }
         }
@@ -195,6 +197,8 @@ namespace TsuroTheSecond
             gameState = State.loop;
 
             Player currentPlayer = _alive[0];
+            if (Constants.verbose) Console.WriteLine("It is player " + currentPlayer.iplayer.GetName() + "'s turn");
+            if (Constants.verbose) Console.WriteLine(currentPlayer.iplayer.GetName() + " has " + currentPlayer.Hand.Count + " tiles in hand");
 
             if (currentPlayer.Hand.Count > 2) {
                 throw new ArgumentException("Player should have 2 or less tiles in hand");
@@ -228,10 +232,13 @@ namespace TsuroTheSecond
 
             var next = _board.ReturnNextSpot(currentPlayer.Color);
             _board.PlaceTile(tile, next.Item1, next.Item2);
+            if (Constants.verbose) Console.WriteLine(currentPlayer.iplayer.GetName() + " has placed tile " + tile + " at position (" + next.Item1 + "," + next.Item2 + ")");
 
             List<Player> fatalities = new List<Player>();
             foreach (Player p in _alive) {
+                Position orig_position = _board.tokenPositions[p.Color];
                 _board.MovePlayer(p.Color);
+                if (Constants.verbose) Console.WriteLine("Moving player from " + orig_position + " to " + _board.tokenPositions[p.Color]);
                 if (_board.IsDead(p.Color)) {
                     fatalities.Add(p);
                 }
@@ -268,6 +275,8 @@ namespace TsuroTheSecond
         }
 
         public void KillPlayer(Player player) {
+            if (Constants.verbose) Console.WriteLine("Killing player " + player.iplayer.GetName());
+
             dead.Add(player);
             alive.Remove(player);
 
@@ -284,6 +293,7 @@ namespace TsuroTheSecond
                     dragonQueue.Remove(dragonQueue[i]);
                 }
             }
+
         }
 
         public void WinGame(List<Player> winners) {
@@ -311,6 +321,7 @@ namespace TsuroTheSecond
             } else {
                 Tile t = deck[0];
                 deck.RemoveAt(0);
+                if (Constants.verbose) Console.WriteLine(player.iplayer.GetName() + " is drawing tile " + t);
                 player.AddTiletoHand(t); 
             }
 
@@ -333,6 +344,8 @@ namespace TsuroTheSecond
                 if (!LegalPlay(currentPlayer, board, playTile)) {
                     ReplacePlayer(currentPlayer); 
                 }
+
+                currentPlayer.RemoveTilefromHand(playTile);
 
                 // playturn
                 var playResult = PlayATurn(deck, alive, dead, board, playTile);
