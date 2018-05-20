@@ -14,7 +14,7 @@ namespace TsuroTheSecond
         public List<Player> dead;
         public Board board;
         public List<Player> dragonQueue; // whoever is the first person of the queue has the tile
-        public enum State { start, ready, loop, safe, end };
+        public enum State { start, ready, handEmpty, loop, safe, end };
         public State gameState;
 
         public Server() {
@@ -77,6 +77,7 @@ namespace TsuroTheSecond
         }
 
         public void InitPlayerPositions() {
+            Console.WriteLine("Initializing " + alive.Count + " player positions");
             Position position;
             if (gameState != State.start)
             {
@@ -90,14 +91,13 @@ namespace TsuroTheSecond
             foreach(Player p in alive) {
                 p.iplayer.Initialize(p.Color, alive.Select(x => x.Color).ToList());
             }
-            gameState = State.loop;
+            gameState = State.handEmpty;
 
             foreach(Player p in alive) {
                 position = new Position(6, 1, 7);
                 try
                 {
                     position = p.iplayer.PlacePawn(this.board);
-                    break;
                 }
                 catch (ArgumentException)
                 {
@@ -107,29 +107,25 @@ namespace TsuroTheSecond
                 Console.WriteLine("added player! " + p.Color);
                 this.board.AddPlayerToken(p.Color, position);
             }
-            // board.AddPlayerToken for all players
-            //for (int i = 0; i < alive.Count; i++) {
-            //    // this seems hacky and unsafe
-            //    while (true) {
-            //        try
-            //        {
-            //            position = alive[i].iplayer.PlacePawn(this.board);
-            //            break;
-            //        }
-            //        catch (ArgumentException)
-            //        {
-            //            Console.WriteLine("Player initialized invalid position and has been replaced");
-            //            ReplacePlayer(alive[i]);
-            //        }
-            //    }
-            //    Console.WriteLine("added player! " + alive[i].Color);
-            //    this.board.AddPlayerToken(alive[i].Color, position);
-            //}
+        }
+
+        public void InitPlayerHands() {
+            if (gameState != State.handEmpty)
+            {
+                throw new Exception("State should be handempty");
+            }
+
+            foreach (Player p in alive) {
+                DrawTile(p);
+                DrawTile(p);
+                DrawTile(p);
+            }
+
+            gameState = State.loop;
         }
 
         public List<Tile> ShuffleDeck(List<Tile> deck)
         {
-            // doesnt quite work the way we want it to yet
             List<Tile> shuffledDeck = new List<Tile>();
             Random rng = new Random();
             HashSet<int> chosen = new HashSet<int>();
@@ -149,6 +145,7 @@ namespace TsuroTheSecond
                 shuffledDeck.Add(tile);
                 chosen.Add(k);
             }
+            Console.WriteLine("the deck has been shuffled");
             return shuffledDeck;
         }
 
@@ -291,6 +288,9 @@ namespace TsuroTheSecond
 
         public void WinGame(List<Player> winners) {
             List<string> winColors = winners.Select(w => w.Color).ToList();
+            foreach (Player p in winners) {
+                Console.WriteLine("Player: " + p.iplayer.GetName() + " won!");
+            }
             foreach (Player p in alive) {
                 p.iplayer.EndGame(board, winColors);
             }
@@ -316,17 +316,18 @@ namespace TsuroTheSecond
 
         }
 
-        public void Play(Dictionary<string, IPlayer> players) {
+        public void Play(List<IPlayer> players) {
             // input: players is color, IPlayer
-            foreach (KeyValuePair<string, IPlayer> p in players) {
-                AddPlayer(p.Value, p.Key);
+            for (int i = 0; i < players.Count; i++) {
+                AddPlayer(players[i], Constants.colors[i]);
             }
 
             InitPlayerPositions();
-            ShuffleDeck(this.deck);
+            InitPlayerHands();
 
-            Boolean game = true;
-            while (game && alive.Count > 0) {
+            Boolean gameLoop = true;
+            List<Player> winners = new List<Player>();
+            while (gameLoop && alive.Count > 0) {
                 Player currentPlayer = alive[0];
                 Tile playTile = currentPlayer.iplayer.PlayTurn(board, currentPlayer.Hand, deck.Count);
                 if (!LegalPlay(currentPlayer, board, playTile)) {
@@ -334,43 +335,14 @@ namespace TsuroTheSecond
                 }
 
                 // playturn
-                PlayATurn(deck, alive, dead, board, playTile);
+                var playResult = PlayATurn(deck, alive, dead, board, playTile);
+                if (playResult.Item5) {
+                    gameLoop = false;
+                    winners = playResult.Item6;
+                }
             }
-        }
 
-        static void Main(string[] args)
-        {
-            // make server
-            Server server = new Server();
-
-            // add players
-            MPlayer1 mplayer1 = new MPlayer1("Adam");
-            MPlayer2 mplayer2 = new MPlayer2("John");
-            MPlayer3 mplayer3 = new MPlayer3("Cathy");
-
-            server.AddPlayer(mplayer1, "blue");
-            server.AddPlayer(mplayer1, "green");
-            server.AddPlayer(mplayer1, "hotpink");
-
-            // init positions of players
-            server.InitPlayerPositions();
-
-            server.ShuffleDeck(server.deck);
-
-            // game loop
-            bool game = true;
-            while (game && server.alive.Count > 0) {
-                Player currentPlayer = server.alive[0];
-                Tile playTile = currentPlayer.iplayer.PlayTurn(server.board, currentPlayer.Hand, server.deck.Count);
-            }
-                // pop from alive
-                // player plays turn
-                // checks if its legal
-                // hopefully doesnt loop back and play differnt tile
-                // place tile
-                // move players
-                // check alive/dead and update
-                // add player to end of alive if alivew
+            WinGame(winners);
         }
     }
 }

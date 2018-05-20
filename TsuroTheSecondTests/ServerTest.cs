@@ -100,6 +100,17 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        public void InitPlayerHands()
+        {
+            AddThreePlayers();
+            server.InitPlayerPositions();
+            server.InitPlayerHands();
+            foreach (Player p in server.alive) {
+                Assert.AreEqual(3, p.Hand.Count);
+            }
+        }
+
+        [TestMethod]
         public void TestShuffleDeck()
         {
             var shuffledDeck = server.ShuffleDeck(Constants.tiles);
