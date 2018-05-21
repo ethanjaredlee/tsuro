@@ -114,8 +114,7 @@ namespace TsuroTheSecond
                     }
                 }
             }
-            // if none of the options are legal, return all illegal options
-            Console.WriteLine("legal count: " + legal.Count.ToString());
+
             if(legal.Count > 0){
                 return legal;
             } else {
