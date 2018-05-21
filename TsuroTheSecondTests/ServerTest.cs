@@ -231,6 +231,21 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        public void TestPlayerInDragonQueueTwiceThenDies()
+        {
+            AddFourPlayers();
+
+            server.InitPlayerPositions();
+            server.InitPlayerHands();
+
+            server.dragonQueue.Add(server.alive[0]);
+            server.dragonQueue.Add(server.alive[0]);
+
+            server.KillPlayer(server.alive[0]);
+            Assert.AreEqual(0, server.dragonQueue.Count);
+        }
+
+        [TestMethod]
         public void TestSetInitialMarkers()
         {
         }
@@ -557,6 +572,36 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(server.dead, playResult.Item3);
             Assert.AreEqual(server.board, playResult.Item4);
             Assert.IsFalse(playResult.Item5);
+        }
+
+        [TestMethod]
+        public void TestPlayATurnAllDead()
+        {
+            // alive[0] is blue, alive[1] is green
+            AddThreePlayers();
+
+            server.InitPlayerPositions();
+
+            server.board.initialPositions["blue"] = new Position(0, -1, 5);
+            server.board.initialPositions["green"] = new Position(0, -1, 4);
+            server.board.initialPositions["hotpink"] = new Position(-1, 0, 2);
+
+            server.board.tokenPositions["blue"] = new Position(0, -1, 5);
+            server.board.tokenPositions["green"] = new Position(0, -1, 4);
+            server.board.tokenPositions["hotpink"] = new Position(-1, 0, 2);
+
+            Tile playTile = new Tile(1, new List<int> { 0, 7, 1, 6, 2, 5, 3, 4 });
+
+            server.gameState = Server.State.safe;
+            (List<Tile>, List<Player>, List<Player>, Board, Boolean, List<Player>) playResult = server.PlayATurn(server.deck,
+                                                                                                   server.alive,
+                                                                                                   server.dead,
+                                                                                                   server.board,
+                                                                                                   playTile);
+            Assert.AreEqual(0, server.alive.Count);
+            Assert.AreEqual(3, server.dead.Count);
+            Assert.IsTrue(playResult.Item5);
+            Assert.AreEqual(3, playResult.Item6.Count);
         }
 
         [TestMethod]

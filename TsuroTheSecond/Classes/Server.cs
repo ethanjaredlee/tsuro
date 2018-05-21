@@ -253,14 +253,17 @@ namespace TsuroTheSecond
             Boolean gameOver = alive.Count == 1 || alive.Count == 0;
             // can decide to return here if thats better
             // everything under here isn't necessary if game is over
-            if (alive.Count == 1) {
-                return (deck, alive, dead, board, true, alive);
-            } else if (alive.Count == 0) {
-                return (deck, alive, dead, board, true, fatalities);
-            }
-
             foreach (Player p in fatalities) {
                 KillPlayer(p);
+            }
+
+            if (alive.Count == 1)
+            {
+                return (deck, alive, dead, board, true, alive);
+            }
+            if (alive.Count == 0)
+            {
+                return (deck, alive, dead, board, true, fatalities);
             }
 
             if (!board.IsDead(currentPlayer.Color)) {
@@ -286,7 +289,7 @@ namespace TsuroTheSecond
             dead.Add(player);
             alive.Remove(player);
 
-            if (dragonQueue.Contains(player)) {
+            while (dragonQueue.Contains(player)) {
                 dragonQueue.Remove(player);
                 if (Constants.verbose) Console.WriteLine(player.iplayer.GetName() + " was removed from dragonQueue, size: " + dragonQueue.Count);
             }
@@ -321,13 +324,17 @@ namespace TsuroTheSecond
 
         public void DrawTile(Player player) {
 
+            if (!alive.Contains(player) || dead.Contains(player)) {
+                throw new ArgumentException("Dead players can't draw tiles");
+            }
+
             if (player.Hand.Count >= 3) {
                 throw new InvalidOperationException("Player can't have more than 3 cards in hand");
             }
 
             if (deck.Count <= 0) {
-                if (Constants.verbose) Console.WriteLine("Deck size is " + deck.Count + " adding " + player.iplayer.GetName() + " to dragonQueue, size: " + dragonQueue.Count);
                 dragonQueue.Add(player);   
+                if (Constants.verbose) Console.WriteLine("Deck size is " + deck.Count + " adding " + player.iplayer.GetName() + " to dragonQueue, size: " + dragonQueue.Count);
             } else {
                 Tile t = deck[0];
                 deck.RemoveAt(0);
@@ -337,7 +344,8 @@ namespace TsuroTheSecond
 
         }
 
-        public void Play(List<IPlayer> players) {
+        public List<string> Play(List<IPlayer> players) {
+            // returns winner type
             int counter = 0;
             // input: players is color, IPlayer
             for (int i = 0; i < players.Count; i++) {
@@ -369,6 +377,8 @@ namespace TsuroTheSecond
             }
 
             WinGame(winners);
+            List<string> winTypes = winners.Select(w => w.iplayer.GetType().ToString()).ToList();
+            return winTypes;
         }
     }
 }
