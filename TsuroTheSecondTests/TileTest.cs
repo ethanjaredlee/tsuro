@@ -131,5 +131,13 @@ namespace TsuroTheSecondTests
             Assert.IsFalse(testTile1.CompareByPath(testTile2));
             Assert.IsFalse(testTile2.CompareByPath(testTile1));
         }
+
+        [TestMethod]
+        public void TestEquals()
+        {
+            Tile testTile1 = new Tile(1, new List<int> {0, 1, 2, 3, 4, 5, 6, 7});
+            Tile testTile2 = new Tile(2, new List<int> {2, 3, 4, 5, 6, 7, 0, 1});
+            Assert.IsTrue(testTile1.Equals(testTile2));
+        }
     }
 }

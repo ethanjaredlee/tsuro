@@ -9,6 +9,7 @@
     <Folder Include="Interfaces\" />
     <Folder Include="Classes\" />
     <Folder Include="Classes\Players\" />
+    <Folder Include="Network\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Classes\Players\EmptyClass.cs" />

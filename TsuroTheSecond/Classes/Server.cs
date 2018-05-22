@@ -250,7 +250,6 @@ namespace TsuroTheSecond
                 }
             }
 
-            Boolean gameOver = alive.Count == 1 || alive.Count == 0;
             // can decide to return here if thats better
             // everything under here isn't necessary if game is over
             foreach (Player p in fatalities) {

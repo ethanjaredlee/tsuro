@@ -90,6 +90,7 @@ namespace TsuroTheSecond
             repr += ")>";
             return repr;
         }
+
         public string PathMap(){
             // init all to -1.
             int[] path_map = Enumerable.Repeat(-1, 8).ToArray();
@@ -123,6 +124,15 @@ namespace TsuroTheSecond
 
         public Boolean CompareByPath(Tile comparison){
             return this.PathMap() == comparison.PathMap();
+        }
+
+        public override bool Equals(object obj) {
+            if ((obj == null) || !this.GetType().Equals(obj.GetType())) {
+                return false;
+            }
+
+            Tile tile = (Tile)obj;
+            return this.CompareByPath(tile);
         }
 
     }
