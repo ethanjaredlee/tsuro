@@ -48,7 +48,7 @@ namespace TsuroTheSecond
                 throw new ArgumentException("Position shouldn't exist");
             }
 
-            if (_x > 5 || _x < 0 || _y > 5 || _y < 0 || _port < 0 || _port > 7) {
+            if (_x > 6 || _x < -1 || _y > 6 || _y < -1 || _port < 0 || _port > 7) {
                 throw new ArgumentException("Invalid position: position not on board");
             }
 

@@ -241,5 +241,35 @@ namespace TsuroTheSecondTests
             bool horizontal = parser.HVIsHorizontalParse(v);
             Assert.IsFalse(horizontal);
         }
+
+        [TestMethod]
+        public void TestPawnLocationParseHorizontal()
+        {
+            string location = "<pawn-loc><h></h><n>2</n><n>1</n></pawn-loc>";
+            Position position = parser.PawnLocationParse(location);
+            Assert.AreEqual(0, position.x);
+            Assert.AreEqual(2, position.y);
+            Assert.AreEqual(1, position.port);
+        }
+
+        [TestMethod]
+        public void TestPawnLocationParseVertical()
+        {
+            string location = "<pawn-loc><v></v><n>2</n><n>1</n></pawn-loc>";
+            Position position = parser.PawnLocationParse(location);
+            Assert.AreEqual(2, position.x);
+            Assert.AreEqual(0, position.y);
+            Assert.AreEqual(6, position.port);
+        }
+
+        [TestMethod]
+        public void TestPawnLocationParseVerticalBoundary()
+        {
+            string location = "<pawn-loc><h></h><n>6</n><n>1</n></pawn-loc>";
+            Position position = parser.PawnLocationParse(location);
+            Assert.AreEqual(0, position.x);
+            Assert.AreEqual(6, position.y);
+            Assert.AreEqual(1, position.port);
+        }
     }
 }

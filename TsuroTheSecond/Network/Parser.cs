@@ -200,6 +200,31 @@ namespace TsuroTheSecond
         public Position PawnLocationParse(string pLocation) {
             XmlDocument document = new XmlDocument();
             document.LoadXml(pLocation);
+
+            // position is for the tile lowest
+            bool horizontal = HVIsHorizontalParse(document.FirstChild.ChildNodes[0].OuterXml);
+            int line = NParse(document.FirstChild.ChildNodes[1].OuterXml);
+            int tick = NParse(document.FirstChild.ChildNodes[2].OuterXml);
+
+            int x = -1;
+            int y = -1;
+            int port = -1;
+
+            if (horizontal) {
+                y = line;
+                x = tick / 2;
+                port = tick % 2;
+            } else {
+                x = line;
+                y = tick / 2;
+                if (tick % 2 == 0) {
+                    port = 7;
+                } else {
+                    port = 6;
+                }
+            }
+
+            return new Position(x, y, port, true);
         }
     }
 }
