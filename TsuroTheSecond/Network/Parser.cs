@@ -80,5 +80,126 @@ namespace TsuroTheSecond
             return document.InnerText.Trim();
         }
 
+        public string ColorParse(string colorXml) {
+            List<string> acceptedColors = new List<string> {
+                "blue",
+                "red",
+                "green",
+                "orange",
+                "sienna",
+                "hotpink",
+                "darkgreen",
+                "purple"
+            };
+
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(colorXml);
+
+            string color = document.InnerText;
+
+            if (!acceptedColors.Contains(color)) {
+                throw new ArgumentException("Invalid color");
+            }
+
+            return color;
+
+        }
+
+        public List<Tile> ListOfTileParse(string listTileXml) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(listTileXml);
+
+            List<Tile> tiles = new List<Tile>();
+            foreach(XmlNode node in document.DocumentElement) {
+                tiles.Add(TileParse(node.OuterXml)); 
+            }
+
+            return tiles;
+        }
+
+        public List<Tile> SetOfTileParse(string listTileXml)
+        {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(listTileXml);
+
+            List<Tile> tiles = new List<Tile>();
+            foreach (XmlNode node in document.DocumentElement)
+            {
+                tiles.Add(TileParse(node.OuterXml));
+            }
+
+            HashSet<Tile> htiles = new HashSet<Tile>(tiles);
+            // are we checking for unique tiles or orientations?
+            if (htiles.Count != tiles.Count) {
+                throw new ArgumentException("Tiles are not unique");
+            }
+
+            foreach(Tile t in htiles) {
+                Console.WriteLine(t);
+            }
+
+            return tiles;
+        }
+
+        public List<string> ListOfColorParse(string listColorXml) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(listColorXml);
+
+            List<string> colors = new List<string>();
+            foreach(XmlNode node in document.DocumentElement) {
+                colors.Add(ColorParse(node.OuterXml));
+            }
+
+            return colors;
+        }
+
+        public List<(string, List<Tile>)> ListOfSplayerParse(string listofSPlayerXml) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(listofSPlayerXml);
+
+            List<(string, List<Tile>)> players = new List<(string, List<Tile>)>();
+            foreach(XmlNode node in document.DocumentElement) {
+                players.Add(SPlayerParse(node.OuterXml));
+            }
+
+            return players;
+        }
+
+        public (string, List<Tile>) SPlayerParse(string sPlayerXml) {
+            // our server keeps track of the dragon tile so i think (hope)
+            // we dont care about the dragontile tag for parsing
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(sPlayerXml);
+
+            string color = ColorParse(document.FirstChild.FirstChild.OuterXml);
+            List <Tile> hand = ListOfTileParse(document.FirstChild.LastChild.OuterXml);
+
+            return (color, hand);
+        }
+
+        public (int, int) XYParse(string xyXml) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xyXml);
+
+            int x = Int32.Parse(document.DocumentElement.FirstChild.FirstChild.InnerText);
+            int y = Int32.Parse(document.DocumentElement.LastChild.LastChild.InnerText);
+
+            return (x, y);
+
+        }
+
+        public bool HVIsHorizontalParse(string hv)
+        {
+            // returns true if h
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(hv);
+
+            return (document.OuterXml.Trim() == "<h></h>");
+        }
+
+        public Position PawnLocationParse(string pLocation) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(pLocation);
+        }
     }
 }

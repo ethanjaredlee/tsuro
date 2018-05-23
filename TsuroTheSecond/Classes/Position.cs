@@ -43,6 +43,20 @@ namespace TsuroTheSecond
             }
         }
 
+        public Position(int _x, int _y, int _port, bool existing) {
+            if (!existing) {
+                throw new ArgumentException("Position shouldn't exist");
+            }
+
+            if (_x > 5 || _x < 0 || _y > 5 || _y < 0 || _port < 0 || _port > 7) {
+                throw new ArgumentException("Invalid position: position not on board");
+            }
+
+            x = _x;
+            y = _y;
+            port = _port;
+        }
+
         public Position(Position copy)
         {
             x = copy.x;
