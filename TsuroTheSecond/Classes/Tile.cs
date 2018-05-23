@@ -135,5 +135,10 @@ namespace TsuroTheSecond
             return this.CompareByPath(tile);
         }
 
+        public override int GetHashCode()
+        {
+            return PathMap().GetHashCode();
+        }
+
     }
 }
