@@ -98,7 +98,7 @@ namespace TsuroTheSecond
             string color = document.InnerText;
 
             if (!acceptedColors.Contains(color)) {
-                throw new ArgumentException("Invalid color");
+                throw new ArgumentException("Invalid color: " + color);
             }
 
             return color;
@@ -225,6 +225,83 @@ namespace TsuroTheSecond
             }
 
             return new Position(x, y, port, true);
+        }
+
+        public Dictionary<string, Position> PawnsParse(string pawnsXml) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(pawnsXml);
+
+            Dictionary<string, Position> pawnLocs = new Dictionary<string, Position>();
+            XmlNode info = document.FirstChild;
+            foreach (XmlNode ent in info.ChildNodes) {
+                string color = ColorParse(ent.FirstChild.OuterXml);
+                Position position = PawnLocationParse(ent.LastChild.OuterXml);
+                pawnLocs[color] = position;
+            }
+
+            return pawnLocs;
+        }
+
+        public Dictionary<(int, int), Tile> MultiTilesParse(string tilesXml) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(tilesXml);
+
+            Dictionary<(int, int), Tile> tileLocs = new Dictionary<(int, int), Tile>();
+            XmlNode info = document.FirstChild;
+            foreach (XmlNode ent in info.ChildNodes)
+            {
+                (int, int) coords = XYParse(ent.FirstChild.OuterXml);
+                Tile tile = TileParse(ent.LastChild.OuterXml);
+                tileLocs[coords] = tile;
+            }
+
+            return tileLocs;
+        }
+
+        public List<(string, List<Tile>)> MaybeSPlayerParse(string maybeXml) {
+            if (maybeXml.Trim() == "<false></false>") {
+                return null;
+            }
+
+            return ListOfSplayerParse(maybeXml);
+        }
+
+        public Board BoardParse(string boardXml) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(boardXml);
+
+            Board board = new Board(6);
+
+            string tilesXml = document.FirstChild.FirstChild.OuterXml;
+            Console.WriteLine(tilesXml);
+            string pawnsXml = document.FirstChild.LastChild.OuterXml;
+            Console.WriteLine(pawnsXml);
+            Dictionary<string, Position> pawns = PawnsParse(pawnsXml);
+
+            Dictionary<(int, int), Tile> tiles = MultiTilesParse(tilesXml);
+
+            foreach (KeyValuePair<(int, int), Tile> tilePos in tiles) {
+                board.PlaceTile(tilePos.Value, tilePos.Key.Item1, tilePos.Key.Item2);
+            }
+
+            return board;
+        }
+
+        public (Board, List<string>) EndGameParse(string end) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(end);
+
+            string boardXml = document.FirstChild.FirstChild.OuterXml;
+            Board board = BoardParse(boardXml);
+
+            string colorXml = document.FirstChild.LastChild.OuterXml;
+            List<string> winners = ListOfColorParse(colorXml);
+
+            return (board, winners);
+        }
+
+        public Board PlacePawnParse(string place) {
+            return BoardParse(place);
         }
     }
 }

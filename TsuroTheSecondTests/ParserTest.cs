@@ -133,7 +133,7 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestSetOfTileParse()
         {
-            string listTileString = "<list-of-tile>" + tile1XML + tile2XML + tile3XML + "</list-of-tile>";
+            string listTileString = "<list>" + tile1XML + tile2XML + tile3XML + "</list>";
             List<Tile> tileList = parser.SetOfTileParse(listTileString);
             Assert.AreEqual(parser.TileParse(tile1XML), tileList[0]);
             Assert.AreEqual(parser.TileParse(tile2XML), tileList[1]);
@@ -144,14 +144,14 @@ namespace TsuroTheSecondTests
         [ExpectedException(typeof(ArgumentException), "Tiles are not unique")]
         public void TestSetOfTileParseDuplicates()
         {
-            string listTileString = "<list-of-tile>" + tile1XML + tile1XML + tile3XML + "</list-of-tile>";
+            string listTileString = "<list>" + tile1XML + tile1XML + tile3XML + "</list>";
             List<Tile> tileList = parser.SetOfTileParse(listTileString);
         }
 
         [TestMethod]
         public void TestListOfColorsParse()
         {
-            string listColorString = "<list-of-color><color>blue</color><color>green</color></list-of-color>";
+            string listColorString = "<list><color>blue</color><color>green</color></list>";
             List<string> colors = parser.ListOfColorParse(listColorString);
             Assert.AreEqual("blue", colors[0]);
             Assert.AreEqual("green", colors[1]);
@@ -163,11 +163,11 @@ namespace TsuroTheSecondTests
             string splayerstring = "" +
                 "<splayer-dragon>" +
                     "<color>blue</color>" +
-                    "<list-of-tile>" + 
+                    "<list>" + 
                         tile1XML + 
                         tile2XML + 
                         tile3XML + 
-                    "</list-of-tile>" +
+                    "</list>" +
                 "</splayer-dragon>";
             (string, List<Tile>) result = parser.SPlayerParse(splayerstring);
             Assert.AreEqual("blue", result.Item1);
@@ -182,20 +182,20 @@ namespace TsuroTheSecondTests
             string splayerstring1 = "" +
                 "<splayer-dragon>" +
                     "<color>blue</color>" +
-                    "<list-of-tile>" +
+                    "<list>" +
                         tile1XML +
                         tile2XML +
                         tile3XML +
-                    "</list-of-tile>" +
+                    "</list>" +
                 "</splayer-dragon>";
             string splayerstring2 = "" +
                 "<splayer-dragon>" +
                     "<color>green</color>" +
-                    "<list-of-tile>" +
+                    "<list>" +
                         tile2XML +
                         tile3XML +
                         tile1XML +
-                    "</list-of-tile>" +
+                    "</list>" +
                 "</splayer-dragon>";
             string listofSplayers = "<list>" + splayerstring1 + splayerstring2 + "</list>";
             List<(string, List<Tile>)> result = parser.ListOfSplayerParse(listofSplayers);
@@ -271,5 +271,104 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(6, position.y);
             Assert.AreEqual(1, position.port);
         }
+
+        [TestMethod]
+        public void TestPawnsParse()
+        {
+            string pawns = "<map>" +
+                "<ent>" +
+                    "<color>blue</color>" +
+                    "<pawn-loc><h></h><n>6</n><n>1</n></pawn-loc>" +
+                "</ent>" +
+                "<ent>" +
+                    "<color>green</color>" +
+                    "<pawn-loc><h></h><n>2</n><n>1</n></pawn-loc>" +
+                "</ent>" +
+                "</map>";
+            Dictionary<string, Position> locations = parser.PawnsParse(pawns);
+            Position bluePos = new Position(0, 6, 1, true);
+            Position greenPos = new Position(0, 2, 1, true);
+            Assert.AreEqual(locations["blue"], bluePos);
+            Assert.AreEqual(locations["green"], greenPos);
+            Assert.AreEqual(2, locations.Count);
+        }
+
+        [TestMethod]
+        public void TestMultiTileParse()
+        {
+            string tiles = "<map>" +
+                "<ent>" +
+                    "<xy><x>1</x><y>2</y></xy>" +
+                    tile1XML + 
+                "</ent>" +
+                "<ent>" +
+                    "<xy><x>2</x><y>2</y></xy>" +
+                    tile2XML +
+                "</ent>" +
+                "</map>";
+            Dictionary<(int, int), Tile> multiTile = parser.MultiTilesParse(tiles);
+            Tile t1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Tile t2 = new Tile(2, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+
+            Assert.AreEqual(multiTile[(1, 2)], t1);
+            Assert.AreEqual(multiTile[(2, 2)], t2);
+            Assert.AreEqual(2, multiTile.Count);
+        }
+
+        [TestMethod]
+        public void TestMaybeSplayerParse()
+        {
+            string notTrue = "<false></false>";
+            Assert.IsNull(parser.MaybeSPlayerParse(notTrue));
+        }
+
+        [TestMethod]
+        public void TestBoardParse()
+        {
+            string boardXml = "<board>" +
+                "<map>" +
+                    "<ent>" +
+                    "<xy><x>0</x><y>0</y></xy>" +
+                    tile1XML + 
+                    "</ent>" +
+                "</map>" +
+                "<map>" +
+                    "<ent>" +
+                    "<color>blue</color>" +
+                    "<pawn-loc><v></v><n>1</n><n>1</n></pawn-loc>" +
+                "</ent>" +
+                "</map>" +
+                "</board>";
+            Board board = parser.BoardParse(boardXml);
+            Tile t1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Assert.AreEqual(t1, board.tiles[0][0]);
+        }
+
+        [TestMethod]
+        public void TestEndGameParse()
+        {
+            string end = "<end-game>" +
+                "<board>" +
+                "<map>" +
+                    "<ent>" +
+                    "<xy><x>0</x><y>0</y></xy>" +
+                    tile1XML +
+                    "</ent>" +
+                "</map>" +
+                "<map>" +
+                    "<ent>" +
+                    "<color>blue</color>" +
+                    "<pawn-loc><v></v><n>1</n><n>1</n></pawn-loc>" +
+                "</ent>" +
+                "</map>" +
+                "</board>" +
+                "<list><color>blue</color></list>" +
+                "</end-game>";
+            (Board, List<string>) endGame = parser.EndGameParse(end);
+            Tile t1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Assert.AreEqual(t1, endGame.Item1.tiles[0][0]);
+            Assert.AreEqual("blue", endGame.Item2[0]);
+        }
+
     }
 }
