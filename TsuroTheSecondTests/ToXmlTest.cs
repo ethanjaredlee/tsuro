@@ -116,5 +116,24 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(check, bString);
         }
 
+        [TestMethod]
+        public void TestColorListToXml()
+        {
+            XElement colorList = converter.ColorListtoXml(new List<string> { "blue", "red" });
+            string colors = converter.FormatXml(colorList);
+
+            string check = "<list><color>blue</color><color>red</color></list>";
+            Assert.AreEqual(check, colors);
+        }
+
+        [TestMethod]
+        public void TestInitializetoXml()
+        {
+            XElement init = converter.InitializetoXml("blue", new List<string> { "blue", "red" });
+            string initString = converter.FormatXml(init);
+
+            string check = "<initialize><color>blue</color><list><color>blue</color><color>red</color></list></initialize>";
+            Assert.AreEqual(check, initString);
+        }
     }
 }

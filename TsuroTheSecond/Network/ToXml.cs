@@ -42,6 +42,16 @@ namespace TsuroTheSecond
             return xyElement;
         }
 
+        public XElement ColorListtoXml(List<string> colors) {
+            XElement colorList = new XElement("list");
+            foreach(string color in colors) {
+                XElement colorXml = new XElement("color", color);
+                colorList.Add(colorXml);
+            }
+
+            return colorList;
+        }
+
         public XElement MultiTilesToXml(List<(Tile, (int, int))> tilePositions) {
 
             XElement multiTiles = new XElement("map");
@@ -126,6 +136,13 @@ namespace TsuroTheSecond
             board.Add(tiles, map);
 
             return board;
+        }
+
+        public XElement InitializetoXml(string color, List<string> allColors) {
+            XElement initialize = new XElement("initialize",
+                                               new XElement("color", color),
+                                               ColorListtoXml(allColors));
+            return initialize;
         }
 
         ////public string BoardtoXml(Board b) { }

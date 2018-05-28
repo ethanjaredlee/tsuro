@@ -370,5 +370,18 @@ namespace TsuroTheSecondTests
             Assert.AreEqual("blue", endGame.Item2[0]);
         }
 
+        [TestMethod]
+        public void VoidParseTestTrue() {
+            string voidXml = "<void></void>";
+            Console.WriteLine(parser.VoidParse(voidXml));
+            Assert.IsTrue(parser.VoidParse(voidXml));
+        }
+
+        [TestMethod]
+        public void VoidParseTestFalse()
+        {
+            string voidXml = "<not-void></not-void>";
+            Assert.IsFalse(parser.VoidParse(voidXml));
+        }
     }
 }

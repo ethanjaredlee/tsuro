@@ -299,5 +299,13 @@ namespace TsuroTheSecond
         public Board PlacePawnParse(string place) {
             return BoardParse(place);
         }
+
+        public Boolean VoidParse(string voidXml) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(voidXml);
+
+            Console.WriteLine(document.FirstChild.Name);
+            return (document.FirstChild.Name == "void");
+        }
     }
 }
