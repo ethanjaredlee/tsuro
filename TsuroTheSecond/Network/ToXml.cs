@@ -37,8 +37,8 @@ namespace TsuroTheSecond
 
         public XElement XYtoXml((int, int) xy) {
             XElement xyElement = new XElement("xy",
-                                              new XElement("x", NtoXml(xy.Item1)),
-                                              new XElement("y", NtoXml(xy.Item2)));
+                                              new XElement("x", xy.Item1),
+                                              new XElement("y", xy.Item2));
             return xyElement;
         }
 
@@ -46,16 +46,84 @@ namespace TsuroTheSecond
 
             XElement multiTiles = new XElement("map");
             foreach ((Tile, (int, int)) t in tilePositions) {
-                XElement ent = new XElement("ent");
+                XElement ent = new XElement("ent",
+                                            XYtoXml(t.Item2),
+                                            TiletoXml(t.Item1));
+                multiTiles.Add(ent);
             }
 
             return multiTiles;
 
         }
 
+        public XElement PawnLoctoXml(Position position)
+        {
+            XElement p = new XElement("pawn-loc");
+
+            Boolean horizontal;
+            int line;
+            int dash;
+
+            if (position.port == 0 || position.port == 1)
+            {
+                horizontal = true;
+                line = position.y;
+                dash = position.x * 2;
+                if (position.port == 1) dash++;
+            }
+            else if (position.port == 4 || position.port == 5)
+            {
+                horizontal = true;
+                line = position.y + 1;
+                dash = position.x * 2;
+                if (position.port == 4) dash++;
+            }
+            else if (position.port == 2 || position.port == 3) {
+                horizontal = false;
+                line = position.x + 1;
+                dash = position.y * 2;
+                if (position.port == 3) dash++;
+            }
+            else if (position.port == 6 || position.port == 7) {
+                horizontal = false;
+                line = position.x;
+                dash = position.y * 2;
+                if (position.port == 6) dash++;
+            } else {
+                throw new ArgumentException("Port number doesn't exist in range");
+            }
+
+            XElement hv = horizontal ? new XElement("h", "") : new XElement("v", "");
+            p.Add(hv,
+                  NtoXml(line),
+                  NtoXml(dash));
+
+            return p;
+        }
+
         public XElement BoardtoXml(Board b) {
             XElement board = new XElement("board");
 
+            List<(Tile, (int, int))> tilePositions = new List<(Tile, (int, int))>();
+            for (int i = 0; i < b.tiles.Count; i++) {
+                for (int j = 0; j < b.tiles.Count; j++) {
+                    if (b.tiles[i][j] == null) continue;
+
+                    tilePositions.Add((b.tiles[i][j], (i, j)));
+                } 
+            }
+
+            XElement tiles = MultiTilesToXml(tilePositions);
+            XElement map = new XElement("map");
+
+            foreach (KeyValuePair<string, Position> pawnLoc in b.tokenPositions) {
+                XElement pawn = new XElement("ent",
+                                             new XElement("color", pawnLoc.Key),
+                                             PawnLoctoXml(pawnLoc.Value));
+                map.Add(pawn);
+            }
+
+            board.Add(tiles, map);
 
             return board;
         }
