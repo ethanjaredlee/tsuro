@@ -10,10 +10,6 @@ namespace TsuroTheSecond
         {
         }
 
-        public void ParseXML() {
-            
-        }
-
         public Tile TileParse(string tileXML) {
             XmlDocument document = new XmlDocument();
             document.LoadXml(tileXML);

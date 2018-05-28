@@ -1,55 +1,64 @@
 ﻿using System;
 using System.Xml;
+using System.Xml.Linq;
+using System.Collections.Generic;
 namespace TsuroTheSecond
 {
     public class ToXml
     {
-        // constant tags
 
-        // colors
-        //readonly string blue = "<color>blue</color>";
-        //readonly string red = "<color>red</color>";
-        //readonly string green = "<color>green</color>";
-        //readonly string orange = "<color>orange</color>";
-        //readonly string sienna = "<color>sienna</color>";
-        //readonly string hotpink = "<color>hotpink</color>";
-        //readonly string darkgreen = "<color>darkgreen</color>";
-        //readonly string purple = "<color>purple</color>";
+        public string FormatXml(XElement xml)
+        {
+            return xml.ToString().Replace("\n", "").Replace(" ", "");
+        }
 
-        //readonly string voidtag = "<void></void>";
+        public XElement NametoXml(string name)
+        {
+            XElement nameXml = new XElement("player-name", name);
+            return nameXml;
+        }
 
-        //readonly string horizontal = "<h></h>";
-        //readonly string vertical = "<v></v>";
+        public XElement NtoXml(int n) {
+            XElement nXml = new XElement("n", n);
+            return nXml;
+        }
 
-        //readonly string falsetag = "<false></false>";
+        public XElement TiletoXml(Tile t)
+        {
+            XElement tile = new XElement("tile");
+            foreach(List<int> connect in t.paths) {
+                XElement con = new XElement("connect",
+                                            NtoXml(connect[0]),
+                                            NtoXml(connect[1]));
+                tile.Add(con);
+            }
+            return tile;
+        }
+
+        public XElement XYtoXml((int, int) xy) {
+            XElement xyElement = new XElement("xy",
+                                              new XElement("x", NtoXml(xy.Item1)),
+                                              new XElement("y", NtoXml(xy.Item2)));
+            return xyElement;
+        }
+
+        public XElement MultiTilesToXml(List<(Tile, (int, int))> tilePositions) {
+
+            XElement multiTiles = new XElement("map");
+            foreach ((Tile, (int, int)) t in tilePositions) {
+                XElement ent = new XElement("ent");
+            }
+
+            return multiTiles;
+
+        }
+
+        public XElement BoardtoXml(Board b) {
+            XElement board = new XElement("board");
 
 
-
-        //public ToXml()
-        //{
-        //}
-
-        //public string NametoXml(string name)
-        //{
-        //    string xmlname = "<player-name>{0}</player-name", name;
-        //    return xmlname;
-        //}
-
-        //public string TiletoXml(Tile t)
-        //{
-        //    int start1 = t.paths[0][0];
-        //    int end1 = t.paths[0][1];
-        //    int start2 = t.paths[1][0];
-        //    int end2 = t.paths[1][1];
-        //    int start3 = t.paths[2][0];
-        //    int end3 = t.paths[2][1];
-        //    int start4 = t.paths[3][0];
-        //    int end4 = t.paths[3][1];
-
-        //    string tilestring = "<tile><connect><n>{0}</n><n>{1}</n></connect><connect><n>{2}</n><n>{3}</n></connect>" +
-        //        "<connect><n>{4}</n><n>{5}</n></connect><connect><n>{6}</n><n>{7}</n></connect></tile>", start1, end1, start2, end2, start3, end3, start4, end4;
-        //    return tilestring;
-        //}
+            return board;
+        }
 
         ////public string BoardtoXml(Board b) { }
 
