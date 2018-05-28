@@ -307,5 +307,6 @@ namespace TsuroTheSecond
             Console.WriteLine(document.FirstChild.Name);
             return (document.FirstChild.Name == "void");
         }
+
     }
 }

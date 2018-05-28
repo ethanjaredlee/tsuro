@@ -6,6 +6,10 @@ namespace TsuroTheSecond
 {
     public class ToXml
     {
+        /*
+         * for the functions that we use in NPlayer, can prob return string
+         * instead of an XElement
+         */
 
         public string FormatXml(XElement xml)
         {
@@ -33,6 +37,23 @@ namespace TsuroTheSecond
                 tile.Add(con);
             }
             return tile;
+        }
+
+        public XElement SetofTiletoXml(List<Tile> tiles) {
+            XElement set = new XElement("set");
+            foreach (Tile t in tiles) {
+                set.Add(TiletoXml(t));
+            }
+
+            return set;
+        }
+
+        public XElement SetofColortoXml(List<string> colors) {
+            XElement set = new XElement("set");
+            foreach (string color in colors) {
+                set.Add(new XElement("color", color));
+            }
+            return set;
         }
 
         public XElement XYtoXml((int, int) xy) {
@@ -145,49 +166,26 @@ namespace TsuroTheSecond
             return initialize;
         }
 
-        ////public string BoardtoXml(Board b) { }
+        public XElement PlacePawntoXml(Board board) {
+            XElement placePawn = new XElement("place-pawn",
+                                              BoardtoXml(board));
+            return placePawn;
+        }
 
-        //public string LocationtoXml(int x, int y, int p)
-        //{
-        //    string orientation;
-        //    string line;
-        //    string path;
-        //    if (p == 0 || p == 1)
-        //    {
-        //        orientation = horizontal;
-        //        line = y.ToString();
-        //        if (p == 0) { path = (x * 2).ToString(); }
-        //        else { path = ((x * 2) + 1).ToString(); }
-        //    }
-        //    else if (p == 4 || p == 5)
-        //    {
-        //        orientation = horizontal;
-        //        line = (y + 1).ToString();
-        //        if (p == 5) { path = (x * 2).ToString(); }
-        //        else { path = ((x * 2) + 1).ToString(); }
-        //    }
-        //    else if(p == 2 || p == 3)
-        //    {
-        //        orientation = vertical;
-        //        line = x.ToString();
-        //        if (p == 2) { path = (y * 2).ToString(); }
-        //        else { path = ((y * 2) + 1).ToString(); }
-        //    }
-        //    else if (p == 6 || p == 7)
-        //    {
-        //        orientation = vertical;
-        //        line = (x + 1).ToString();
-        //        if (p == 7) { path = (y * 2).ToString(); }
-        //        else { path = ((y * 2) + 1).ToString(); }
-        //    }
-        //    else
-        //    {
-        //        throw new ArgumentException("This is not a valid path position");
-        //    }
+        public XElement PlayTurntoXml(Board board, List<Tile> hand, int unused) {
+            XElement turn = new XElement("play-turn",
+                                         BoardtoXml(board),
+                                         SetofTiletoXml(hand),
+                                         NtoXml(unused));
+            return turn;
+        }
 
-        //    string ret =  "<pawn-loc>{0}<n>{1}</n><n>{2}</n></pawn-loc>", orientation, line, path;
-        //    return ret;
-        //}
+        public XElement EndGametoXml(Board board, List<string> colors) {
+            XElement end = new XElement("end-game",
+                                        BoardtoXml(board),
+                                        SetofColortoXml(colors));
+            return end;
+        }
 
     }
 }

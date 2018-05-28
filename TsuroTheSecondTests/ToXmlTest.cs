@@ -56,6 +56,16 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        public void TestSetofTiletoXml()
+        {
+            XElement setTile = converter.SetofTiletoXml(new List<Tile>{testTile1, testTile2});
+            string tileString = converter.FormatXml(setTile);
+            string check = "<set>" + checkTile1 + checkTile2 + "</set>";
+            Assert.AreEqual(check, tileString);
+        }
+
+
+        [TestMethod]
         public void TestXYtoXml()
         {
             XElement xy = converter.XYtoXml((1, 2));
@@ -134,6 +144,55 @@ namespace TsuroTheSecondTests
 
             string check = "<initialize><color>blue</color><list><color>blue</color><color>red</color></list></initialize>";
             Assert.AreEqual(check, initString);
+        }
+
+        [TestMethod]
+        public void PlayTurntoXmlTest() {
+            Board board = new Board(6);
+            Tile tile = new Tile(1, new List<int> { 0, 1, 2, 4, 3, 6, 5, 7 });
+            board.PlaceTile(tile, 0, 0);
+            board.tokenPositions["red"] = new Position(0, 0, 3, true);
+
+            List<Tile> hand = new List<Tile> { testTile1, testTile2 };
+            int unused = 30;
+
+            XElement play = converter.PlayTurntoXml(board, hand, unused);
+            string playTurn = converter.FormatXml(play);
+
+            string boardCheck = "<board><map><ent><xy><x>0</x><y>0</y></xy><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>4</n></connect><connect><n>3</n><n>6</n></connect><connect><n>5</n><n>7</n></connect></tile></ent></map><map><ent><color>red</color><pawn-loc><v></v><n>1</n><n>1</n></pawn-loc></ent></map></board>";
+            string handCheck = "<set>" + checkTile1 + checkTile2 + "</set>";
+            string check = "<play-turn>" + boardCheck + handCheck + "<n>30</n></play-turn>";
+
+            Assert.AreEqual(check, playTurn);
+        }
+
+        [TestMethod]
+        public void EndGametoXmlTest() {
+            Board board = new Board(6);
+            Tile tile = new Tile(1, new List<int> { 0, 1, 2, 4, 3, 6, 5, 7 });
+            board.PlaceTile(tile, 0, 0);
+            board.tokenPositions["red"] = new Position(0, 0, 3, true);
+
+            List<string> winners = new List<string> { "red" };
+
+            XElement end = converter.EndGametoXml(board, winners);
+            string endString = converter.FormatXml(end);
+
+            string boardCheck = "<board><map><ent><xy><x>0</x><y>0</y></xy><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>4</n></connect><connect><n>3</n><n>6</n></connect><connect><n>5</n><n>7</n></connect></tile></ent></map><map><ent><color>red</color><pawn-loc><v></v><n>1</n><n>1</n></pawn-loc></ent></map></board>";
+            string colorsCheck = "<set><color>red</color></set>";
+            string check = "<end-game>" + boardCheck + colorsCheck + "</end-game>";
+
+            Assert.AreEqual(check, endString);
+        }
+
+        [TestMethod]
+        public void SetofColortoXmlTest()
+        {
+            List<string> colors = new List<string> { "blue", "green", "red" };
+            XElement element = converter.SetofColortoXml(colors);
+            string colorString = converter.FormatXml(element);
+            string check = "<set><color>blue</color><color>green</color><color>red</color></set>";
+            Assert.AreEqual(check, colorString);
         }
     }
 }
