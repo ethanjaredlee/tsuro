@@ -187,5 +187,10 @@ namespace TsuroTheSecond
             return end;
         }
 
+        public string VoidtoXml() {
+            XElement element = new XElement("void", "");
+            return FormatXml(element);
+        }
+
     }
 }

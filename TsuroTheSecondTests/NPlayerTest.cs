@@ -37,8 +37,15 @@ namespace TsuroTheSecondTests
             player.Initialize("blue", new List<string> { "blue", "red" });
         }
 
-        [TestMethod]
-        public void PlacePawnTest() {
-        }
+        //[TestMethod]
+        //public void PlacePawnTest() {
+        //    string response = "<pawn-loc><hv><h></h><n>0</n><n>1</n></hv></pawn-loc>";
+        //    Board board = new Board(6);
+
+        //    Position initPosition = player.PlacePawn(board);
+        //    Console.SetIn(new StringReader(response));
+        //    Position check = new Position(0, -1, 4, true);
+        //    Assert.AreEqual(initPosition, check);
+        //}
     }
 }

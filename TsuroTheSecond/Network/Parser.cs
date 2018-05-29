@@ -308,5 +308,52 @@ namespace TsuroTheSecond
             return (document.FirstChild.Name == "void");
         }
 
+        public (string, List<string>) InitializeParse(string initXml) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(initXml);
+
+            if (document.FirstChild.Name != "initialize") {
+                throw new ArgumentException("<initialize> tag not found");
+            }
+
+            string color = ColorParse(document.FirstChild.FirstChild.OuterXml);
+            List<string> allColors = ListOfColorParse(document.FirstChild.LastChild.OuterXml);
+            return (color, allColors);
+        }
+
+        public (Board, List<Tile>, int) PlayTurnParse(string turn) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(turn);
+
+            RootTagCheck("play-turn", turn);
+
+            Board board = BoardParse(document.FirstChild.ChildNodes[0].OuterXml);
+            List<Tile> hand = SetOfTileParse(document.FirstChild.ChildNodes[1].OuterXml);
+            int unused = NParse(document.FirstChild.ChildNodes[2].OuterXml);
+
+            return (board, hand, unused);
+        }
+
+        public void GetNameCheck(string input) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(input);
+
+            RootTagCheck("get-name", input);
+            Console.WriteLine(document.FirstChild.InnerXml.Trim());
+            if (document.FirstChild.InnerXml.Trim() != "") {
+                throw new ArgumentException("invalid <get-name> tag format");
+            }
+        }
+
+        public void RootTagCheck(string tag, string input) {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(input);
+
+            if (document.FirstChild.Name != tag)
+            {
+                throw new ArgumentException(tag + " tag not found");
+            }
+        }
+
     }
 }

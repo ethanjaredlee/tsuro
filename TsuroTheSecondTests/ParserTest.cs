@@ -383,5 +383,60 @@ namespace TsuroTheSecondTests
             string voidXml = "<not-void></not-void>";
             Assert.IsFalse(parser.VoidParse(voidXml));
         }
+
+        [TestMethod]
+        public void InitializeParseTest()
+        {
+            string init = "<initialize><color>blue</color><list><color>blue</color><color>red</color></list></initialize>";
+            (string, List<string>) response = parser.InitializeParse(init);
+            Assert.AreEqual("blue", response.Item1);
+            CollectionAssert.AreEqual(new List<string> { "blue", "red" }, response.Item2);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "invalid <get-name> tag format")]
+        public void GetNameTest()
+        {
+            string badinside = "<get-name><bad></bad></get-name>";
+            parser.GetNameCheck(badinside);
+        }
+
+        [TestMethod]
+        public void GetNameWhitespaceTest()
+        {
+            string whitespace = "<get-name> </get-name>";
+            parser.GetNameCheck(whitespace);
+            Assert.AreEqual(2, 2);
+        }
+
+        [TestMethod]
+        public void ParsePlayTurnTest() {
+            string board = "<board>" +
+                "<map>" +
+                    "<ent>" +
+                    "<xy><x>0</x><y>0</y></xy>" +
+                    tile1XML +
+                    "</ent>" +
+                "</map>" +
+                "<map>" +
+                    "<ent>" +
+                    "<color>blue</color>" +
+                    "<pawn-loc><v></v><n>1</n><n>1</n></pawn-loc>" +
+                "</ent>" +
+                "</map>" +
+                "</board>";
+
+            string hand = "<list>" + tile1XML + tile2XML + "</list>";
+            string unused = "<n>20</n>";
+            string playTurn = "<play-turn>" + board + hand + unused + "</play-turn>";
+            (Board, List<Tile>, int) turn = parser.PlayTurnParse(playTurn);
+            Assert.AreEqual(20, turn.Item3);
+
+            Tile t1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Tile t2 = new Tile(2, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+            CollectionAssert.AreEqual(new List<Tile> { t1, t2 }, turn.Item2);
+
+            Assert.AreEqual(t1, turn.Item1.tiles[0][0]);
+        }
     }
 }
