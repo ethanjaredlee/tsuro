@@ -795,5 +795,31 @@ namespace TsuroTheSecondTests
             server.InitPlayerPositions();
             Assert.AreNotEqual(cheat.GetType(), server.alive[0].iplayer.GetType());
         }
+
+        [TestMethod]
+        public void Test35TilesonBoardAndPlayersStillAlive()
+        {
+            AddFourPlayers();
+            server.InitPlayerPositions();
+            server.deck = new List<Tile> { };
+
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 6; j++) {
+                    server.board.tiles[i][j] = new Tile(1, new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 });
+                }
+            }
+
+            server.board.tiles[5][5] = null;
+
+            server.board.tokenPositions["blue"] = new Position(4, 5, 3, true);
+            server.board.tokenPositions["green"] = new Position(4, 5, 2, true);
+            server.board.tokenPositions["hotpink"] = new Position(5, 4, 4, true);
+
+            server.gameState = Server.State.safe;
+
+            var result = server.PlayATurn(null, null, null, null, null);
+            Assert.IsTrue(result.Item5);
+            Assert.AreEqual(4, result.Item6.Count);
+        }
     }
 }

@@ -203,6 +203,22 @@ namespace TsuroTheSecond
                 throw new ArgumentException("Player should have 2 or less tiles in hand");
             }
 
+            // check if game over by condition that all 35 tiles are on board
+            int tilesOnBoard = 0;
+            foreach (List<Tile> row in board.tiles)
+            {
+                foreach (Tile t in row) {
+                    if (t != null) {
+                        tilesOnBoard++;
+                    }
+                }
+            }
+
+            Console.WriteLine(tilesOnBoard);
+            if (tilesOnBoard >= 35) {
+                return (deck, alive, dead, board, true, alive);
+            }
+
             // check to make sure player tiles in hand and tile to be played are unique
             HashSet<string> tilePaths = new HashSet<string>();
             tilePaths.Add(tile.PathMap());

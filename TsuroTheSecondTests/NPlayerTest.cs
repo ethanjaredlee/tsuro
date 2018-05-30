@@ -13,7 +13,7 @@ namespace TsuroTheSecondTests
 
         [TestInitialize]
         public void Initialize() {
-            player = new NPlayer();
+            player = new NPlayer("network player");
         }
 
         [TestMethod]
