@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TsuroTheSecond;
+using System.Net.Sockets;
 
 namespace TsuroTheSecondTests
 {

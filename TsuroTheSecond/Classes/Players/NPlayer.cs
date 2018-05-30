@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Net.Sockets;
+using System.IO;
+using System.Text;
 namespace TsuroTheSecond
 {
     public class NPlayer : IPlayer
@@ -10,16 +13,41 @@ namespace TsuroTheSecond
         List<string> allColors;
         ToXml toXml;
         Parser parser;
+        NetworkStream stream;
+        byte[] readBuffer;
+        byte[] writeBuffer;
+        string inputString;
+        string outputString;
 
-        public NPlayer(string _name)
+        public NPlayer(NetworkStream s)
         {
-            name = _name;
+            
             toXml = new ToXml();
             parser = new Parser();
+            stream = s;
+            readBuffer = new byte[1024];
+            writeBuffer = new byte[1024];
+            inputString = "";
+            outputString = "";
         }
 
         public string GetName() {
-            return "hi";
+            inputString = "<get-name></get-name>";
+            writeBuffer = Encoding.ASCII.GetBytes(inputString);
+            stream.Write(writeBuffer, 0, writeBuffer.Length);
+            int numberOfBytesRead = 0;
+            StringBuilder myCompleteMessage = new StringBuilder();
+            // Incoming message may be larger than the buffer size.
+            do
+            {
+                numberOfBytesRead = stream.Read(readBuffer, 0, readBuffer.Length);
+
+                myCompleteMessage.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, numberOfBytesRead));
+
+            }
+            while (stream.DataAvailable);
+            return parser.PlayerNameParse(myCompleteMessage);
+
         }
 
         public void Initialize(string _color, List<string> _allColors) {
@@ -28,9 +56,11 @@ namespace TsuroTheSecond
 
             // server is sending this
             Console.WriteLine(init);
+            
 
             // receiving back this
             string response = Console.ReadLine();
+      
 
             if (!parser.VoidParse(response)) {
                 throw new ArgumentException("Network should have returned void");
