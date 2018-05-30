@@ -266,18 +266,56 @@ namespace TsuroTheSecond
             XmlDocument document = new XmlDocument();
             document.LoadXml(boardXml);
 
-            Board board = new Board(6);
-
             string tilesXml = document.FirstChild.FirstChild.OuterXml;
-            Console.WriteLine(tilesXml);
             string pawnsXml = document.FirstChild.LastChild.OuterXml;
-            Console.WriteLine(pawnsXml);
-            Dictionary<string, Position> pawns = PawnsParse(pawnsXml);
 
+            Board board = new Board(6);
             Dictionary<(int, int), Tile> tiles = MultiTilesParse(tilesXml);
 
-            foreach (KeyValuePair<(int, int), Tile> tilePos in tiles) {
+            foreach (KeyValuePair<(int, int), Tile> tilePos in tiles)
+            {
                 board.PlaceTile(tilePos.Value, tilePos.Key.Item1, tilePos.Key.Item2);
+            }
+
+            Dictionary<string, Position> pawns = PawnsParse(pawnsXml);
+            foreach (KeyValuePair<string, Position> pawn in pawns) {
+                Position position = pawn.Value;
+                Position flipped = position.FlipPosition();
+                Console.WriteLine(position);
+                Console.WriteLine(flipped);
+
+                // start of extremely ugly error checking / figuring out which
+                // position a parsed position represents
+                if (!position.OnEdge()) {
+                    if (!flipped.OnEdge()) {
+                        if (board.tiles[position.x][position.y] != null)
+                        {
+                            // on tile
+                            if (board.tiles[flipped.x][flipped.y] != null)
+                            {
+                                // flipped on tile
+                                throw new ArgumentException("Invalid Position on parsed board: in between two tiles");
+                            }
+                        }
+                        else
+                        {
+                            // not on tile
+                            if (board.tiles[flipped.x][flipped.y] != null)
+                            {
+                                // flipped on tile
+                                position = flipped;
+                            }
+                            else
+                            {
+                                throw new ArgumentException("Invalid Position on parsed board: in between two empty spaces");
+                            }
+                        }
+                    } else {
+                        position = flipped;
+                    }
+                }
+
+                board.tokenPositions[pawn.Key] = position;
             }
 
             return board;

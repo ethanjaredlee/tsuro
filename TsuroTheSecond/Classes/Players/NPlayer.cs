@@ -46,6 +46,13 @@ namespace TsuroTheSecond
             string response = Console.ReadLine();
 
             Position pawnLocation = parser.PawnLocationParse(response);
+            if (!pawnLocation.OnEdge()) {
+                pawnLocation.FlipPosition(); 
+            }
+
+            if (!pawnLocation.OnEdge()) {
+                throw new Exception("Initial pawn location should be on the edge of the board");
+            }
             return pawnLocation;
         }
 

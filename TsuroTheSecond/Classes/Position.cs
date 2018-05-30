@@ -64,6 +64,44 @@ namespace TsuroTheSecond
             port = copy.port;
         }
 
+        public bool OnEdge() {
+            return ((port < 8 && port > -1) && (((x == -1) || (x == 6)) ^ ((y == -1) || (y == 6))));
+        }
+
+        public Position FlipPosition() {
+            int newx = this.x;
+            int newy = this.y;
+            int newport = this.port;
+
+            if (port > 7 || port < -1) {
+                throw new ArgumentException("port not in range");
+            }
+
+            // top side
+            if (port == 0 || port == 1) {
+                newy--;
+                if (port == 0) newport = 5;
+                if (port == 1) newport = 4;
+            } else if (port == 2 || port == 3) {
+                // right side
+                newx++;
+                if (port == 2) newport = 7;
+                if (port == 3) newport = 6;
+            } else if (port == 4 || port == 5) {
+                // bot
+                newy++;
+                if (port == 4) newport = 1;
+                if (port == 5) newport = 0;
+            } else {
+                // left 
+                newx--;
+                if (port == 6) newport = 3;
+                if (port == 7) newport = 2;
+            }
+
+            return new Position(newx, newy, newport, true);
+        }
+
         public static bool operator ==(Position a, Position b) {
             return a.x == b.x && a.y == b.y && a.port == b.port;
         }
