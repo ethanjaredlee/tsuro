@@ -6,12 +6,14 @@ namespace TsuroTheSecond
     public class NPlayer : IPlayer
     {
         string color;
+        string name;
         List<string> allColors;
         ToXml toXml;
         Parser parser;
 
-        public NPlayer()
+        public NPlayer(string _name)
         {
+            name = _name;
             toXml = new ToXml();
             parser = new Parser();
         }

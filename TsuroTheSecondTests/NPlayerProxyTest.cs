@@ -11,7 +11,8 @@ namespace TsuroTheSecondTests
     public class NPlayerProxyTest
     {
         [TestMethod]
-        public void ParseInputTest() {
+        public void ParseInputTestInitialize() {
+
         }
     }
 }
