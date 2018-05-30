@@ -323,7 +323,107 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
-        public void TestBoardParse()
+        public void TestBoardParseOnEdge()
+        {
+            string boardXml = "<board>" +
+                "<map>" +
+                    "<ent>" +
+                    "<xy><x>0</x><y>0</y></xy>" +
+                    tile1XML +
+                    "</ent>" +
+                "</map>" +
+                "<map>" +
+                    "<ent>" +
+                    "<color>blue</color>" +
+                    "<pawn-loc><v></v><n>0</n><n>1</n></pawn-loc>" +
+                "</ent>" +
+                "</map>" +
+                "</board>";
+            Board board = parser.BoardParse(boardXml);
+            Tile t1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Assert.AreEqual(t1, board.tiles[0][0]);
+
+            Position position = new Position(-1, 0, 3, true);
+            Assert.AreEqual(position, board.tokenPositions["blue"]);
+        }
+
+        [TestMethod]
+        public void TestBoardParseFlippedOnEdgeWith()
+        {
+            string boardXml = "<board>" +
+                "<map>" +
+                    "<ent>" +
+                    "<xy><x>5</x><y>0</y></xy>" +
+                    tile1XML +
+                    "</ent>" +
+                "</map>" +
+                "<map>" +
+                    "<ent>" +
+                    "<color>blue</color>" +
+                    "<pawn-loc><v></v><n>6</n><n>1</n></pawn-loc>" +
+                "</ent>" +
+                "</map>" +
+                "</board>";
+            Board board = parser.BoardParse(boardXml);
+            Tile t1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Assert.AreEqual(t1, board.tiles[5][0]);
+
+            Position position = new Position(6, 0, 6, true);
+            Assert.AreEqual(position, board.tokenPositions["blue"]);
+        }
+
+        [TestMethod]
+        public void TestBoardParseFlippedOnEdgeNoTile()
+        {
+            string boardXml = "<board>" +
+                "<map>" +
+                    "<ent>" +
+                    "<xy><x>0</x><y>0</y></xy>" +
+                    tile1XML +
+                    "</ent>" +
+                "</map>" +
+                "<map>" +
+                    "<ent>" +
+                    "<color>blue</color>" +
+                    "<pawn-loc><v></v><n>6</n><n>1</n></pawn-loc>" +
+                "</ent>" +
+                "</map>" +
+                "</board>";
+            Board board = parser.BoardParse(boardXml);
+            Tile t1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Assert.AreEqual(t1, board.tiles[0][0]);
+
+            Position position = new Position(6, 0, 6, true);
+            Assert.AreEqual(position, board.tokenPositions["blue"]);
+        }
+
+        [TestMethod]
+        public void TestBoardParsePositionOnBoard()
+        {
+            string boardXml = "<board>" +
+                "<map>" +
+                    "<ent>" +
+                    "<xy><x>1</x><y>0</y></xy>" +
+                    tile1XML +
+                    "</ent>" +
+                "</map>" +
+                "<map>" +
+                    "<ent>" +
+                    "<color>blue</color>" +
+                    "<pawn-loc><v></v><n>1</n><n>1</n></pawn-loc>" +
+                "</ent>" +
+                "</map>" +
+                "</board>";
+            Board board = parser.BoardParse(boardXml);
+            Tile t1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
+            Assert.AreEqual(t1, board.tiles[1][0]);
+
+            Position position = new Position(1, 0, 6, true);
+            Assert.AreEqual(position, board.tokenPositions["blue"]);
+        }
+
+        [TestMethod]
+        public void TestBoardParseFlippedOnBoard()
         {
             string boardXml = "<board>" +
                 "<map>" +
@@ -342,6 +442,9 @@ namespace TsuroTheSecondTests
             Board board = parser.BoardParse(boardXml);
             Tile t1 = new Tile(1, new List<int> { 0, 5, 1, 3, 2, 6, 4, 7 });
             Assert.AreEqual(t1, board.tiles[0][0]);
+
+            Position position = new Position(0, 0, 3, true);
+            Assert.AreEqual(position, board.tokenPositions["blue"]);
         }
 
         [TestMethod]

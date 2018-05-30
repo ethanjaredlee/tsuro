@@ -8,7 +8,8 @@ namespace TsuroTheSecondTests
     public class PositionTest
     {
         [TestMethod]
-        public void TestConstructor() {
+        public void TestConstructor()
+        {
             // top
             Position position = new Position(0, -1, 5);
             Assert.AreEqual(0, position.x);
@@ -34,6 +35,14 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(0, position.x);
             Assert.AreEqual(6, position.y);
             Assert.AreEqual(1, position.port);
+        }
+
+        [TestMethod]
+        public void TestOnEdge()
+        {
+            // bottom 
+            Position position = new Position(0, 6, 7, true);
+            Assert.IsTrue(position.OnEdge());
         }
 
         [TestMethod]
@@ -83,6 +92,14 @@ namespace TsuroTheSecondTests
         {
             // illegal edge position
             Position position = new Position(0, 0, 4);
+        }
+
+        [TestMethod]
+        public void TestFlipPort() {
+            Position position = new Position(0, -1, 5, true);
+            Position flipped = position.FlipPosition();
+            Position check = new Position(0, 0, 0, true);
+            Assert.AreEqual(check, flipped);
         }
     }
 }
