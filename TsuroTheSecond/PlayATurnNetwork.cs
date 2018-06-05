@@ -19,16 +19,22 @@ namespace TsuroTheSecond
 
             List<Tile> deck = parser.ListOfTileParse(deckXml);
 
-            List<(string, List<Tile>)> aliveInfo = parser.ListOfSplayerParse(aliveXml);
+            List<(string, List<Tile>, bool)> aliveInfo = parser.ListOfSplayerParse(aliveXml);
             List<Player> alive = new List<Player>();
-            foreach ((string, List<Tile>) playerInfo in aliveInfo) {
+            bool addToDragonQueue = false;
+            foreach ((string, List<Tile>, bool) playerInfo in aliveInfo) {
                 Player player = new Player(new RandomPlayer("player"), playerInfo.Item1);
+
+                // fancy or because you want to add all players behind the player with dragontile to dqueue
+                if (playerInfo.Item3 || addToDragonQueue) {
+                    server.dragonQueue.Add(player);
+                }
                 alive.Add(player);
             }
 
-            List<(string, List<Tile>)> deadInfo = parser.ListOfSplayerParse(deadXml);
+            List<(string, List<Tile>, bool)> deadInfo = parser.ListOfSplayerParse(deadXml);
             List<Player> dead = new List<Player>();
-            foreach((string, List<Tile>) playerInfo in deadInfo) {
+            foreach((string, List<Tile>, bool) playerInfo in deadInfo) {
                 Player player = new Player(new RandomPlayer("player"), playerInfo.Item1);
                 dead.Add(player);
             }

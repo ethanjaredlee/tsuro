@@ -145,11 +145,11 @@ namespace TsuroTheSecond
             return colors;
         }
 
-        public List<(string, List<Tile>)> ListOfSplayerParse(string listofSPlayerXml) {
+        public List<(string, List<Tile>, bool)> ListOfSplayerParse(string listofSPlayerXml) {
             XmlDocument document = new XmlDocument();
             document.LoadXml(listofSPlayerXml);
 
-            List<(string, List<Tile>)> players = new List<(string, List<Tile>)>();
+            List<(string, List<Tile>, bool)> players = new List<(string, List<Tile>, bool)>();
             foreach(XmlNode node in document.DocumentElement) {
                 players.Add(SPlayerParse(node.OuterXml));
             }
@@ -157,16 +157,16 @@ namespace TsuroTheSecond
             return players;
         }
 
-        public (string, List<Tile>) SPlayerParse(string sPlayerXml) {
-            // our server keeps track of the dragon tile so i think (hope)
-            // we dont care about the dragontile tag for parsing
+        public (string, List<Tile>, bool) SPlayerParse(string sPlayerXml) {
             XmlDocument document = new XmlDocument();
             document.LoadXml(sPlayerXml);
+
+            bool hasDragonTile = document.FirstChild.Name == "splayer-dragon";
 
             string color = ColorParse(document.FirstChild.FirstChild.OuterXml);
             List <Tile> hand = ListOfTileParse(document.FirstChild.LastChild.OuterXml);
 
-            return (color, hand);
+            return (color, hand, hasDragonTile);
         }
 
         public (int, int) XYParse(string xyXml) {
@@ -250,7 +250,7 @@ namespace TsuroTheSecond
             return tileLocs;
         }
 
-        public List<(string, List<Tile>)> MaybeSPlayerParse(string maybeXml) {
+        public List<(string, List<Tile>, bool)> MaybeSPlayerParse(string maybeXml) {
             if (maybeXml.Trim() == "<false></false>") {
                 return null;
             }

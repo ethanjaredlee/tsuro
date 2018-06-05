@@ -13,5 +13,6 @@
   <ItemGroup>
     <Compile Remove="Classes\Players\EmptyClass.cs" />
     <Compile Remove="Classes\Players\MPlayer1.cs" />
+    <Compile Remove="Interfaces\IServer.cs" />
   </ItemGroup>
 </Project>

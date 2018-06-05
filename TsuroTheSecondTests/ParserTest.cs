@@ -169,11 +169,12 @@ namespace TsuroTheSecondTests
                         tile3XML + 
                     "</list>" +
                 "</splayer-dragon>";
-            (string, List<Tile>) result = parser.SPlayerParse(splayerstring);
+            (string, List<Tile>, Boolean) result = parser.SPlayerParse(splayerstring);
             Assert.AreEqual("blue", result.Item1);
             Assert.AreEqual(parser.TileParse(tile1XML), result.Item2[0]);
             Assert.AreEqual(parser.TileParse(tile2XML), result.Item2[1]);
             Assert.AreEqual(parser.TileParse(tile3XML), result.Item2[2]);
+            Assert.AreEqual(true, result.Item3);
         }
 
         [TestMethod]
@@ -189,25 +190,27 @@ namespace TsuroTheSecondTests
                     "</list>" +
                 "</splayer-dragon>";
             string splayerstring2 = "" +
-                "<splayer-dragon>" +
+                "<splayer-nodragon>" +
                     "<color>green</color>" +
                     "<list>" +
                         tile2XML +
                         tile3XML +
                         tile1XML +
                     "</list>" +
-                "</splayer-dragon>";
+                "</splayer-nodragon>";
             string listofSplayers = "<list>" + splayerstring1 + splayerstring2 + "</list>";
-            List<(string, List<Tile>)> result = parser.ListOfSplayerParse(listofSplayers);
+            List<(string, List<Tile>, bool)> result = parser.ListOfSplayerParse(listofSplayers);
             Assert.AreEqual("blue", result[0].Item1);
             Assert.AreEqual(parser.TileParse(tile1XML), result[0].Item2[0]);
             Assert.AreEqual(parser.TileParse(tile2XML), result[0].Item2[1]);
             Assert.AreEqual(parser.TileParse(tile3XML), result[0].Item2[2]);
+            Assert.IsTrue(result[0].Item3);
 
             Assert.AreEqual("green", result[1].Item1);
             Assert.AreEqual(parser.TileParse(tile2XML), result[1].Item2[0]);
             Assert.AreEqual(parser.TileParse(tile3XML), result[1].Item2[1]);
             Assert.AreEqual(parser.TileParse(tile1XML), result[1].Item2[2]);
+            Assert.IsFalse(result[1].Item3);
         }
 
         [TestMethod]
