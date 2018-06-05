@@ -48,6 +48,17 @@ namespace TsuroTheSecond
             return set;
         }
 
+        public XElement ListofTiletoXml(List<Tile> tiles)
+        {
+            XElement list = new XElement("list");
+            foreach (Tile t in tiles)
+            {
+                list.Add(TiletoXml(t));
+            }
+
+            return list;
+        }
+
         public XElement SetofColortoXml(List<string> colors) {
             XElement set = new XElement("set");
             foreach (string color in colors) {
@@ -187,10 +198,39 @@ namespace TsuroTheSecond
             return end;
         }
 
+        public XElement PlayertoXml(Player player, Boolean dragonTileHolder) {
+            XElement root;
+            if (dragonTileHolder) {
+                root = new XElement("splayer-dragon");
+            } else {
+                root = new XElement("splayer-nodragon");
+            }
+
+            root.Add(new XElement("color", player.Color), SetofTiletoXml(player.Hand));
+            return root;
+            
+        }
+
+        public XElement ListofPlayertoXml(List<Player> players, int indexOfDragonTile) {
+            // set indexOfDragonTile <- -1 if there is no dragonTileHolder
+            XElement root = new XElement("list");
+            for (int i = 0; i < players.Count; i++) {
+                if (i == indexOfDragonTile) {
+                    XElement dragontilePlayer = PlayertoXml(players[i], true);
+                    root.Add(dragontilePlayer);
+                } else {
+                    XElement nondragonTilePlayer = PlayertoXml(players[i], false);
+                    root.Add(nondragonTilePlayer);
+                }
+            }
+            return root;
+        }
+
         public string VoidtoXml() {
             XElement element = new XElement("void", "");
             return FormatXml(element);
         }
+
 
     }
 }

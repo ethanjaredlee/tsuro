@@ -16,6 +16,7 @@ namespace TsuroTheSecond
         public List<Player> dragonQueue; // whoever is the first person of the queue has the tile
         public enum State { start, ready, handEmpty, loop, safe, end };
         public State gameState;
+        public bool verbose;
 
         public Server() {
             gameState = State.start;
@@ -25,6 +26,7 @@ namespace TsuroTheSecond
             alive = new List<Player>();
             dead = new List<Player>();
             board = new Board(Constants.boardSize);
+            verbose = false;
         }
 
         public void AddPlayer(IPlayer p, string color) {
@@ -48,7 +50,7 @@ namespace TsuroTheSecond
             }
             // todo organize alive by age and don't let players pick duplicate colors
             alive.Add(new Player(p, color));
-            if (Constants.verbose) Console.WriteLine("Added player " + p.GetName() + ", color: " + color);
+            if (this.verbose) Console.WriteLine("Added player " + p.GetName() + ", color: " + color);
         }
 
         public void ReplacePlayer(Player player) {
@@ -78,7 +80,7 @@ namespace TsuroTheSecond
         }
 
         public void InitPlayerPositions() {
-            if (Constants.verbose) Console.WriteLine("Initializing " + alive.Count + " player positions");
+            if (this.verbose) Console.WriteLine("Initializing " + alive.Count + " player positions");
 
             Position position;
             if (gameState != State.start)
@@ -106,7 +108,7 @@ namespace TsuroTheSecond
                     Console.WriteLine("Player initialized invalid position and has been replaced");
                     ReplacePlayer(p);
                 }
-                if (Constants.verbose) Console.WriteLine("Added player to board " + p.Color);
+                if (this.verbose) Console.WriteLine("Added player to board " + p.Color);
                 this.board.AddPlayerToken(p.Color, position);
             }
         }
@@ -147,7 +149,7 @@ namespace TsuroTheSecond
                 shuffledDeck.Add(tile);
                 chosen.Add(k);
             }
-            Console.WriteLine("the deck has been shuffled");
+            if (this.verbose) Console.WriteLine("the deck has been shuffled");
             return shuffledDeck;
         }
 
@@ -197,27 +199,12 @@ namespace TsuroTheSecond
             gameState = State.loop;
 
             Player currentPlayer = alive[0];
-            if (Constants.verbose) Console.WriteLine(currentPlayer.iplayer.GetName() + " has " + currentPlayer.Hand.Count + " tiles in hand and is in position " + board.tokenPositions[currentPlayer.Color]);
+            if (this.verbose) Console.WriteLine(currentPlayer.iplayer.GetName() + " color: " + currentPlayer.Color + " "  + currentPlayer.Hand.Count + " tiles in hand and is in position " + board.tokenPositions[currentPlayer.Color]);
 
             if (currentPlayer.Hand.Count > 2) {
                 throw new ArgumentException("Player should have 2 or less tiles in hand");
             }
 
-            // check if game over by condition that all 35 tiles are on board
-            int tilesOnBoard = 0;
-            foreach (List<Tile> row in board.tiles)
-            {
-                foreach (Tile t in row) {
-                    if (t != null) {
-                        tilesOnBoard++;
-                    }
-                }
-            }
-
-            Console.WriteLine(tilesOnBoard);
-            if (tilesOnBoard >= 35) {
-                return (deck, alive, dead, board, true, alive);
-            }
 
             // check to make sure player tiles in hand and tile to be played are unique
             HashSet<string> tilePaths = new HashSet<string>();
@@ -247,21 +234,21 @@ namespace TsuroTheSecond
 
             var next = board.ReturnNextSpot(currentPlayer.Color);
             board.PlaceTile(tile, next.Item1, next.Item2);
-            if (Constants.verbose) Console.WriteLine(currentPlayer.iplayer.GetName() + " has placed tile " + tile + " at position (" + next.Item1 + "," + next.Item2 + ")");
+            if (this.verbose) Console.WriteLine(currentPlayer.iplayer.GetName() + " has placed tile " + tile + " at position (" + next.Item1 + "," + next.Item2 + ")");
 
             List<Player> fatalities = new List<Player>();
             foreach (Player p in alive) {
                 Position orig_position = board.tokenPositions[p.Color];
                 board.MovePlayer(p.Color);
 
-                if (Constants.verbose) {
+                if (this.verbose) {
                     if (orig_position != board.tokenPositions[p.Color]) {
                         Console.WriteLine("Moving player from " + orig_position + " to " + board.tokenPositions[p.Color]);  
                     }
                 }
 
                 if (board.IsDead(p.Color)) {
-                    Console.WriteLine("Player " + p.iplayer.GetName() + " died at position " + board.tokenPositions[p.Color]);
+                    if (this.verbose) Console.WriteLine("Player " + p.iplayer.GetName() + " died at position " + board.tokenPositions[p.Color]);
                     fatalities.Add(p);
                 }
             }
@@ -295,27 +282,32 @@ namespace TsuroTheSecond
                 }
             }
 
+            if (board.TilesOnBoard() >= 35)
+            {
+                return (deck, alive, dead, board, true, alive);
+            }
+
             return (deck, alive, dead, board, false, null);
         }
 
         public void KillPlayer(Player player) {
-            if (Constants.verbose) Console.WriteLine("Killing player " + player.iplayer.GetName());
+            if (this.verbose) Console.WriteLine("Killing player " + player.iplayer.GetName());
 
             dead.Add(player);
             alive.Remove(player);
 
             while (dragonQueue.Contains(player)) {
                 dragonQueue.Remove(player);
-                if (Constants.verbose) Console.WriteLine(player.iplayer.GetName() + " was removed from dragonQueue, size: " + dragonQueue.Count);
+                if (this.verbose) Console.WriteLine(player.iplayer.GetName() + " was removed from dragonQueue, size: " + dragonQueue.Count);
             }
 
             // distribute player hand to whoevers waiting in queue or just add to deck
             if (player.Hand.Count > 0) {
                 deck.AddRange(player.Hand);
-                if (Constants.verbose) Console.WriteLine("Adding " + player.Hand.Count + " cards to deck");
+                if (this.verbose) Console.WriteLine("Adding " + player.Hand.Count + " cards to deck");
                 int dragonCount = dragonQueue.Count;
                 for (int i = 0; i < dragonCount; i++) {
-                    if (Constants.verbose) Console.WriteLine("dragon tile holder " + player.iplayer.GetName() + " is now drawing");
+                    if (this.verbose) Console.WriteLine("dragon tile holder " + player.iplayer.GetName() + " is now drawing");
                     DrawTile(dragonQueue[0]);
                     dragonQueue.Remove(dragonQueue[0]);
                 }
@@ -326,7 +318,7 @@ namespace TsuroTheSecond
         public void WinGame(List<Player> winners) {
             List<string> winColors = winners.Select(w => w.Color).ToList();
             foreach (Player p in winners) {
-                Console.WriteLine("Player: " + p.iplayer.GetName() + " won!");
+                if (this.verbose) Console.WriteLine("Player: " + p.iplayer.GetName() + " won!");
             }
             foreach (Player p in alive) {
                 p.iplayer.EndGame(board, winColors);
@@ -349,11 +341,11 @@ namespace TsuroTheSecond
 
             if (deck.Count <= 0) {
                 dragonQueue.Add(player);   
-                if (Constants.verbose) Console.WriteLine("Deck size is " + deck.Count + " adding " + player.iplayer.GetName() + " to dragonQueue, size: " + dragonQueue.Count);
+                if (this.verbose) Console.WriteLine("Deck size is " + deck.Count + " adding " + player.iplayer.GetName() + " to dragonQueue, size: " + dragonQueue.Count);
             } else {
                 Tile t = deck[0];
                 deck.RemoveAt(0);
-                if (Constants.verbose) Console.WriteLine(player.iplayer.GetName() + " is drawing tile " + t);
+                if (this.verbose) Console.WriteLine(player.iplayer.GetName() + " is drawing tile " + t);
                 player.AddTiletoHand(t); 
             }
 
@@ -374,7 +366,7 @@ namespace TsuroTheSecond
             List<Player> winners = new List<Player>();
             while (gameLoop && alive.Count > 0) {
                 counter++;
-                if (Constants.verbose) Console.WriteLine("\nTurn: " + counter + ", deck size: " + deck.Count + " players left in game: " + alive.Count);
+                if (this.verbose) Console.WriteLine("\nTurn: " + counter + ", deck size: " + deck.Count + " players left in game: " + alive.Count);
                 Player currentPlayer = alive[0];
                 Tile playTile = currentPlayer.iplayer.PlayTurn(board, currentPlayer.Hand, deck.Count);
                 if (!LegalPlay(currentPlayer, board, playTile)) {
@@ -385,6 +377,8 @@ namespace TsuroTheSecond
 
                 // playturn
                 var playResult = PlayATurn(deck, alive, dead, board, playTile);
+                if (this.verbose) Console.WriteLine("deck size is: " + playResult.Item1.Count);
+                if (this.verbose) Console.WriteLine("gameLoop is: " + playResult.Item5);
                 if (playResult.Item5) {
                     gameLoop = false;
                     winners = playResult.Item6;

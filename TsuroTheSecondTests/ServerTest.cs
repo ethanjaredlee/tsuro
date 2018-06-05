@@ -124,7 +124,7 @@ namespace TsuroTheSecondTests
         {
             AddThreePlayers();
 
-            MPlayer1 mPlayer = new MPlayer1("harry");
+            RandomPlayer mPlayer = new RandomPlayer("harry");
             server.AddPlayer(mPlayer, "blue");
         }
 
@@ -134,7 +134,7 @@ namespace TsuroTheSecondTests
         {
             AddThreePlayers();
 
-            MPlayer1 mPlayer = new MPlayer1("john");
+            RandomPlayer mPlayer = new RandomPlayer("john");
             server.AddPlayer(mPlayer, "not blue");
         }
 
@@ -258,7 +258,7 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestLegalPlayCheckLastPossibleMoveNotUndone()
         {
-            MPlayer1 p1 = new MPlayer1("john");
+            RandomPlayer p1 = new RandomPlayer("john");
             server.AddPlayer(p1, "blue");
 
             Tile testTile1 = new Tile(1, new List<int>(8) {
@@ -286,7 +286,7 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestIllegalPlayNullTile()
         {
-            MPlayer1 mp1 = new MPlayer1("jim");
+            RandomPlayer mp1 = new RandomPlayer("jim");
             server.AddPlayer(mp1, "blue");
 
             Tile testTile1 = new Tile(1, new List<int>(8) {
@@ -310,7 +310,7 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestIllegalPlayTileNotInHand()
         {
-            MPlayer1 mp1 = new MPlayer1("jim");
+            RandomPlayer mp1 = new RandomPlayer("jim");
             server.AddPlayer(mp1, "blue");
 
             Tile testTile1 = new Tile(1, new List<int>(8) {
@@ -338,7 +338,7 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestLegalPlayBoardUndo()
         {
-            MPlayer1 p1 = new MPlayer1("john");
+            RandomPlayer p1 = new RandomPlayer("john");
             server.AddPlayer(p1, "blue");
 
             Tile testTile1 = new Tile(1, new List<int>(8) {

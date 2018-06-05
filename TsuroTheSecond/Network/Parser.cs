@@ -130,10 +130,6 @@ namespace TsuroTheSecond
                 throw new ArgumentException("Tiles are not unique");
             }
 
-            foreach(Tile t in htiles) {
-                Console.WriteLine(t);
-            }
-
             return tiles;
         }
 
@@ -281,8 +277,6 @@ namespace TsuroTheSecond
             foreach (KeyValuePair<string, Position> pawn in pawns) {
                 Position position = pawn.Value;
                 Position flipped = position.FlipPosition();
-                Console.WriteLine(position);
-                Console.WriteLine(flipped);
 
                 // start of extremely ugly error checking / figuring out which
                 // position a parsed position represents
@@ -342,7 +336,6 @@ namespace TsuroTheSecond
             XmlDocument document = new XmlDocument();
             document.LoadXml(voidXml);
 
-            Console.WriteLine(document.FirstChild.Name);
             return (document.FirstChild.Name == "void");
         }
 
@@ -377,7 +370,6 @@ namespace TsuroTheSecond
             document.LoadXml(input);
 
             RootTagCheck("get-name", input);
-            Console.WriteLine(document.FirstChild.InnerXml.Trim());
             if (document.FirstChild.InnerXml.Trim() != "") {
                 throw new ArgumentException("invalid <get-name> tag format");
             }

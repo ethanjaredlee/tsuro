@@ -3,12 +3,21 @@ using System.Collections.Generic;
 
 namespace TsuroTheSecond
 {
-    public class Tournament
+    public static class Tournament
     {
-        static void Main(string[] args) {
+        public static void RunTournament(Boolean verbose) {
+            int games = 1000;
             Dictionary<string, int> tournament = new Dictionary<string, int>();
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < games; i++) {
+
+                if (i % 100 == 0) {
+                    Console.WriteLine("playing game: " + i);
+                }
                 Server server = new Server();
+
+                if (verbose) {
+                    server.verbose = true;
+                }
 
                 List<IPlayer> gamePlayers = new List<IPlayer>{
                     new LeastSymmetricPlayer("lPlayer1"),
@@ -30,6 +39,7 @@ namespace TsuroTheSecond
                 }
             }
 
+            Console.WriteLine("After " + games + " games played, here are the results!");
             foreach (KeyValuePair<string, int> result in tournament) {
                 Console.WriteLine(result.Key + " wins: " + result.Value);
             }

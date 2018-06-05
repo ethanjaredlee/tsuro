@@ -28,6 +28,23 @@ namespace TsuroTheSecond
             initialPositions = new Dictionary<string, Position>();
         }
 
+        public int TilesOnBoard() {
+            // check if game over by condition that all 35 tiles are on board
+            int tilesOnBoard = 0;
+            foreach (List<Tile> row in tiles)
+            {
+                foreach (Tile t in row)
+                {
+                    if (t != null)
+                    {
+                        tilesOnBoard++;
+                    }
+                }
+            }
+
+            return tilesOnBoard;
+        }
+
         public void PlaceTile(Tile tile, int x, int y)
         {
             if (x < 0 || x > 5 || y < 0 || y > 5) {

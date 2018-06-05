@@ -396,7 +396,7 @@ namespace TsuroTheSecondTests
         //[TestMethod]
         //public void TestRandomPlayerPlayTurnMultiLegalHand()
         //{
-        //    MPlayer1 mPlayer = new MPlayer1("mark");
+        //    RandomPlayer mPlayer = new RandomPlayer("mark");
         //    List<string> other_colors = new List<string>(Constants.colors);
         //    other_colors.Remove("blue");
         //    mPlayer.Initialize("blue", other_colors);
@@ -850,7 +850,7 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestReplacePlayer()
         {
-            MPlayer1 mPlayer1 = new MPlayer1("john");
+            RandomPlayer mPlayer1 = new RandomPlayer("john");
             LeastSymmetricPlayer replacement = new LeastSymmetricPlayer("adam");
 
             Player player = new Player(mPlayer1, "blue");

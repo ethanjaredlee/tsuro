@@ -194,5 +194,19 @@ namespace TsuroTheSecondTests
             string check = "<set><color>blue</color><color>green</color><color>red</color></set>";
             Assert.AreEqual(check, colorString);
         }
+
+        [TestMethod]
+        public void DragonTileHolderPlayertoXmlTest() {
+            Player player = new Player(new RandomPlayer("john"), "blue");
+            player.Hand = new List<Tile>{
+                testTile1,
+                testTile2
+            };
+
+            XElement playerXml = converter.PlayertoXml(player, true);
+            string playerString = converter.FormatXml(playerXml);
+            string check = "<splayer-dragon><color>blue</color><set>" + checkTile1 + checkTile2 + "</set></splayer-dragon>";
+            Assert.AreEqual(check, playerString);
+        }
     }
 }

@@ -25,8 +25,8 @@ namespace TsuroTheSecondTests
         }
         void AddTwoPlayers()
         {
-            MPlayer1 p1 = new MPlayer1("john");
-            MPlayer1 p2 = new MPlayer1("john");
+            LeastSymmetricPlayer p1 = new LeastSymmetricPlayer("john");
+            RandomPlayer p2 = new RandomPlayer("john");
 
             server.AddPlayer(p1, "blue");
             server.AddPlayer(p2, "green");
@@ -34,10 +34,10 @@ namespace TsuroTheSecondTests
 
         void AddFourPlayers()
         {
-            MPlayer1 p1 = new MPlayer1("john");
-            MPlayer1 p2 = new MPlayer1("jim");
-            MPlayer1 p3 = new MPlayer1("harry");
-            MPlayer1 p4 = new MPlayer1("miles");
+            RandomPlayer p1 = new RandomPlayer("john");
+            RandomPlayer p2 = new RandomPlayer("jim");
+            RandomPlayer p3 = new RandomPlayer("harry");
+            RandomPlayer p4 = new RandomPlayer("miles");
 
             server.AddPlayer(p1, "blue");
             server.AddPlayer(p2, "green");
