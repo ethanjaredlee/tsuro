@@ -123,7 +123,7 @@ namespace TsuroTheSecondTests
         [TestMethod]
         public void TestListOfTileParse()
         {
-            string listTileString = "<list-of-tile>" + tile1XML + tile2XML + tile3XML + "</list-of-tile>";
+            string listTileString = "<list>" + tile1XML + tile2XML + tile3XML + "</list>";
             List<Tile> tileList = parser.ListOfTileParse(listTileString);
             Assert.AreEqual(parser.TileParse(tile1XML), tileList[0]);
             Assert.AreEqual(parser.TileParse(tile2XML), tileList[1]);

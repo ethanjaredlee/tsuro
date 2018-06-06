@@ -10,8 +10,10 @@ namespace TsuroTheSecond
             }
 
             if (args.Contains("--play")) {
-                PlayATurnNetwork.PlayATurn();
+                PlayATurnNetwork.TestPlayATurn();
             }
+
+            PlayATurnNetwork.TestPlayATurn();
         }
     }
 }

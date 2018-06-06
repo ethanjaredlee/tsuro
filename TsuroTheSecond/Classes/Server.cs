@@ -29,6 +29,16 @@ namespace TsuroTheSecond
             verbose = false;
         }
 
+        public Server(List<Tile> _deck, List<Player> _alive, List<Player> _dead, Board _board, List<Player> _dragonQueue, State _gameState) {
+            deck = _deck;
+            alive = _alive;
+            dead = _dead;
+            board = _board;
+            dragonQueue = _dragonQueue;
+            gameState = _gameState;
+            verbose = false;
+        }
+
         public void AddPlayer(IPlayer p, string color) {
             if (gameState != State.start) {
                 throw new Exception("Invalid game state");
@@ -302,11 +312,17 @@ namespace TsuroTheSecond
             }
 
             // distribute player hand to whoevers waiting in queue or just add to deck
-            if (player.Hand.Count > 0) {
+            int playerHandCount = player.Hand.Count;
+            if (playerHandCount > 0) {
                 deck.AddRange(player.Hand);
+
+                for (int i = 0; i < playerHandCount; i++) {
+                    player.Hand.RemoveAt(0);
+                }
+
                 if (this.verbose) Console.WriteLine("Adding " + player.Hand.Count + " cards to deck");
                 int dragonCount = dragonQueue.Count;
-                for (int i = 0; i < dragonCount; i++) {
+                for (int i = 0; (i < dragonCount && deck.Count > 0); i++) {
                     if (this.verbose) Console.WriteLine("dragon tile holder " + player.iplayer.GetName() + " is now drawing");
                     DrawTile(dragonQueue[0]);
                     dragonQueue.Remove(dragonQueue[0]);

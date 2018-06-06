@@ -86,11 +86,13 @@ namespace TsuroTheSecond
         }
 
         public Boolean IsDead(string color) {
-            if (initialPositions[color] == tokenPositions[color]) return false;
-            return ((tokenPositions[color].x < 0) ||
-                    (tokenPositions[color].x > 5) ||
-                    (tokenPositions[color].y < 0) ||
-                    (tokenPositions[color].y > 5));
+            //if (initialPositions[color] == tokenPositions[color]) return false;
+            bool onEdge = ((tokenPositions[color].x < 0) ||
+                            (tokenPositions[color].x > 5) ||
+                            (tokenPositions[color].y < 0) ||
+                            (tokenPositions[color].y > 5));
+            (int, int) nextSpot = ReturnNextSpot(color);
+            return !(tiles[nextSpot.Item1][nextSpot.Item2] == null);
         }
 
         public Boolean ValidTilePlacement(string color, Tile tile)

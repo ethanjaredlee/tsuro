@@ -14,7 +14,7 @@ namespace TsuroTheSecond
             XmlDocument document = new XmlDocument();
             document.LoadXml(tileXML);
 
-            if (document.DocumentElement.Name != "tile") {
+            if (document.FirstChild.Name != "tile") {
                 throw new ArgumentException("This is not a <tile> tag");
             }
 

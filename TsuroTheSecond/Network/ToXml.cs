@@ -50,7 +50,7 @@ namespace TsuroTheSecond
 
         public XElement ListofTiletoXml(List<Tile> tiles)
         {
-            XElement list = new XElement("list");
+            XElement list = new XElement("list", "");
             foreach (Tile t in tiles)
             {
                 list.Add(TiletoXml(t));

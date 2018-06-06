@@ -1,2 +1,2 @@
-dotnet build
-dotnet TsuroTheSecond/bin/Debug/netcoreapp2.0/TsuroTheSecond.dll --play
+#!/bin/bash
+dotnet ../tsuro/TsuroTheSecond/bin/Debug/netcoreapp2.0/TsuroTheSecond.dll --play
