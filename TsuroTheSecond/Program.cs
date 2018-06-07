@@ -23,7 +23,8 @@ namespace TsuroTheSecond
                 NPlayerProxy.RunNPlayerProxy();
             }
 
-            PlayATurnNetwork.TestPlayATurn();
+            //PlayATurnNetwork.TestPlayATurn();
+            Console.WriteLine("done with program");
         }
     }
 }

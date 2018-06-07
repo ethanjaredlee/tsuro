@@ -26,6 +26,11 @@ namespace TsuroTheSecond
                 new RandomPlayer("RPlayer4")
             };
 
+            List<string> winners = server.Play(gamePlayers);
+            foreach (string win in winners) {
+                Console.WriteLine(win + " won!");
+            }
+
         }
 
 
