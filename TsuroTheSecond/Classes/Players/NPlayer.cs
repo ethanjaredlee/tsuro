@@ -97,7 +97,7 @@ namespace TsuroTheSecond
         public string byteStreamHelper(string inputString)
         {
             byte[] readBuffer = new byte[1024];
-            byte[] writeBuffer = new byte[1024];
+            byte[] writeBuffer = new byte[8192];
 
             // send message
             writeBuffer = Encoding.ASCII.GetBytes(inputString); // string to byte array

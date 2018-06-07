@@ -13,6 +13,16 @@ namespace TsuroTheSecond
                 PlayATurnNetwork.TestPlayATurn();
             }
 
+            if (args.Contains("--network"))
+            {
+                NetworkTournament.RunNetworkTournament(args.Contains("--verbose"));
+            }
+
+            if (args.Contains("--proxy"))
+            {
+                NPlayerProxy.RunNPlayerProxy();
+            }
+
             PlayATurnNetwork.TestPlayATurn();
         }
     }

@@ -2,6 +2,10 @@
 using System.Xml;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Text;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
 
 namespace TsuroTheSecond
 {
@@ -16,22 +20,27 @@ namespace TsuroTheSecond
             player = new MostSymmetricPlayer("network player");
             ToXml = new ToXml();
             Parser = new Parser();
+
         }
 
         /* 
          * returns an xml-string representing proper output
          * to the input xml
          */
-        public string ParseInput(string input) {
+        public string ParseInput(string input)
+        {
             XmlDocument document = new XmlDocument();
             document.LoadXml(input);
 
             string message = document.FirstChild.Name;
             string response;
-            switch (message) {
-                //case "get-name":
+            switch (message)
+            {
+                case "get-name":
+                    string name = player.GetName();
+                    response = ToXml.FormatXml(ToXml.NametoXml(name));
 
-                    //break;
+                    break;
                 case "initialize":
                     (string, List<string>) init = Parser.InitializeParse(input);
 
@@ -65,6 +74,45 @@ namespace TsuroTheSecond
             }
 
             return response;
+        }
+
+
+        public static void RunNPlayerProxy() // input host IP address and port number as 2 args
+        {
+            NPlayerProxy player = new NPlayerProxy();
+
+            // line comments here are alternate statements for passing these values as args to Main
+            string hostname = "localhost";  // args[0];
+            int port = 10048;               // Convert.ToInt32(args[1]);
+            TcpClient client = new TcpClient(hostname, port);
+
+            NetworkStream stream = client.GetStream();
+            byte[] readBuffer = new byte[1024];
+            byte[] writeBuffer = new byte[8192];     // this may need to be bigger. not sure the # of bytes of a full board xml string 
+            int numberOfBytesRead = 0;
+            StringBuilder completeMessage = new StringBuilder();
+
+            while (true)
+            {
+                completeMessage.Clear();
+
+                do
+                {
+                    numberOfBytesRead = stream.Read(readBuffer, 0, readBuffer.Length);
+
+                    completeMessage.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, numberOfBytesRead));
+
+                }
+                while (stream.DataAvailable);
+
+                string response = player.ParseInput(completeMessage.ToString());
+
+                writeBuffer = Encoding.ASCII.GetBytes(response);
+                stream.Write(writeBuffer, 0, writeBuffer.Length);
+
+            }
+
+
         }
 
     }
