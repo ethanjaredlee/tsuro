@@ -39,7 +39,6 @@ namespace TsuroTheSecond
                 case "get-name":
                     string name = player.GetName();
                     response = ToXml.FormatXml(ToXml.NametoXml(name));
-                    Console.WriteLine(response);
 
                     break;
                 case "initialize":
@@ -92,28 +91,25 @@ namespace TsuroTheSecond
                 SocketType.Stream, ProtocolType.Tcp );
 
             sender.Connect(remoteEP);
-            Console.WriteLine("connected to tournament!");
 
             NetworkStream networkStream = new NetworkStream(sender);
             StreamWriter writer = new StreamWriter(networkStream);
             StreamReader reader = new StreamReader(networkStream);
 
+            int count = 0;
             while (true)
             {
 
+                count++;
                 string incoming = reader.ReadLine();
-                Console.WriteLine("Got message: " + incoming);
 
                 (string, Boolean) response = player.ParseInput(incoming);
-                Console.WriteLine("Sending message: " + response.Item1);
 
                 writer.WriteLine(response.Item1);
                 writer.Flush();
 
                 if (response.Item2) {
-                    Console.WriteLine("done");
-
-                    break; 
+                    if (count == 2) break;
                 }
             }
 

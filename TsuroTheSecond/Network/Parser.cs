@@ -240,7 +240,6 @@ namespace TsuroTheSecond
 
             Dictionary<(int, int), Tile> tileLocs = new Dictionary<(int, int), Tile>();
             XmlNode info = document.FirstChild;
-            Console.WriteLine(tilesXml);
             foreach (XmlNode ent in info.ChildNodes)
             {
                 (int, int) coords = XYParse(ent.FirstChild.OuterXml);
@@ -263,7 +262,6 @@ namespace TsuroTheSecond
             XmlDocument document = new XmlDocument();
             document.LoadXml(boardXml);
 
-            Console.WriteLine(boardXml);
             string tilesXml = document.FirstChild.FirstChild.OuterXml;
             string pawnsXml = document.FirstChild.LastChild.OuterXml;
 
