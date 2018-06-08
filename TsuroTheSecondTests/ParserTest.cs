@@ -70,6 +70,12 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        public void TestEmptyTiles() {
+            string empty = "<map></map>";
+            Assert.AreEqual(0, parser.MultiTilesParse(empty).Count);
+        }
+
+        [TestMethod]
         public void TestConnectParse()
         {
             (int, int) n = parser.ConnectParse("<connect><n>5</n><n>2</n></connect>");
@@ -488,6 +494,17 @@ namespace TsuroTheSecondTests
         {
             string voidXml = "<not-void></not-void>";
             Assert.IsFalse(parser.VoidParse(voidXml));
+        }
+
+        [TestMethod]
+        public void TestPlacePawnEmpty() {
+            string empty = "<place-pawn><board><map></map><map></map></board></place-pawn>";
+            Board otherBoard = parser.PlacePawnParse(empty);
+            foreach (List<Tile> tiles in otherBoard.tiles) {
+                foreach (Tile t in tiles) {
+                    Assert.IsNull(t);
+                }
+            }
         }
 
         [TestMethod]

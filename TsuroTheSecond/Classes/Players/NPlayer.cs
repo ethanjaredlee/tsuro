@@ -12,13 +12,15 @@ namespace TsuroTheSecond
         ToXml toXml;
         Parser parser;
         NetworkStream stream;
+        string name;
 
 
-        public NPlayer(NetworkStream s)
+        public NPlayer(NetworkStream s, string name)
         {
             toXml = new ToXml();
             parser = new Parser();
-            stream = s;  
+            stream = s;
+            this.name = name;
         }
 
         public string GetName() {
@@ -58,7 +60,6 @@ namespace TsuroTheSecond
             if (!pawnLocation.OnEdge()) {
                 throw new Exception("Initial pawn location should be on the edge of the board");
             }
-
             return pawnLocation;
         }
 
@@ -98,7 +99,7 @@ namespace TsuroTheSecond
         public string byteStreamHelper(string inputString)
         {
             byte[] readBuffer = new byte[1024];
-            byte[] writeBuffer = new byte[8192];
+            byte[] writeBuffer = new byte[1024];
 
             // send message
             writeBuffer = Encoding.ASCII.GetBytes(inputString); // string to byte array

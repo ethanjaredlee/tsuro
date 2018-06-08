@@ -102,8 +102,6 @@ namespace TsuroTheSecondTests
             string multiString = converter.FormatXml(multi);
             string check = "" +
                 "<map>" +
-                "<ent>" +
-                "</ent>" +
                 "</map>";
             Assert.AreEqual(check, multiString);
         }
@@ -145,7 +143,7 @@ namespace TsuroTheSecondTests
             XElement boardXml = converter.BoardtoXml(board);
             string bString = converter.FormatXml(boardXml);
             // board given in the assignment
-            string check = "<board><map><ent></ent></map><map><ent></ent></map></board>";
+            string check = "<board><map></map><map></map></board>";
             Assert.AreEqual(check, bString);
         }
 

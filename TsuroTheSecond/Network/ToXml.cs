@@ -86,16 +86,12 @@ namespace TsuroTheSecond
 
         public XElement MultiTilesToXml(List<(Tile, (int, int))> tilePositions) {
 
-            XElement multiTiles = new XElement("map");
+            XElement multiTiles = new XElement("map", "");
             foreach ((Tile, (int, int)) t in tilePositions) {
                 XElement ent = new XElement("ent",
                                             XYtoXml(t.Item2),
                                             TiletoXml(t.Item1));
                 multiTiles.Add(ent);
-            }
-
-            if (tilePositions.Count == 0) {
-                multiTiles.Add(new XElement("ent", ""));
             }
 
             return multiTiles;
@@ -143,12 +139,12 @@ namespace TsuroTheSecond
             p.Add(hv,
                   NtoXml(line),
                   NtoXml(dash));
-
+            
             return p;
         }
 
         public XElement BoardtoXml(Board b) {
-            XElement board = new XElement("board");
+            XElement board = new XElement("board", "");
 
             List<(Tile, (int, int))> tilePositions = new List<(Tile, (int, int))>();
             for (int i = 0; i < b.tiles.Count; i++) {
@@ -160,18 +156,24 @@ namespace TsuroTheSecond
             }
 
             XElement tiles = MultiTilesToXml(tilePositions);
-            XElement map = new XElement("map");
+            XElement map = PawnsToXml(b.tokenPositions);
 
-            foreach (KeyValuePair<string, Position> pawnLoc in b.tokenPositions) {
+            board.Add(tiles, map);
+
+            return board;
+        }
+
+        public XElement PawnsToXml(Dictionary<string, Position> positions) {
+            XElement map = new XElement("map", "");
+            foreach (KeyValuePair<string, Position> pawnLoc in positions)
+            {
                 XElement pawn = new XElement("ent",
                                              new XElement("color", pawnLoc.Key),
                                              PawnLoctoXml(pawnLoc.Value));
                 map.Add(pawn);
             }
 
-            board.Add(tiles, map);
-
-            return board;
+            return map;
         }
 
         public XElement InitializetoXml(string color, List<string> allColors) {

@@ -15,9 +15,9 @@ namespace TsuroTheSecond
         ToXml ToXml;
         Parser Parser;
 
-        public NPlayerProxy()
+        public NPlayerProxy(string name)
         {
-            player = new MostSymmetricPlayer("network player");
+            player = new MostSymmetricPlayer(name);
             ToXml = new ToXml();
             Parser = new Parser();
         }
@@ -26,13 +26,14 @@ namespace TsuroTheSecond
          * returns an xml-string representing proper output
          * to the input xml
          */
-        public string ParseInput(string input)
+        public (string, Boolean) ParseInput(string input)
         {
             XmlDocument document = new XmlDocument();
             document.LoadXml(input);
 
             string message = document.FirstChild.Name;
             string response;
+            Boolean done = false;
             switch (message)
             {
                 case "get-name":
@@ -68,52 +69,53 @@ namespace TsuroTheSecond
                     player.EndGame(endGame.Item1, endGame.Item2);
 
                     response = ToXml.VoidtoXml();
+                    done = true;
                     break;
                 default:
                     throw new ArgumentException("invalid xml given");
             }
 
-            return response;
+            return (response, done);
         }
 
 
-        public static void RunNPlayerProxy() // input host IP address and port number as 2 args
+        public static void RunNPlayerProxy(string name, int port) // input host IP address and port number as 2 args
         {
-            NPlayerProxy player = new NPlayerProxy();
+            NPlayerProxy player = new NPlayerProxy(name);
 
-            // line comments here are alternate statements for passing these values as args to Main
-            string hostname = "localhost";  // args[0];
-            int port = 10048;               // Convert.ToInt32(args[1]);
-            TcpClient client = new TcpClient(hostname, port);
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());  
+            IPAddress ipAddress = ipHostInfo.AddressList[0];  
+            IPEndPoint remoteEP = new IPEndPoint(ipAddress,port);  
 
-            NetworkStream stream = client.GetStream();
-            byte[] readBuffer = new byte[1024];
-            byte[] writeBuffer = new byte[8192];     // this may need to be bigger. not sure the # of bytes of a full board xml string 
-            int numberOfBytesRead = 0;
-            StringBuilder completeMessage = new StringBuilder();
+            // Create a TCP/IP  socket.  
+            Socket sender = new Socket(ipAddress.AddressFamily,   
+                SocketType.Stream, ProtocolType.Tcp );
+
+            sender.Connect(remoteEP);
+            Console.WriteLine("connected to tournament!");
+
+            NetworkStream networkStream = new NetworkStream(sender);
+            StreamWriter writer = new StreamWriter(networkStream);
+            StreamReader reader = new StreamReader(networkStream);
 
             while (true)
             {
-                completeMessage.Clear();
 
-                do
-                {
-                    numberOfBytesRead = stream.Read(readBuffer, 0, readBuffer.Length);
+                string incoming = reader.ReadLine();
+                Console.WriteLine("Got message: " + incoming);
 
-                    completeMessage.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, numberOfBytesRead));
+                (string, Boolean) response = player.ParseInput(incoming);
+                Console.WriteLine("Sending message: " + response.Item1);
 
+                writer.WriteLine(response.Item1);
+                writer.Flush();
+
+                if (response.Item2) {
+                    Console.WriteLine("done");
+
+                    break; 
                 }
-                while (stream.DataAvailable);
-
-                Console.WriteLine("got xml " + completeMessage);
-                string response = player.ParseInput(completeMessage.ToString());
-                Console.WriteLine("sending xml " + response);
-
-                writeBuffer = Encoding.ASCII.GetBytes(response);
-                stream.Write(writeBuffer, 0, writeBuffer.Length);
-
             }
-
 
         }
 

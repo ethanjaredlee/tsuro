@@ -15,7 +15,8 @@ namespace TsuroTheSecond
 
             else if (args.Contains("player"))
             {
-                NPlayerProxy.RunNPlayerProxy();
+                int port = args.Length < 3 ? 12345 : Int32.Parse(args[2]);
+                NPlayerProxy.RunNPlayerProxy(args[1], port);
             } 
 
             else if (args.Contains("host")){
@@ -24,11 +25,12 @@ namespace TsuroTheSecond
                 Console.WriteLine("Available arguments:");
                 Console.WriteLine("<tournament>: run internal tournament simulation");
                 Console.WriteLine("<playturn>: test playATurn function on stdin and stdout");
-                Console.WriteLine("<player>: launch a player to connect to network");
+                Console.WriteLine("<player> name: launch a player to connect to network with name");
                 Console.WriteLine("<host> n: host a network tournament with n players in the game");
             }
 
-            NetworkTournament.RunNetworkTournament(8);
+            //NetworkTournament.RunNetworkTournament(8);
+            NPlayerProxy.RunNPlayerProxy("ethan", 12345);
 
             Console.WriteLine("done with program");
         }
