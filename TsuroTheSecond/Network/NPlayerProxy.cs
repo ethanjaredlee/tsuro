@@ -20,7 +20,6 @@ namespace TsuroTheSecond
             player = new MostSymmetricPlayer("network player");
             ToXml = new ToXml();
             Parser = new Parser();
-
         }
 
         /* 
@@ -39,6 +38,7 @@ namespace TsuroTheSecond
                 case "get-name":
                     string name = player.GetName();
                     response = ToXml.FormatXml(ToXml.NametoXml(name));
+                    Console.WriteLine(response);
 
                     break;
                 case "initialize":
@@ -105,7 +105,9 @@ namespace TsuroTheSecond
                 }
                 while (stream.DataAvailable);
 
+                Console.WriteLine("got xml " + completeMessage);
                 string response = player.ParseInput(completeMessage.ToString());
+                Console.WriteLine("sending xml " + response);
 
                 writeBuffer = Encoding.ASCII.GetBytes(response);
                 stream.Write(writeBuffer, 0, writeBuffer.Length);

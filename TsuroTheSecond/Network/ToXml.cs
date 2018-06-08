@@ -94,6 +94,10 @@ namespace TsuroTheSecond
                 multiTiles.Add(ent);
             }
 
+            if (tilePositions.Count == 0) {
+                multiTiles.Add(new XElement("ent", ""));
+            }
+
             return multiTiles;
 
         }

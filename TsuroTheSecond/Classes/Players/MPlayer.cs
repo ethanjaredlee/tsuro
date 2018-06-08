@@ -48,7 +48,9 @@ namespace TsuroTheSecond
                 position.x++;
                 if (position.x > Constants.boardSize - 1)
                 {
-                    throw new Exception("incomplete place pawn check");
+                    position.x = 6;
+                    position.y++;
+                    position.port = 7;
                 }
             }
             playerState = State.loop;

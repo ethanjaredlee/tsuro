@@ -58,6 +58,7 @@ namespace TsuroTheSecond
             if (!pawnLocation.OnEdge()) {
                 throw new Exception("Initial pawn location should be on the edge of the board");
             }
+
             return pawnLocation;
         }
 

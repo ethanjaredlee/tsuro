@@ -96,6 +96,19 @@ namespace TsuroTheSecondTests
         }
 
         [TestMethod]
+        public void TestMultiTilestoXmlNoTiles()
+        {
+            XElement multi = converter.MultiTilesToXml(new List<(Tile, (int, int))>());
+            string multiString = converter.FormatXml(multi);
+            string check = "" +
+                "<map>" +
+                "<ent>" +
+                "</ent>" +
+                "</map>";
+            Assert.AreEqual(check, multiString);
+        }
+
+        [TestMethod]
         public void TestPositionXml()
         {
             Position p1 = new Position(0, 0, 3, true);
@@ -123,6 +136,16 @@ namespace TsuroTheSecondTests
             string bString = converter.FormatXml(boardXml);
             // board given in the assignment
             string check = "<board><map><ent><xy><x>0</x><y>0</y></xy><tile><connect><n>0</n><n>1</n></connect><connect><n>2</n><n>4</n></connect><connect><n>3</n><n>6</n></connect><connect><n>5</n><n>7</n></connect></tile></ent></map><map><ent><color>red</color><pawn-loc><v></v><n>1</n><n>1</n></pawn-loc></ent></map></board>";
+            Assert.AreEqual(check, bString);
+        }
+
+        [TestMethod]
+        public void TestEmptyBoard() {
+            Board board = new Board(6);
+            XElement boardXml = converter.BoardtoXml(board);
+            string bString = converter.FormatXml(boardXml);
+            // board given in the assignment
+            string check = "<board><map><ent></ent></map><map><ent></ent></map></board>";
             Assert.AreEqual(check, bString);
         }
 

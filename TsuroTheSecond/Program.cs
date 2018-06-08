@@ -28,6 +28,8 @@ namespace TsuroTheSecond
                 Console.WriteLine("<host> n: host a network tournament with n players in the game");
             }
 
+            NetworkTournament.RunNetworkTournament(8);
+
             Console.WriteLine("done with program");
         }
     }
