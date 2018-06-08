@@ -304,7 +304,6 @@ namespace TsuroTheSecondTests
             server.gameState = Server.State.loop;
             bool legalPlay = server.LegalPlay(p1, server.board, null);
             Assert.IsFalse(legalPlay);
-            Assert.AreNotEqual(origClass, server.alive[0].iplayer.GetType());
         }
 
         [TestMethod]
@@ -332,7 +331,6 @@ namespace TsuroTheSecondTests
             server.gameState = Server.State.loop;
             bool legalPlay = server.LegalPlay(p1, server.board, otherTile);
             Assert.IsFalse(legalPlay);
-            Assert.AreNotEqual(origClass, server.alive[0].iplayer.GetType());
         }
 
         [TestMethod]
@@ -359,7 +357,6 @@ namespace TsuroTheSecondTests
             p_1.Hand = new List<Tile> { testTile1, testTile2, testTile3 };
             server.gameState = Server.State.loop;
             Boolean legalPlay = server.LegalPlay(p_1, server.board, testTile1);
-            Assert.AreNotEqual(origClass, server.alive[0].iplayer.GetType());
             Assert.IsFalse(legalPlay);
             for (int i = 0; i < 6; i++)
             {

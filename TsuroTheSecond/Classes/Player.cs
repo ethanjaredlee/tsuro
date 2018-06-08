@@ -51,8 +51,9 @@ namespace TsuroTheSecond
             }
         }
 
-        public void ReplaceIPlayer(IPlayer player) {
-            this.iplayer = player;
+        public void ReplaceMPlayer(MPlayer player) {
+            this.iplayer = (IPlayer)player;
+            player.playerState = MPlayer.State.replacement;
         }
     }
 }

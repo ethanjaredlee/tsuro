@@ -7,8 +7,6 @@ namespace TsuroTheSecond
 {
     public class Server 
     {
-        // TODO: refactor so that everything mutates the fields and doesn't really use inputs
-
         public List<Tile> deck;
         public List<Player> alive;
         public List<Player> dead;
@@ -65,17 +63,17 @@ namespace TsuroTheSecond
 
         public void ReplacePlayer(Player player) {
             // might want a better way to do this
-            List<IPlayer> iplayers = new List<IPlayer>{
-                new RandomPlayer(player.iplayer.GetName()),
-                new LeastSymmetricPlayer(player.iplayer.GetName()),
-                new MostSymmetricPlayer(player.iplayer.GetName()),
+            List<MPlayer> mplayers = new List<MPlayer>{
+                new RandomPlayer("Replacement Player"),
+                new LeastSymmetricPlayer("Replacement Player"),
+                new MostSymmetricPlayer("Replacement Player"),
             };
 
             Random random = new Random();
-            IPlayer replacement = iplayers[random.Next(0, 3)];
+            MPlayer replacement = mplayers[random.Next(0, 3)];
 
             while (replacement.GetType() == player.iplayer.GetType()) {
-                replacement = iplayers[random.Next(0, 3)];
+                replacement = mplayers[random.Next(0, 3)];
             }
 
             List<string> colorCopy = new List<string>();
@@ -86,7 +84,7 @@ namespace TsuroTheSecond
             }
 
             replacement.Initialize(player.Color, colorCopy);
-            player.ReplaceIPlayer(replacement);
+            player.ReplaceMPlayer(replacement);
         }
 
         public void InitPlayerPositions() {
@@ -103,7 +101,12 @@ namespace TsuroTheSecond
             }
 
             foreach(Player p in alive) {
-                p.iplayer.Initialize(p.Color, alive.Select(x => x.Color).ToList());
+                try {
+                    p.iplayer.Initialize(p.Color, alive.Select(x => x.Color).ToList());
+                } catch (Exception) {
+                    Console.WriteLine("Player initialized failed and has been replaced");
+                    ReplacePlayer(p);
+                }
             }
             gameState = State.handEmpty;
 
@@ -113,10 +116,11 @@ namespace TsuroTheSecond
                 {
                     position = p.iplayer.PlacePawn(this.board);
                 }
-                catch (ArgumentException)
+                catch (Exception)
                 {
-                    Console.WriteLine("Player initialized invalid position and has been replaced");
+                    Console.WriteLine("Player placed pawn in an invalid position and has been replaced");
                     ReplacePlayer(p);
+                    position = p.iplayer.PlacePawn(this.board);
                 }
                 if (this.verbose) Console.WriteLine("Added player to board " + p.Color);
                 this.board.AddPlayerToken(p.Color, position);
@@ -172,8 +176,8 @@ namespace TsuroTheSecond
 
             // Check for valid tile
             if (tile == null || !player.TileinHand(tile)) {
-                ReplacePlayer(player);
-                Console.WriteLine("Player yielded an illegal tile and has been replaced");
+                //ReplacePlayer(player);
+                //Console.WriteLine("Player yielded an illegal tile and has been replaced");
                 return false;
             }
 
@@ -192,8 +196,8 @@ namespace TsuroTheSecond
                 }
             }
 
-            ReplacePlayer(player);
-            Console.WriteLine("Player has played an illegal tile and has been replaced");
+            //ReplacePlayer(player);
+            //Console.WriteLine("Player has played an illegal tile and has been replaced");
             return false;
         }
 
@@ -337,11 +341,25 @@ namespace TsuroTheSecond
                 if (this.verbose) Console.WriteLine("Player: " + p.iplayer.GetName() + " won!");
             }
             foreach (Player p in alive) {
-                p.iplayer.EndGame(board, winColors);
+                try {
+                    p.iplayer.EndGame(board, winColors);
+                } catch(Exception) {
+                    Console.WriteLine("Invalid Engame Response, player has been replaced");
+                    ReplacePlayer(p);
+                    p.iplayer.EndGame(board, winColors);
+                }
             }
 
             foreach (Player p in dead) {
-                p.iplayer.EndGame(board, winColors);
+                try {
+                    p.iplayer.EndGame(board, winColors);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Invalid Engame Response, player has been replaced");
+                    ReplacePlayer(p);
+                    p.iplayer.EndGame(board, winColors);
+                }
             }
         }
 
@@ -384,9 +402,25 @@ namespace TsuroTheSecond
                 counter++;
                 if (this.verbose) Console.WriteLine("\nTurn: " + counter + ", deck size: " + deck.Count + " players left in game: " + alive.Count);
                 Player currentPlayer = alive[0];
-                Tile playTile = currentPlayer.iplayer.PlayTurn(board, currentPlayer.Hand, deck.Count);
+
+                Tile playTile = null;
+                try {
+                    playTile = currentPlayer.iplayer.PlayTurn(board, currentPlayer.Hand, deck.Count);
+                } catch(Exception) {
+                    Console.WriteLine("PlayTurn didn't return correctly, player is being replaced");
+                    ReplacePlayer(currentPlayer);
+                    playTile = currentPlayer.iplayer.PlayTurn(board, currentPlayer.Hand, deck.Count);
+                }
+
                 if (!LegalPlay(currentPlayer, board, playTile)) {
-                    ReplacePlayer(currentPlayer); 
+                    ReplacePlayer(currentPlayer);
+                    Console.WriteLine("Player made an illegal move and is being replaced");
+                    // assuming this makes a legal move...
+                    playTile = currentPlayer.iplayer.PlayTurn(board, currentPlayer.Hand, deck.Count);
+                    if (!LegalPlay(currentPlayer, board, playTile)) {
+                        // just kidding, never assume, but this shouldn't be thrown
+                        throw new Exception("the replaced player played an illegal tile");
+                    }
                 }
 
                 currentPlayer.RemoveTilefromHand(playTile);

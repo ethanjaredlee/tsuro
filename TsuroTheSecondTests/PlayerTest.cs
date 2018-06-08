@@ -854,7 +854,7 @@ namespace TsuroTheSecondTests
             LeastSymmetricPlayer replacement = new LeastSymmetricPlayer("adam");
 
             Player player = new Player(mPlayer1, "blue");
-            player.ReplaceIPlayer(replacement);
+            player.ReplaceMPlayer(replacement);
             Assert.AreEqual("adam", player.iplayer.GetName());
         }
 

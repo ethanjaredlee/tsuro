@@ -5,25 +5,29 @@ namespace TsuroTheSecond
     public class Program
     {
         static void Main(string[] args) {
-            if (args.Contains("--tournament")) {
+            if (args.Contains("tournament")) {
                 Tournament.RunTournament(args.Contains("--verbose"));
             }
 
-            if (args.Contains("--play")) {
+            else if (args.Contains("playturn")) {
                 PlayATurnNetwork.TestPlayATurn();
             }
 
-            if (args.Contains("--network"))
-            {
-                NetworkTournament.RunNetworkTournament(args.Contains("--verbose"));
-            }
-
-            if (args.Contains("--proxy"))
+            else if (args.Contains("player"))
             {
                 NPlayerProxy.RunNPlayerProxy();
+            } 
+
+            else if (args.Contains("host")){
+                NetworkTournament.RunNetworkTournament(Int32.Parse(args[1]));
+            } else {
+                Console.WriteLine("Available arguments:");
+                Console.WriteLine("<tournament>: run internal tournament simulation");
+                Console.WriteLine("<playturn>: test playATurn function on stdin and stdout");
+                Console.WriteLine("<player>: launch a player to connect to network");
+                Console.WriteLine("<host> n: host a network tournament with n players in the game");
             }
 
-            //PlayATurnNetwork.TestPlayATurn();
             Console.WriteLine("done with program");
         }
     }

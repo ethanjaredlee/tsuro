@@ -7,25 +7,29 @@ namespace TsuroTheSecond
 {
     public static class NetworkTournament
     {
-        public static void RunNetworkTournament(Boolean verbose)
+        public static void RunNetworkTournament(int playerCount)
         {
             Server server = new Server();
-
-            if (verbose)
-            {
-                server.verbose = true;
-            }
 
             TcpListener netserver = new TcpListener(IPAddress.Any, 10048);
             netserver.Start();
 
-            List<IPlayer> gamePlayers = new List<IPlayer>{
-                new LeastSymmetricPlayer("lPlayer1"),
-                new MostSymmetricPlayer("mPlayer2"),
-                getNetworkPlayer(netserver),
-                new RandomPlayer("RPlayer4")
-            };
+            List<IPlayer> gamePlayers = new List<IPlayer>();
 
+            Console.WriteLine("Do you want to add a network player? (y/n)");
+            string response = Console.ReadLine();
+            while (response.Trim().ToLower() == "y" && gamePlayers.Count <= playerCount) {
+                NPlayer player = getNetworkPlayer(netserver);
+                gamePlayers.Add(player);
+                Console.WriteLine("Do you want to add another player? (y/n)");
+                response = Console.ReadLine();
+            }
+
+            while (gamePlayers.Count < playerCount) {
+                gamePlayers.Add(new RandomPlayer("filler player"));
+            }
+
+            Console.WriteLine("\n\nStarting game with " + gamePlayers.Count + " players");
             List<string> winners = server.Play(gamePlayers);
             foreach (string win in winners) {
                 Console.WriteLine(win + " won!");

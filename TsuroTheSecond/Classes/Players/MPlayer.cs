@@ -7,8 +7,8 @@ namespace TsuroTheSecond
         protected string name;
         protected string color;
         protected List<string> player_colors;
-        protected enum State { start, initialized, loop, end };
-        protected State playerState;
+        public enum State { start, initialized, loop, end, replacement };
+        public State playerState;
 
         public MPlayer(string _name)
         {
@@ -23,7 +23,7 @@ namespace TsuroTheSecond
 
         public void Initialize(string _color, List<string> all_colors)
         {
-            if (playerState != State.start)
+            if (playerState != State.start && playerState != State.replacement)
             {
                 throw new Exception("Player should be in start state");
             }
@@ -34,7 +34,7 @@ namespace TsuroTheSecond
 
         public Position PlacePawn(Board board)
         {
-            if (playerState != State.initialized)
+            if (playerState != State.initialized && playerState != State.replacement)
             {
                 throw new Exception("Player should be in initialized state");
             }
@@ -57,19 +57,19 @@ namespace TsuroTheSecond
 
         public void EndGame(Board board, List<string> colors)
         {
-            if (playerState != State.loop)
+            if (playerState != State.loop && playerState != State.replacement)
             {
                 throw new Exception("Player is in wrong state");
             }
             playerState = State.end;
-            //if (colors.Contains(color))
-            //{
-            //    Console.WriteLine(color + " won!");
-            //}
-            //else
-            //{
-            //    Console.WriteLine(color + " lost!");
-            //}
+            if (colors.Contains(color))
+            {
+                Console.WriteLine(color + " won!");
+            }
+            else
+            {
+                Console.WriteLine(color + " lost!");
+            }
         }
     }
 }
