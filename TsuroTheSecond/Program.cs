@@ -16,7 +16,8 @@ namespace TsuroTheSecond
             else if (args.Contains("player"))
             {
                 int port = args.Length < 3 ? 12345 : Int32.Parse(args[2]);
-                NPlayerProxy.RunNPlayerProxy(args[1], port);
+                string ip = args.Length < 4 ? null : args[3];
+                NPlayerProxy.RunNPlayerProxy(args[1], port, ip);
             } 
 
             else if (args.Contains("host")){
