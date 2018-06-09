@@ -24,7 +24,9 @@ namespace TsuroTheSecond
             }
 
             Console.WriteLine("\n\nStarting game with " + gamePlayers.Count + " players");
+
             List<string> winners = server.Play(gamePlayers);
+
             foreach (string win in winners) {
                 Console.WriteLine(win + " won!");
             }
