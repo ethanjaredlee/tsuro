@@ -30,8 +30,8 @@ namespace TsuroTheSecond
                 Console.WriteLine("<host> n: host a network tournament with n players in the game");
             }
 
-            //NetworkTournament.RunNetworkTournament(8);
-            NPlayerProxy.RunNPlayerProxy("ethan", 12345);
+            NetworkTournament.RunNetworkTournament(1);
+            //NPlayerProxy.RunNPlayerProxy("ethan", 12345);
 
             Console.WriteLine("done with program");
         }

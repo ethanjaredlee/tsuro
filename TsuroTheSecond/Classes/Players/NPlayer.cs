@@ -59,7 +59,7 @@ namespace TsuroTheSecond
 
             Position pawnLocation = parser.PawnLocationParse(response);
             if (!pawnLocation.OnEdge()) {
-                pawnLocation.FlipPosition(); 
+                pawnLocation = pawnLocation.FlipPosition(); 
             }
 
             if (!pawnLocation.OnEdge()) {

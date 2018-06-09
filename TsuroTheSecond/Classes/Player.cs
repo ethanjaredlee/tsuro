@@ -44,11 +44,12 @@ namespace TsuroTheSecond
         }
 
         public bool TileinHand(Tile tile) {
-            if ( this.Hand.Find(each => each.id == tile.id) == null ) {
-                return false;
-            } else {
-                return true;
+            foreach (Tile t in Hand) {
+                if (tile.Equals(t)) {
+                    return true;
+                }
             }
+            return false;
         }
 
         public void ReplaceMPlayer(MPlayer player) {

@@ -12,6 +12,11 @@ namespace TsuroTheSecond
 
         public Tile PlayTurn(Board board, List<Tile> hand, int unused)
         {
+            if (playerState != State.loop && playerState != State.replacement)
+            {
+                Console.WriteLine(playerState);
+                throw new Exception("Player should be in loop state");
+            }
             // all legal options
             List<Tile> legal_options = board.AllPossibleTiles(this.color, hand);
             // all legal options, rid of overlapped.
