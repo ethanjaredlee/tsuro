@@ -32,23 +32,26 @@ namespace TsuroTheSecond
             if( this.Hand.Count <= 0 ) {
                 throw new Exception("Player hand is already empty!");
             }
+
             int hand_cnt = this.Hand.Count;
             for (int i = 0; i < this.Hand.Count; i++) {
-                if( this.Hand[i].id == tile.id ) {
+                if (tile.Equals(Hand[i])) {
                     this.Hand.Remove(this.Hand[i]);
                 }
             }
+
             if(hand_cnt == this.Hand.Count) {
                 throw new Exception("Remove Tile from hand was not effective");
             }
         }
 
         public bool TileinHand(Tile tile) {
-            if ( this.Hand.Find(each => each.id == tile.id) == null ) {
-                return false;
-            } else {
-                return true;
+            foreach (Tile t in Hand) {
+                if (tile.Equals(t)) {
+                    return true;
+                }
             }
+            return false;
         }
 
         public void ReplaceMPlayer(MPlayer player) {

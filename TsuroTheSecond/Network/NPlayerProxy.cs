@@ -78,13 +78,16 @@ namespace TsuroTheSecond
         }
 
 
-        public static void RunNPlayerProxy(string name, int port) // input host IP address and port number as 2 args
+        public static void RunNPlayerProxy(string name, int port, string ip=null) // input host IP address and port number as 2 args
         {
             NPlayerProxy player = new NPlayerProxy(name);
 
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());  
-            IPAddress ipAddress = ipHostInfo.AddressList[0];  
-            IPEndPoint remoteEP = new IPEndPoint(ipAddress,port);  
+            IPAddress localAddress = ipHostInfo.AddressList[0];
+
+            IPAddress ipAddress = ip == null ? localAddress : IPAddress.Parse(ip);
+
+            IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);  
 
             // Create a TCP/IP  socket.  
             Socket sender = new Socket(ipAddress.AddressFamily,   
@@ -112,7 +115,6 @@ namespace TsuroTheSecond
                     if (count == 2) break;
                 }
             }
-
         }
 
     }

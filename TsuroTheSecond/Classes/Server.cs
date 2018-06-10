@@ -172,12 +172,15 @@ namespace TsuroTheSecond
             {
                 throw new Exception("Invalid game state");
             }
-            gameState = State.safe;
 
             // Check for valid tile
             if (tile == null || !player.TileinHand(tile)) {
                 //ReplacePlayer(player);
-                //Console.WriteLine("Player yielded an illegal tile and has been replaced");
+                Console.WriteLine("tile is not in hand");
+                Console.WriteLine("play tile " + tile);
+                foreach (Tile t in player.Hand) {
+                    Console.WriteLine(t);
+                }
                 return false;
             }
 
@@ -185,6 +188,7 @@ namespace TsuroTheSecond
 
             // if there's no options that don't kill you, then any tile is legal
             if (all_options.Count == 0) {
+                gameState = State.safe;
                 return true;
             }
 
@@ -192,12 +196,13 @@ namespace TsuroTheSecond
             // If so, return true
             foreach(Tile goodTile in all_options){
                 if(goodTile.CompareByPath(tile)){
+                    gameState = State.safe;
                     return true;
                 }
             }
 
             //ReplacePlayer(player);
-            //Console.WriteLine("Player has played an illegal tile and has been replaced");
+            Console.WriteLine("tile will kill player when there's better options");
             return false;
         }
 
