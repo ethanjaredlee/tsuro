@@ -32,12 +32,15 @@ namespace TsuroTheSecond
             if( this.Hand.Count <= 0 ) {
                 throw new Exception("Player hand is already empty!");
             }
+
             int hand_cnt = this.Hand.Count;
-            for (int i = 0; i < this.Hand.Count; i++) {
-                if( this.Hand[i].id == tile.id ) {
-                    this.Hand.Remove(this.Hand[i]);
+            foreach(Tile t in Hand) {
+                if (t.Equals(tile)) {
+                    this.Hand.Remove(t);
+                    break;
                 }
             }
+
             if(hand_cnt == this.Hand.Count) {
                 throw new Exception("Remove Tile from hand was not effective");
             }
