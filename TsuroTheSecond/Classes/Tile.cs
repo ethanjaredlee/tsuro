@@ -132,7 +132,13 @@ namespace TsuroTheSecond
             }
 
             Tile tile = (Tile)obj;
-            return this.CompareByPath(tile);
+            for (int i = 0; i < 4; i++) {
+                tile.Rotate();
+                if (this.CompareByPath(tile)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public override int GetHashCode()

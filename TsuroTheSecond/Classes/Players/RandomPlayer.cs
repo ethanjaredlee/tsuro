@@ -11,8 +11,9 @@ namespace TsuroTheSecond
 
         public Tile PlayTurn(Board board, List<Tile> hand, int unused)
         {
-            if (playerState != State.loop)
+            if (playerState != State.loop && playerState != State.replacement)
             {
+                Console.WriteLine(playerState);
                 throw new Exception("Player should be in loop state");
             }
             Random random = new Random();
