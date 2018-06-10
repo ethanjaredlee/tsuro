@@ -34,10 +34,9 @@ namespace TsuroTheSecond
             }
 
             int hand_cnt = this.Hand.Count;
-            foreach(Tile t in Hand) {
-                if (t.Equals(tile)) {
-                    this.Hand.Remove(t);
-                    break;
+            for (int i = 0; i < this.Hand.Count; i++) {
+                if (tile.Equals(Hand[i])) {
+                    this.Hand.Remove(this.Hand[i]);
                 }
             }
 
