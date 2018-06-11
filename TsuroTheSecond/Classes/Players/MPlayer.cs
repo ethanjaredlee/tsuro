@@ -64,14 +64,6 @@ namespace TsuroTheSecond
                 throw new Exception("Player is in wrong state");
             }
             playerState = State.start;
-            //if (colors.Contains(color))
-            //{
-            //    Console.WriteLine(color + " won!");
-            //}
-            //else
-            //{
-            //    Console.WriteLine(color + " lost!");
-            //}
         }
     }
 }

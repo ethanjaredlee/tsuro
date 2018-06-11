@@ -16,4 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TsuroTheSecond\TsuroTheSecond.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="PlayATurnNetworkTest.cs" />
+  </ItemGroup>
 </Project>

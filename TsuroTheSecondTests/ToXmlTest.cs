@@ -230,22 +230,5 @@ namespace TsuroTheSecondTests
             Assert.AreEqual(check, playerString);
         }
 
-        //[TestMethod]
-        //public void ListofPlayersToXmlTest() {
-        //    Player player1 = new Player(new RandomPlayer("john"), "blue");
-        //    player1.Hand = new List<Tile>{
-        //        testTile1,
-        //        testTile2
-        //    };
-
-        //    Player player2 = new Player(new RandomPlayer("john"), "blue");
-        //    player2.Hand = new List<Tile>{
-        //        testTile1,
-        //        testTile2
-        //    };
-
-        //    List<Player> players = new List<Player> { player1, player2 };
-        //    XElement listPlayersXml = converter.ListofPlayertoXml(players, -1);
-        //}
     }
 }
