@@ -221,7 +221,7 @@ namespace TsuroTheSecond
             if (this.verbose) Console.WriteLine(currentPlayer.iplayer.GetName() + " color: " + currentPlayer.Color + " "  + currentPlayer.Hand.Count + " tiles in hand and is in position " + board.tokenPositions[currentPlayer.Color]);
 
             if (currentPlayer.Hand.Count > 2) {
-                throw new ArgumentException("Player should have 2 or less tiles in hand");
+                throw new ArgumentException("Player should have 2 or less tiles in hand, blame in server");
             }
 
 
